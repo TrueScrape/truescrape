@@ -11,10 +11,6 @@ tools and your agents.
 | **MCP server** | `claude mcp add --transport http truescrape https://api.truescrape.com/mcp --header "x-api-key: YOUR_KEY"` | Claude, Cursor, VS Code and any MCP client calling endpoints as tools |
 | **Agent skill** | `npx skills add TrueScrape/truescrape` | Teaching Claude Code, Cursor, Codex, Copilot, Gemini CLI or Windsurf how to use the API well |
 
-> The npm package is not published yet. Until it is, run the CLI from source:
-> `git clone https://github.com/TrueScrape/truescrape && cd truescrape && pnpm install && pnpm build && node dist/index.js --help`.
-> The skill, the plugin and the MCP server work today.
-
 <!-- catalogue:start -->
 **173 endpoints across 28 platforms**, generated from the live API on 2026-09-02.
 

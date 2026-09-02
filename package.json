@@ -4,7 +4,7 @@
   "description": "CLI for the TrueScrape API: public social media data from every platform in the catalogue, from the terminal or as an MCP server for agents.",
   "type": "module",
   "bin": {
-    "truescrape": "./dist/index.js"
+    "truescrape": "dist/index.js"
   },
   "files": [
     "dist",
