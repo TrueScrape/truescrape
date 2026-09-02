@@ -5,7 +5,12 @@ Entries are prose only: the client, its version, the date, whether the tool
 count matched what the API advertises at `/.well-known/mcp`, and whether one
 call completed. No logs, no paths, no numbers pasted from a session.
 
-## 0.1.0 (pre-release, 2026-09-03)
+## 0.1.0 (published 2026-09-03)
+
+**npm.** Published by the tag-triggered workflow with provenance. From a
+clean directory, `npx -y truescrape@0.1.0 --version` printed the version,
+`list youtube --json` returned the endpoint list, and an endpoint call with
+no key exited with the usage error naming the three ways to set one.
 
 **Skill install.** `npx skills add TrueScrape/truescrape --list` against the
 GitHub repository found exactly one skill, `truescrape`, with the expected
