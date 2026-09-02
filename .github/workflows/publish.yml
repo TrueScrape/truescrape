@@ -32,6 +32,8 @@ jobs:
       - name: publish unless this version is already on npm
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+          # prepublishOnly re-runs the hygiene guard, which refuses to run without the list.
+          TRUESCRAPE_HYGIENE_DENYLIST: ${{ runner.temp }}/denylist.txt
         run: |
           version="$(node -p "require('./package.json').version")"
           if npm view "truescrape@${version}" version >/dev/null 2>&1; then
