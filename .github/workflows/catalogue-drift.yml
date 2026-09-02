@@ -1,0 +1,30 @@
+name: catalogue drift
+
+on:
+  schedule:
+    - cron: '17 4 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  regenerate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm catalogue
+      - uses: peter-evans/create-pull-request@v7
+        with:
+          branch: catalogue/refresh
+          title: 'Refresh the endpoint catalogue'
+          commit-message: 'Refresh the endpoint catalogue from the live API'
+          body: 'The live OpenAPI spec changed. This PR regenerates src/catalogue.json and the generated blocks in README.md and the skill.'
+          delete-branch: true

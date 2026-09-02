@@ -1,0 +1,4 @@
+# Single package; this file only decides the one build script pnpm would
+# otherwise leave undecided, which makes `pnpm install` exit 1.
+allowBuilds:
+  esbuild: true
