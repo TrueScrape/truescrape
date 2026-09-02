@@ -115,7 +115,12 @@ export function main(root = process.cwd()): number {
     console.error('hygiene: set TRUESCRAPE_HYGIENE_DENYLIST to the path of the denylist file (one term per line).');
     return 2;
   }
-  const denylist = readFileSync(listPath, 'utf8').split(/\r?\n/);
+  const denylist = readFileSync(listPath, 'utf8').split(/\r?\n/).filter((t) => t.trim().length > 0);
+  // An empty list would pass everything; a missing secret must fail loudly, not quietly.
+  if (denylist.length === 0) {
+    console.error(`hygiene: ${listPath} has no terms; refusing to run with an empty denylist.`);
+    return 2;
+  }
 
   const files: HygieneFile[] = [];
   for (const path of trackedFiles(root)) {
