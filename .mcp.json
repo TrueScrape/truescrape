@@ -1,0 +1,9 @@
+{
+  "mcpServers": {
+    "truescrape": {
+      "type": "http",
+      "url": "https://api.truescrape.com/mcp",
+      "headers": { "x-api-key": "${TRUESCRAPE_API_KEY}" }
+    }
+  }
+}

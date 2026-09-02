@@ -42,6 +42,18 @@ describe('metaLine', () => {
     expect(metaLine({ data: [1], meta: { creditsCharged: 0, cached: true }, status: 200 })).toBe('0 credits · cache hit');
     expect(metaLine({ data: { items: [] }, meta: { creditsCharged: 0 }, status: 200 })).toBe('0 credits · empty');
     expect(metaLine({ data: [1], meta: { creditsCharged: 2 }, pagination: { cursor: 'abc', hasMore: true, count: 1 }, status: 200 })).toContain('more: --cursor abc');
+    expect(metaLine({ data: [1], meta: { creditsCharged: 1, creditsRemaining: 41 }, status: 200 })).toBe('1 credit · live fetch · 41 remaining');
+  });
+});
+
+describe('raw passthrough', () => {
+  it('appears in the envelope output and nowhere else', () => {
+    const s = capture();
+    emit({ data: { a: 1 }, raw: { r: 1 }, status: 200 }, { ...base, quiet: true }, s);
+    expect(s.out).toEqual(['{"a":1}\n']);
+    const e = capture();
+    emit({ data: { a: 1 }, raw: { r: 1 }, status: 200 }, { ...base, envelope: true, quiet: true }, e);
+    expect(JSON.parse(e.out[0] ?? '')).toEqual({ data: { a: 1 }, meta: null, pagination: null, raw: { r: 1 } });
   });
 });
 
@@ -85,12 +97,16 @@ describe('reportError', () => {
   it('maps error classes to exit codes and prints one JSON line when piped', () => {
     const s = capture();
     expect(reportError(new ApiError('invalid_api_key', 401, 'Bad key', undefined, 'req_9'), false, s)).toBe(EXIT.api);
-    expect(JSON.parse(s.err[0] ?? '')).toEqual({ error: 'invalid_api_key', message: 'Bad key', requestId: 'req_9' });
-    expect(reportError(new ApiError('insufficient_credits', 402, 'Top up'), false, s)).toBe(EXIT.api);
-    expect(JSON.parse(s.err[1] ?? '').error).toBe('insufficient_credits');
+    // The API's own shape, with the header-borne requestId beside `error`.
+    expect(JSON.parse(s.err[0] ?? '')).toEqual({ success: false, error: { code: 'invalid_api_key', message: 'Bad key' }, requestId: 'req_9' });
+    expect(reportError(new ApiError('insufficient_credits', 402, 'Top up', { needed: 2 }), false, s)).toBe(EXIT.api);
+    expect(JSON.parse(s.err[1] ?? '')).toEqual({ success: false, error: { code: 'insufficient_credits', message: 'Top up', details: { needed: 2 } } });
     expect(reportError(new UsageError('missing --handle'), false, s)).toBe(EXIT.usage);
+    expect(JSON.parse(s.err[2] ?? '')).toEqual({ success: false, error: { code: 'usage', message: 'missing --handle' } });
     expect(reportError(new NetworkError('down'), false, s)).toBe(EXIT.network);
+    expect(JSON.parse(s.err[3] ?? '').error.code).toBe('network');
     expect(reportError(new Error('boom'), false, s)).toBe(EXIT.api);
+    expect(JSON.parse(s.err[4] ?? '').error.code).toBe('internal');
   });
 
   it('prints prose for a person', () => {

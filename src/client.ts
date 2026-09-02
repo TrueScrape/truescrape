@@ -6,6 +6,8 @@ export interface Meta {
   cacheAgeSeconds?: number | null;
   durationMs?: number;
   requestId?: string;
+  /** From the `x-credits-remaining` header; the body may carry it too one day. */
+  creditsRemaining?: number;
 }
 
 export interface Pagination {
@@ -19,6 +21,8 @@ export interface Envelope<T = unknown> {
   data: T;
   meta?: Meta;
   pagination?: Pagination;
+  /** The untouched upstream payload, present only when `include_raw=true` was sent. */
+  raw?: unknown;
   status: number;
 }
 
@@ -80,7 +84,9 @@ export class Client {
 
   constructor(private readonly options: ClientOptions) {
     this.fetchImpl = options.fetchImpl ?? fetch;
-    this.timeoutMs = options.timeoutMs ?? 60_000;
+    // Longer than the slowest server-side path, or the CLI reports failure
+    // for a call the server goes on to complete and bill.
+    this.timeoutMs = options.timeoutMs ?? 90_000;
   }
 
   get baseUrl(): string {
@@ -142,6 +148,7 @@ export class Client {
       data?: T;
       meta?: Meta;
       pagination?: Pagination;
+      raw?: unknown;
       error?: { code?: string; message?: string; details?: unknown };
     };
 
@@ -151,10 +158,16 @@ export class Client {
       throw new ApiError(code, response.status, message, envelope.error?.details, requestId ?? envelope.meta?.requestId);
     }
 
+    const remainingHeader = response.headers.get('x-credits-remaining');
+    const remaining = remainingHeader === null ? NaN : Number(remainingHeader);
+    let meta = envelope.meta;
+    if (Number.isFinite(remaining)) meta = { ...meta, creditsRemaining: remaining };
+
     return {
       data: envelope.data as T,
-      meta: envelope.meta,
+      meta,
       pagination: envelope.pagination,
+      ...(envelope.raw !== undefined ? { raw: envelope.raw } : {}),
       status: response.status,
     };
   }

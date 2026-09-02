@@ -55,5 +55,6 @@
     "agent-skill"
   ],
   "license": "MIT",
+  "author": "TrueScrape",
   "packageManager": "pnpm@11.5.3"
 }

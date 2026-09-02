@@ -1,0 +1,9 @@
+{
+  "name": "truescrape",
+  "description": "Public social media and creator data for agents: the TrueScrape skill (endpoint selection, credits, batching, subscriptions, caching) plus the remote MCP server.",
+  "version": "0.1.0",
+  "author": { "name": "TrueScrape", "url": "https://truescrape.com" },
+  "homepage": "https://truescrape.com",
+  "repository": "https://github.com/TrueScrape/truescrape",
+  "license": "MIT"
+}

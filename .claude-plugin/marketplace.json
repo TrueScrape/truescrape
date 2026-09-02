@@ -1,0 +1,12 @@
+{
+  "name": "truescrape",
+  "description": "The TrueScrape plugin for Claude Code: an agent skill for public social media and creator data, plus the remote MCP server.",
+  "owner": { "name": "TrueScrape" },
+  "plugins": [
+    {
+      "name": "truescrape",
+      "source": "./",
+      "description": "Public social media and creator data for agents: the TrueScrape skill (endpoint selection, credits, batching, subscriptions, caching) plus the remote MCP server."
+    }
+  ]
+}

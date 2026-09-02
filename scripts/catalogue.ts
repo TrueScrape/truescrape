@@ -1,11 +1,15 @@
 /**
- * Regenerates src/catalogue.json from the live OpenAPI document and rewrites
- * the generated blocks in README.md and the skill.
+ * Keeps the endpoint catalogue and everything generated from it current.
  *
- * The snapshot is rewritten only when the endpoints actually changed, so a
- * no-op run leaves the tree clean and CI's currency check stays meaningful.
+ *   pnpm catalogue          fetch the live API: refresh test/fixtures/openapi.json,
+ *                           src/catalogue.json and the generated blocks in README.md
+ *                           and the skill; also verify .mcp.json against discovery.
+ *   pnpm catalogue --check  no network: rebuild from the committed fixture and fail
+ *                           if the snapshot or a generated block is stale. CI runs this.
  *
- * Usage: pnpm catalogue            (TRUESCRAPE_BASE_URL overrides the API)
+ * The snapshot keeps its `generatedAt` while the endpoints are unchanged, so a
+ * no-op run leaves the tree clean and the daily drift job only opens a pull
+ * request when something really moved.
  */
 import { existsSync, readFileSync, writeFileSync } from 'node:fs';
 import { resolve } from 'node:path';
@@ -14,6 +18,13 @@ import { buildCatalogue, type Catalogue, type OpenApiDoc } from '../src/catalogu
 export const DEFAULT_BASE_URL = 'https://api.truescrape.com';
 const START = '<!-- catalogue:start -->';
 const END = '<!-- catalogue:end -->';
+
+export const FIXTURE = 'test/fixtures/openapi.json';
+export const SNAPSHOT = 'src/catalogue.json';
+export const BLOCKS: readonly [file: string, render: (c: Catalogue) => string][] = [
+  ['README.md', renderReadmeBlock],
+  ['skills/truescrape/SKILL.md', renderSkillBlock],
+];
 
 export function replaceBlock(text: string, body: string): string {
   const start = text.indexOf(START);
@@ -64,29 +75,99 @@ function sameEndpoints(a: Catalogue | null, b: Catalogue): boolean {
   return a !== null && JSON.stringify(a.endpoints) === JSON.stringify(b.endpoints);
 }
 
-export async function main(root = process.cwd()): Promise<void> {
-  const baseUrl = (process.env.TRUESCRAPE_BASE_URL ?? DEFAULT_BASE_URL).replace(/\/$/, '');
-  const url = `${baseUrl}/openapi.json`;
+function readSnapshot(root: string): Catalogue | null {
+  const path = resolve(root, SNAPSHOT);
+  return existsSync(path) ? (JSON.parse(readFileSync(path, 'utf8')) as Catalogue) : null;
+}
+
+/** The catalogue the committed fixture produces, keeping the snapshot's timestamp when nothing moved. */
+export function catalogueFromFixture(root: string, source = 'fixture', now = new Date()): Catalogue {
+  const spec = JSON.parse(readFileSync(resolve(root, FIXTURE), 'utf8')) as OpenApiDoc;
+  const existing = readSnapshot(root);
+  const fresh = buildCatalogue(spec, existing?.source ?? source, now);
+  return sameEndpoints(existing, fresh) ? (existing as Catalogue) : fresh;
+}
+
+/** Problems that would make CI fail: a stale snapshot or a stale generated block. Never touches the network. */
+export function check(root: string): string[] {
+  const problems: string[] = [];
+  if (!existsSync(resolve(root, FIXTURE))) return [`${FIXTURE} is missing; run pnpm catalogue`];
+  const catalogue = catalogueFromFixture(root);
+  const existing = readSnapshot(root);
+  if (!existing || !sameEndpoints(existing, catalogue)) problems.push(`${SNAPSHOT} is stale; run pnpm catalogue`);
+
+  for (const [file, render] of BLOCKS) {
+    const path = resolve(root, file);
+    if (!existsSync(path)) continue;
+    const text = readFileSync(path, 'utf8');
+    if (replaceBlock(text, render(catalogue)) !== text) problems.push(`${file} generated block is stale; run pnpm catalogue`);
+  }
+  return problems;
+}
+
+interface Discovery {
+  endpoint: string;
+  authentication: { in: string; name: string };
+}
+
+/** The plugin's .mcp.json cannot do discovery, so the daily job checks it against discovery instead. */
+export function verifyMcpJson(text: string, discovery: Discovery, baseUrl: string): string | null {
+  const parsed = JSON.parse(text) as { mcpServers?: Record<string, { url?: string; headers?: Record<string, string> }> };
+  const entry = parsed.mcpServers?.truescrape;
+  if (!entry) return '.mcp.json has no mcpServers.truescrape entry';
+
+  let expectedUrl: string;
+  try {
+    expectedUrl = `${baseUrl.replace(/\/$/, '')}${new URL(discovery.endpoint).pathname}`;
+  } catch {
+    expectedUrl = discovery.endpoint;
+  }
+  if (entry.url !== expectedUrl) return `.mcp.json url is ${entry.url}; discovery says ${expectedUrl}`;
+
+  const headers = Object.keys(entry.headers ?? {}).map((h) => h.toLowerCase());
+  if (!headers.includes(discovery.authentication.name.toLowerCase())) {
+    return `.mcp.json sends ${headers.join(', ') || 'no headers'}; discovery wants ${discovery.authentication.name}`;
+  }
+  return null;
+}
+
+async function fetchJson<T>(url: string): Promise<{ text: string; json: T }> {
   const response = await fetch(url, { headers: { accept: 'application/json' } });
   if (!response.ok) throw new Error(`Could not fetch ${url}: HTTP ${response.status}`);
-  const spec = (await response.json()) as OpenApiDoc;
+  const text = await response.text();
+  return { text, json: JSON.parse(text) as T };
+}
 
-  const snapshotPath = resolve(root, 'src/catalogue.json');
-  const existing = existsSync(snapshotPath) ? (JSON.parse(readFileSync(snapshotPath, 'utf8')) as Catalogue) : null;
-  const fresh = buildCatalogue(spec, url, new Date());
-  const catalogue = sameEndpoints(existing, fresh) ? (existing as Catalogue) : fresh;
+/** Fetch mode: refresh the fixture from the live API, then regenerate everything from it. */
+export async function refresh(root: string): Promise<void> {
+  const baseUrl = (process.env.TRUESCRAPE_BASE_URL ?? DEFAULT_BASE_URL).replace(/\/$/, '');
+  const specUrl = `${baseUrl}/openapi.json`;
+  const { text } = await fetchJson<OpenApiDoc>(specUrl);
 
+  const fixturePath = resolve(root, FIXTURE);
+  const pretty = `${JSON.stringify(JSON.parse(text), null, 2)}\n`;
+  if (!existsSync(fixturePath) || readFileSync(fixturePath, 'utf8') !== pretty) {
+    writeFileSync(fixturePath, pretty);
+    console.error(`catalogue: ${FIXTURE} refreshed from ${specUrl}`);
+  }
+
+  const mcpPath = resolve(root, '.mcp.json');
+  if (existsSync(mcpPath)) {
+    const { json: discovery } = await fetchJson<Discovery>(`${baseUrl}/.well-known/mcp`);
+    const problem = verifyMcpJson(readFileSync(mcpPath, 'utf8'), discovery, baseUrl);
+    if (problem) throw new Error(problem);
+  }
+
+  const existing = readSnapshot(root);
+  const catalogue = catalogueFromFixture(root, specUrl);
   if (catalogue !== existing) {
-    writeFileSync(snapshotPath, `${JSON.stringify(catalogue, null, 2)}\n`);
-    console.error(`catalogue: ${catalogue.endpoints.length} endpoints written to src/catalogue.json`);
+    writeFileSync(resolve(root, SNAPSHOT), `${JSON.stringify(catalogue, null, 2)}\n`);
+    console.error(`catalogue: ${catalogue.endpoints.length} endpoints written to ${SNAPSHOT}`);
   } else {
     console.error(`catalogue: unchanged (${catalogue.endpoints.length} endpoints)`);
   }
 
-  for (const [file, render] of [
-    ['README.md', renderReadmeBlock],
-    ['skills/truescrape/SKILL.md', renderSkillBlock],
-  ] as const) {
+  for (const [file, render] of BLOCKS) {
     const path = resolve(root, file);
     if (!existsSync(path)) continue;
     const before = readFileSync(path, 'utf8');
@@ -98,9 +179,24 @@ export async function main(root = process.cwd()): Promise<void> {
   }
 }
 
+export async function main(argv = process.argv.slice(2), root = process.cwd()): Promise<number> {
+  if (argv.includes('--check')) {
+    const problems = check(root);
+    for (const p of problems) console.error(`catalogue: ${p}`);
+    if (!problems.length) console.error('catalogue: snapshot and generated blocks are current.');
+    return problems.length ? 1 : 0;
+  }
+  await refresh(root);
+  return 0;
+}
+
 if (process.argv[1] && /catalogue\.(ts|js)$/.test(process.argv[1])) {
-  main().catch((err: unknown) => {
-    console.error(err instanceof Error ? err.message : String(err));
-    process.exitCode = 1;
-  });
+  main()
+    .then((code) => {
+      process.exitCode = code;
+    })
+    .catch((err: unknown) => {
+      console.error(err instanceof Error ? err.message : String(err));
+      process.exitCode = 1;
+    });
 }

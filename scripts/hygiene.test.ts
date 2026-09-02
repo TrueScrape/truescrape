@@ -47,6 +47,11 @@ describe('hygiene guard', () => {
     expect(generated).toEqual([]);
   });
 
+  it('skips the denylist for verbatim public fixtures but not for generated files', () => {
+    expect(checkFiles([{ path: 'test/fixtures/openapi.json', content: 'zzz-secret-vendor' }], DENYLIST)).toEqual([]);
+    expect(checkFiles([{ path: 'src/catalogue.json', content: 'zzz-secret-vendor' }], DENYLIST)).toHaveLength(1);
+  });
+
   it('does not scan itself', () => {
     const findings = checkFiles([{ path: 'scripts/hygiene.ts', content: 'zzz-secret-vendor\n' }], DENYLIST);
     expect(findings).toEqual([]);

@@ -82,6 +82,18 @@ describe('Client', () => {
     expect(result).toMatchObject({ status: 202, pagination: { cursor: 'c', hasMore: true } });
   });
 
+  it('lifts x-credits-remaining into meta and passes raw through', async () => {
+    const { fetchImpl } = stub(() => json({ success: true, data: { a: 1 }, raw: { upstream: true }, meta: { creditsCharged: 1 } }, 200, { 'x-credits-remaining': '41' }));
+    const result = await new Client({ baseUrl: 'https://api.example', apiKey: 'k', fetchImpl }).get('/x');
+    expect(result.meta).toEqual({ creditsCharged: 1, creditsRemaining: 41 });
+    expect(result.raw).toEqual({ upstream: true });
+
+    const { fetchImpl: plain } = stub(() => json({ success: true, data: 1 }));
+    const bare = await new Client({ baseUrl: 'https://api.example', fetchImpl: plain }).get('/x');
+    expect(bare.meta).toBeUndefined();
+    expect('raw' in bare).toBe(false);
+  });
+
   it('calls onRequest with timing for --verbose', async () => {
     const onRequest = vi.fn();
     const { fetchImpl } = stub(() => json({ success: true, data: 1 }));

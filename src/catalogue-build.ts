@@ -65,6 +65,12 @@ export interface OpenApiDoc {
 
 const BOILERPLATE = [/^\*\*Cost:\*\*/, /^\*\*Cache hits cost/, /^Failed and empty/, /^\*\*Required:\*\*/];
 
+/**
+ * A server-side credential name in a description tells a caller nothing they
+ * can act on; what they need to know is that the surface needs configuration.
+ */
+const CREDENTIAL_NAME = /`?\b[A-Z][A-Z0-9]*(?:_[A-Z0-9]+)*_(?:TOKEN|KEY|SECRET)\b`?/g;
+
 /** The endpoint's own prose, without the billing lines the spec repeats on every operation. */
 export function cleanDescription(text: string | undefined): string {
   if (!text) return '';
@@ -72,7 +78,8 @@ export function cleanDescription(text: string | undefined): string {
     .split(/\r?\n/)
     .map((line) => line.trim())
     .filter((line) => line.length > 0 && !BOILERPLATE.some((re) => re.test(line)))
-    .join(' ');
+    .join(' ')
+    .replace(CREDENTIAL_NAME, 'server-side credentials');
 }
 
 export function toFlag(name: string): string {

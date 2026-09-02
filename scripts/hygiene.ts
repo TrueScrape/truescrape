@@ -39,6 +39,12 @@ const GENERATED_END = '<!-- catalogue:end -->';
 /** Files that legitimately mention the rules themselves. */
 const SELF = new Set(['scripts/hygiene.ts', 'scripts/hygiene.test.ts']);
 
+/**
+ * Verbatim copies of public documents. Their wording is the API's to fix, not
+ * this repository's; the generated catalogue built from them is still scanned.
+ */
+const VERBATIM_PUBLIC = /^test\/fixtures\//;
+
 export function checkFiles(files: HygieneFile[], denylist: string[]): Finding[] {
   const findings: Finding[] = [];
   const terms = denylist.map((t) => t.trim().toLowerCase()).filter((t) => t.length > 0);
@@ -61,8 +67,10 @@ export function checkFiles(files: HygieneFile[], denylist: string[]): Finding[] 
       if (raw.includes(GENERATED_START)) inGenerated = true;
       if (raw.includes(GENERATED_END)) inGenerated = false;
 
-      for (const term of terms) {
-        if (lower.includes(term)) findings.push({ path, line, rule: 'denylist', text: raw.trim() });
+      if (!VERBATIM_PUBLIC.test(path)) {
+        for (const term of terms) {
+          if (lower.includes(term)) findings.push({ path, line, rule: 'denylist', text: raw.trim() });
+        }
       }
 
       for (const match of raw.matchAll(/TRUESCRAPE_[A-Z0-9_]+/g)) {

@@ -26,6 +26,4 @@ jobs:
           printf '%s\n' "$DENYLIST" > "$RUNNER_TEMP/denylist.txt"
           TRUESCRAPE_HYGIENE_DENYLIST="$RUNNER_TEMP/denylist.txt" pnpm hygiene
       - name: catalogue is current
-        run: |
-          pnpm catalogue
-          git diff --exit-code -- src/catalogue.json README.md skills/
+        run: pnpm catalogue --check

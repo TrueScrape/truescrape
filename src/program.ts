@@ -1,5 +1,15 @@
 import { Command, Option } from 'commander';
 import pkg from '../package.json' with { type: 'json' };
+import { register as registerAgent } from './commands/agent.js';
+import { register as registerAuth } from './commands/auth.js';
+import { register as registerBalance } from './commands/balance.js';
+import { register as registerBatch } from './commands/batch.js';
+import { register as registerConfig } from './commands/config.js';
+import { register as registerEndpoints } from './commands/endpoints.js';
+import { register as registerInteractive } from './commands/interactive.js';
+import { register as registerJobs } from './commands/jobs.js';
+import { register as registerList } from './commands/list.js';
+import { register as registerMcp } from './commands/mcp.js';
 import { FORMATS } from './output.js';
 
 export type Register = (program: Command) => void;
@@ -36,5 +46,16 @@ export function buildProgram(registrations: Register[] = defaultRegistrations): 
   return program;
 }
 
-/** Filled in as command modules land; each is one import and one entry. */
-export const defaultRegistrations: Register[] = [];
+/** One entry per command module. The bare-command walkthrough registers the root action, so it goes last. */
+export const defaultRegistrations: Register[] = [
+  (p) => registerAuth(p),
+  (p) => registerBalance(p),
+  (p) => registerConfig(p),
+  (p) => registerBatch(p),
+  (p) => registerJobs(p),
+  (p) => registerMcp(p),
+  (p) => registerAgent(p),
+  (p) => registerList(p),
+  (p) => registerEndpoints(p),
+  (p) => registerInteractive(p),
+];

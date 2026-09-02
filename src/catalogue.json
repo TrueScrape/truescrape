@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-02T19:57:54.683Z",
+  "generatedAt": "2026-09-02T20:18:30.725Z",
   "source": "https://api.truescrape.com/openapi.json",
   "endpoints": [
     {
@@ -6826,7 +6826,7 @@
       "action": "profile",
       "path": "/v1/twitter/profile",
       "summary": "Profile details",
-      "description": "Public profile for an X account. With TWITTER_BEARER_TOKEN set this is the full profile — bio, location, follower/following/post counts, join date. Without one, X exposes only handle, id, display name, avatar and verified status to logged-out callers, and the call is refunded to 0 credits because that is not worth charging for.",
+      "description": "Public profile for an X account. With server-side credentials set this is the full profile — bio, location, follower/following/post counts, join date. Without one, X exposes only handle, id, display name, avatar and verified status to logged-out callers, and the call is refunded to 0 credits because that is not worth charging for.",
       "credits": 1,
       "cacheable": true,
       "batchable": true,
@@ -6860,7 +6860,7 @@
       "action": "tweet",
       "path": "/v1/twitter/tweet",
       "summary": "Post details",
-      "description": "One public post with its text, media and engagement. Served from X's embed CDN, which is the most durable logged-out surface X still operates; with TWITTER_BEARER_TOKEN set it uses the official API instead and adds retweet, quote and impression counts.",
+      "description": "One public post with its text, media and engagement. Served from X's embed CDN, which is the most durable logged-out surface X still operates; with server-side credentials set it uses the official API instead and adds retweet, quote and impression counts.",
       "credits": 1,
       "cacheable": true,
       "batchable": true,
@@ -6935,7 +6935,7 @@
       "action": "user-tweets",
       "path": "/v1/twitter/user-tweets",
       "summary": "Recent posts from an account",
-      "description": "An account's recent public posts. With TWITTER_BEARER_TOKEN this pages through the timeline with real engagement metrics; without one it returns the single page X's embedded timeline exposes (roughly 20 posts, likes and replies only).",
+      "description": "An account's recent public posts. With server-side credentials this pages through the timeline with real engagement metrics; without one it returns the single page X's embedded timeline exposes (roughly 20 posts, likes and replies only).",
       "credits": 1,
       "cacheable": true,
       "batchable": true,

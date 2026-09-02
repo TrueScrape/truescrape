@@ -82,6 +82,7 @@ export function metaLine(envelope: Envelope): string {
   else if (isEmptyData(envelope.data)) parts.push('empty');
   else parts.push('live fetch');
   if (typeof meta.durationMs === 'number') parts.push(`${meta.durationMs} ms`);
+  if (typeof meta.creditsRemaining === 'number') parts.push(`${meta.creditsRemaining} remaining`);
   if (meta.requestId) parts.push(meta.requestId);
   if (envelope.pagination?.hasMore && envelope.pagination.cursor) parts.push(`more: --cursor ${envelope.pagination.cursor}`);
   return parts.join(' · ');
@@ -120,7 +121,7 @@ export const processStreams: Streams = {
 /** Data to stdout (or a file, printing only its path); the billing line to stderr. */
 export function emit(envelope: Envelope, options: OutputOptions, streams: Streams = processStreams): void {
   const payload = options.envelope
-    ? { data: envelope.data, meta: envelope.meta ?? null, pagination: envelope.pagination ?? null }
+    ? { data: envelope.data, meta: envelope.meta ?? null, pagination: envelope.pagination ?? null, ...(envelope.raw !== undefined ? { raw: envelope.raw } : {}) }
     : envelope.data;
   const text = formatData(payload, options.format, options.pretty);
 
@@ -133,10 +134,23 @@ export function emit(envelope: Envelope, options: OutputOptions, streams: Stream
   if (!options.quiet) streams.stderr(`${paint(metaLine(envelope), options.color, 'dim')}\n`);
 }
 
+/**
+ * The API's own error shape, so an agent reading stderr and an agent reading
+ * an HTTP body learn one format. `requestId` comes from the response header,
+ * which is why it sits beside `error` rather than inside it.
+ */
+export function errorLine(code: string, message: string, details?: unknown, requestId?: string): string {
+  return JSON.stringify({
+    success: false,
+    error: { code, message, ...(details !== undefined ? { details } : {}) },
+    ...(requestId ? { requestId } : {}),
+  });
+}
+
 /** Every failure goes to stderr as one JSON line for pipes, or prose for a person. Returns the exit code. */
 export function reportError(err: unknown, isTTY: boolean, streams: Streams = processStreams, color = false): number {
   if (err instanceof UsageError) {
-    streams.stderr(isTTY ? `${paint('Usage error:', color, 'red')} ${err.message}\n` : `${JSON.stringify({ error: 'usage', message: err.message })}\n`);
+    streams.stderr(isTTY ? `${paint('Usage error:', color, 'red')} ${err.message}\n` : `${errorLine('usage', err.message)}\n`);
     return EXIT.usage;
   }
   if (err instanceof ApiError) {
@@ -144,15 +158,15 @@ export function reportError(err: unknown, isTTY: boolean, streams: Streams = pro
       streams.stderr(`${paint(`Error (${err.code})`, color, 'red')}: ${err.message}${err.requestId ? ` [${err.requestId}]` : ''}\n`);
       if (err.details !== undefined) streams.stderr(`${JSON.stringify(err.details, null, 2)}\n`);
     } else {
-      streams.stderr(`${JSON.stringify({ error: err.code, message: err.message, details: err.details, requestId: err.requestId })}\n`);
+      streams.stderr(`${errorLine(err.code, err.message, err.details, err.requestId)}\n`);
     }
     return EXIT.api;
   }
   if (err instanceof NetworkError) {
-    streams.stderr(isTTY ? `${paint('Network error:', color, 'red')} ${err.message}\n` : `${JSON.stringify({ error: 'network', message: err.message })}\n`);
+    streams.stderr(isTTY ? `${paint('Network error:', color, 'red')} ${err.message}\n` : `${errorLine('network', err.message)}\n`);
     return EXIT.network;
   }
   const message = err instanceof Error ? err.message : String(err);
-  streams.stderr(isTTY ? `${paint('Error:', color, 'red')} ${message}\n` : `${JSON.stringify({ error: 'internal', message })}\n`);
+  streams.stderr(isTTY ? `${paint('Error:', color, 'red')} ${message}\n` : `${errorLine('internal', message)}\n`);
   return EXIT.api;
 }

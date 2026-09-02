@@ -63,6 +63,13 @@ describe('catalogue from the OpenAPI fixture', () => {
     ).toBe('Recent uploads.');
   });
 
+  it('replaces server credential names with a phrase a caller can act on', () => {
+    expect(cleanDescription('Counts need `SOME_SERVICE_TOKEN` to be set.')).toBe('Counts need server-side credentials to be set.');
+    expect(cleanDescription('Needs OTHER_SERVICE_KEY and A_SECRET.')).toBe('Needs server-side credentials and server-side credentials.');
+    expect(cleanDescription('The x-api-key header is yours.')).toBe('The x-api-key header is yours.');
+    for (const e of catalogue.endpoints) expect(e.description, e.path).not.toMatch(/[A-Z]+_(TOKEN|KEY|SECRET)\b/);
+  });
+
   it('carries cost, flags and cross-field constraints', () => {
     const ad = catalogue.endpoints.find((e) => e.credits > 1);
     expect(ad).toBeDefined();

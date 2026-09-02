@@ -26,5 +26,5 @@ jobs:
           branch: catalogue/refresh
           title: 'Refresh the endpoint catalogue'
           commit-message: 'Refresh the endpoint catalogue from the live API'
-          body: 'The live OpenAPI spec changed. This PR regenerates src/catalogue.json and the generated blocks in README.md and the skill.'
+          body: 'The live OpenAPI spec changed. This PR refreshes test/fixtures/openapi.json, src/catalogue.json and the generated blocks in README.md and the skill.'
           delete-branch: true
