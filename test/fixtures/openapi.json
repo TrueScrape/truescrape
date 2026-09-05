@@ -39,7 +39,13 @@
       "name": "inference"
     },
     {
+      "name": "ebay"
+    },
+    {
       "name": "facebook"
+    },
+    {
+      "name": "identity"
     },
     {
       "name": "github"
@@ -72,6 +78,9 @@
       "name": "linktree"
     },
     {
+      "name": "milkshake"
+    },
+    {
       "name": "pillar"
     },
     {
@@ -81,16 +90,28 @@
       "name": "reddit"
     },
     {
+      "name": "redfin"
+    },
+    {
       "name": "rumble"
     },
     {
       "name": "snapchat"
     },
     {
+      "name": "solo"
+    },
+    {
       "name": "soundcloud"
     },
     {
       "name": "spotify"
+    },
+    {
+      "name": "taplink"
+    },
+    {
+      "name": "telegram"
     },
     {
       "name": "threads"
@@ -108,14 +129,318 @@
       "name": "twitter"
     },
     {
+      "name": "walmart"
+    },
+    {
       "name": "youtube"
+    },
+    {
+      "name": "zillow"
     }
   ],
   "paths": {
+    "/v1/amazon/offers": {
+      "get": {
+        "summary": "All seller offers for a product",
+        "description": "Every offer on an Amazon listing — price, seller, condition, Prime eligibility and shipping — alongside the product itself.\n**Cost:** 3 credits per live request.\n**Cache hits cost 0 credits.**\nFailed and empty responses are never charged.",
+        "operationId": "amazon_offers",
+        "tags": [
+          "amazon"
+        ],
+        "x-credit-cost": 3,
+        "x-render-credit-multiplier": 3,
+        "x-cacheable": true,
+        "x-batchable": true,
+        "x-subscribable": true,
+        "parameters": [
+          {
+            "name": "asin",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "description": "Amazon ASIN, e.g. \"B08N5WRWNW\"",
+              "type": "string"
+            }
+          },
+          {
+            "name": "tld",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "description": "Marketplace TLD, default \"com\". One of: com, co.uk, ca, de, es, fr, ie, it, co.jp, co.za, in, cn, com.sg, com.mx, ae, com.br, nl, com.au, com.tr, sa, se, pl",
+              "type": "string"
+            }
+          },
+          {
+            "name": "country_code",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "description": "Best-effort locale hint (ISO 3166-1 alpha-2).",
+              "type": "string"
+            }
+          },
+          {
+            "name": "condition",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "description": "Filter offers to one condition.",
+              "type": "string",
+              "enum": [
+                "new",
+                "used_like_new",
+                "used_very_good",
+                "used_good",
+                "used_acceptable"
+              ]
+            }
+          },
+          {
+            "name": "cache_max_age",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "include_raw",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "security": [
+          {
+            "apiKeyAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "400": {
+            "description": "invalid_request — not charged"
+          },
+          "401": {
+            "description": "missing_api_key / invalid_api_key / revoked_api_key — never a billing error"
+          },
+          "402": {
+            "description": "insufficient_credits — the key is valid, the balance is not"
+          },
+          "429": {
+            "description": "daily_cap_exceeded or upstream_rate_limited — not charged"
+          },
+          "501": {
+            "description": "not_configured — server is missing credentials or proxies"
+          },
+          "502": {
+            "description": "upstream_blocked / upstream_schema_drift — not charged"
+          },
+          "504": {
+            "description": "upstream_timeout — not charged"
+          }
+        }
+      }
+    },
+    "/v1/amazon/product": {
+      "get": {
+        "summary": "Product details",
+        "description": "Public details for one Amazon listing: title, brand, price, availability, rating, specifications and an inline review sample.\n**Cost:** 3 credits per live request.\n**Cache hits cost 0 credits.**\nFailed and empty responses are never charged.",
+        "operationId": "amazon_product",
+        "tags": [
+          "amazon"
+        ],
+        "x-credit-cost": 3,
+        "x-render-credit-multiplier": 3,
+        "x-cacheable": true,
+        "x-batchable": true,
+        "x-subscribable": true,
+        "parameters": [
+          {
+            "name": "asin",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "description": "Amazon ASIN, e.g. \"B08N5WRWNW\"",
+              "type": "string"
+            }
+          },
+          {
+            "name": "tld",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "description": "Marketplace TLD, default \"com\". One of: com, co.uk, ca, de, es, fr, ie, it, co.jp, co.za, in, cn, com.sg, com.mx, ae, com.br, nl, com.au, com.tr, sa, se, pl",
+              "type": "string"
+            }
+          },
+          {
+            "name": "country_code",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "description": "Best-effort locale hint (ISO 3166-1 alpha-2).",
+              "type": "string"
+            }
+          },
+          {
+            "name": "cache_max_age",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "include_raw",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "security": [
+          {
+            "apiKeyAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "400": {
+            "description": "invalid_request — not charged"
+          },
+          "401": {
+            "description": "missing_api_key / invalid_api_key / revoked_api_key — never a billing error"
+          },
+          "402": {
+            "description": "insufficient_credits — the key is valid, the balance is not"
+          },
+          "429": {
+            "description": "daily_cap_exceeded or upstream_rate_limited — not charged"
+          },
+          "501": {
+            "description": "not_configured — server is missing credentials or proxies"
+          },
+          "502": {
+            "description": "upstream_blocked / upstream_schema_drift — not charged"
+          },
+          "504": {
+            "description": "upstream_timeout — not charged"
+          }
+        }
+      }
+    },
+    "/v1/amazon/search": {
+      "get": {
+        "summary": "Search results",
+        "description": "Public Amazon search results for a query: position, price, rating and badges per item.\n**Cost:** 3 credits per live request.\n**Cache hits cost 0 credits.**\nFailed and empty responses are never charged.",
+        "operationId": "amazon_search",
+        "tags": [
+          "amazon"
+        ],
+        "x-credit-cost": 3,
+        "x-render-credit-multiplier": 3,
+        "x-cacheable": true,
+        "x-batchable": true,
+        "x-subscribable": false,
+        "parameters": [
+          {
+            "name": "query",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "description": "Search terms, e.g. \"wireless mouse\"",
+              "type": "string"
+            }
+          },
+          {
+            "name": "tld",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "description": "Marketplace TLD, default \"com\". One of: com, co.uk, ca, de, es, fr, ie, it, co.jp, co.za, in, cn, com.sg, com.mx, ae, com.br, nl, com.au, com.tr, sa, se, pl",
+              "type": "string"
+            }
+          },
+          {
+            "name": "country_code",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "description": "Best-effort locale hint (ISO 3166-1 alpha-2).",
+              "type": "string"
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "default": 1,
+              "type": "number"
+            }
+          },
+          {
+            "name": "cache_max_age",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "include_raw",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "security": [
+          {
+            "apiKeyAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "400": {
+            "description": "invalid_request — not charged"
+          },
+          "401": {
+            "description": "missing_api_key / invalid_api_key / revoked_api_key — never a billing error"
+          },
+          "402": {
+            "description": "insufficient_credits — the key is valid, the balance is not"
+          },
+          "429": {
+            "description": "daily_cap_exceeded or upstream_rate_limited — not charged"
+          },
+          "501": {
+            "description": "not_configured — server is missing credentials or proxies"
+          },
+          "502": {
+            "description": "upstream_blocked / upstream_schema_drift — not charged"
+          },
+          "504": {
+            "description": "upstream_timeout — not charged"
+          }
+        }
+      }
+    },
     "/v1/amazon/shop": {
       "get": {
         "summary": "Amazon Shop page",
-        "description": "A creator's public Amazon storefront: their name, and the product links the page exposes.\n**Cost:** 1 credit per live request.\n**Cache hits cost 0 credits.**\nFailed and empty responses are never charged.",
+        "description": "A creator's public Amazon storefront: their name, the product links the page exposes, and the storefront feed — idea lists (with Amazon's own item count), shoppable videos (id, title, thumbnail and attached ASINs) and shoppable photos. The first request needs no pageToken and already returns the videos embedded on the page. Pass `pagination.cursor` back as `pageToken`, unchanged, with the same shop URL for the next page; a page can carry lists, videos, photos or any mix. A continuation page carries the feed ONLY — Amazon serves it as a fragment with no profile markup, so every identity field (display name, bio, avatar) is null on page two onwards. ASINs are the products the storefront shows attached to an item, which for a long idea list is the first screenful rather than the whole list; `itemCount` is the true total.\n**Cost:** 1 credit per live request.\n**Cache hits cost 0 credits.**\nFailed and empty responses are never charged.",
         "operationId": "amazon_shop",
         "tags": [
           "amazon"
@@ -124,7 +449,6 @@
         "x-render-credit-multiplier": 3,
         "x-cacheable": true,
         "x-batchable": true,
-        "x-requires-residential-proxy": true,
         "x-subscribable": true,
         "parameters": [
           {
@@ -133,6 +457,15 @@
             "required": true,
             "schema": {
               "description": "Storefront URL (https://www.amazon.com/shop/<handle>) or just the handle",
+              "type": "string"
+            }
+          },
+          {
+            "name": "pageToken",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "description": "Opaque page token returned by a previous response for the same shop URL. Pass it back unchanged and do not infer the response type from its value.",
               "type": "string"
             }
           },
@@ -198,7 +531,6 @@
         "x-render-credit-multiplier": 3,
         "x-cacheable": true,
         "x-batchable": true,
-        "x-requires-residential-proxy": false,
         "x-subscribable": true,
         "parameters": [
           {
@@ -225,6 +557,17 @@
             "schema": {
               "type": "boolean"
             }
+          },
+          {
+            "name": "url",
+            "in": "query",
+            "required": false,
+            "deprecated": true,
+            "schema": {
+              "description": "Apple Music album id (1708308989) or a music.apple.com album URL",
+              "type": "string"
+            },
+            "description": "Alias for `id`, accepted for compatibility. Sending both with different values is rejected."
           }
         ],
         "security": [
@@ -272,7 +615,6 @@
         "x-render-credit-multiplier": 3,
         "x-cacheable": true,
         "x-batchable": true,
-        "x-requires-residential-proxy": false,
         "x-subscribable": true,
         "parameters": [
           {
@@ -299,6 +641,17 @@
             "schema": {
               "type": "boolean"
             }
+          },
+          {
+            "name": "url",
+            "in": "query",
+            "required": false,
+            "deprecated": true,
+            "schema": {
+              "description": "Apple Music artist id (159260351) or a music.apple.com artist URL",
+              "type": "string"
+            },
+            "description": "Alias for `id`, accepted for compatibility. Sending both with different values is rejected."
           }
         ],
         "security": [
@@ -346,7 +699,6 @@
         "x-render-credit-multiplier": 3,
         "x-cacheable": true,
         "x-batchable": true,
-        "x-requires-residential-proxy": false,
         "x-subscribable": false,
         "parameters": [
           {
@@ -453,7 +805,6 @@
         "x-render-credit-multiplier": 3,
         "x-cacheable": true,
         "x-batchable": true,
-        "x-requires-residential-proxy": false,
         "x-subscribable": true,
         "parameters": [
           {
@@ -480,6 +831,17 @@
             "schema": {
               "type": "boolean"
             }
+          },
+          {
+            "name": "url",
+            "in": "query",
+            "required": false,
+            "deprecated": true,
+            "schema": {
+              "description": "Apple Music track id (1833328840), a /song/ URL, or an album URL with ?i=<track id>",
+              "type": "string"
+            },
+            "description": "Alias for `id`, accepted for compatibility. Sending both with different values is rejected."
           }
         ],
         "security": [
@@ -527,7 +889,6 @@
         "x-render-credit-multiplier": 3,
         "x-cacheable": true,
         "x-batchable": true,
-        "x-requires-residential-proxy": false,
         "x-subscribable": true,
         "parameters": [
           {
@@ -601,7 +962,6 @@
         "x-render-credit-multiplier": 3,
         "x-cacheable": true,
         "x-batchable": true,
-        "x-requires-residential-proxy": false,
         "x-subscribable": true,
         "parameters": [
           {
@@ -675,7 +1035,6 @@
         "x-render-credit-multiplier": 3,
         "x-cacheable": true,
         "x-batchable": true,
-        "x-requires-residential-proxy": false,
         "x-subscribable": true,
         "parameters": [
           {
@@ -776,7 +1135,6 @@
         "x-render-credit-multiplier": 3,
         "x-cacheable": true,
         "x-batchable": true,
-        "x-requires-residential-proxy": false,
         "x-subscribable": false,
         "x-experimental": true,
         "parameters": [
@@ -786,6 +1144,267 @@
             "required": true,
             "schema": {
               "description": "Public image URL",
+              "type": "string"
+            }
+          },
+          {
+            "name": "cache_max_age",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "include_raw",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "security": [
+          {
+            "apiKeyAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "400": {
+            "description": "invalid_request — not charged"
+          },
+          "401": {
+            "description": "missing_api_key / invalid_api_key / revoked_api_key — never a billing error"
+          },
+          "402": {
+            "description": "insufficient_credits — the key is valid, the balance is not"
+          },
+          "429": {
+            "description": "daily_cap_exceeded or upstream_rate_limited — not charged"
+          },
+          "501": {
+            "description": "not_configured — server is missing credentials or proxies"
+          },
+          "502": {
+            "description": "upstream_blocked / upstream_schema_drift — not charged"
+          },
+          "504": {
+            "description": "upstream_timeout — not charged"
+          }
+        }
+      }
+    },
+    "/v1/ebay/product": {
+      "get": {
+        "summary": "eBay listing details",
+        "description": "Public details for an eBay listing: title, price, condition, seller and an inline sample of reviews.\n**Required:** Pass either `product_id` or `url`.\n**Cost:** 1 credit per live request.\n**Cache hits cost 0 credits.**\nFailed and empty responses are never charged.",
+        "operationId": "ebay_product",
+        "tags": [
+          "ebay"
+        ],
+        "x-credit-cost": 1,
+        "x-render-credit-multiplier": 3,
+        "x-cacheable": true,
+        "x-batchable": true,
+        "x-subscribable": true,
+        "x-experimental": true,
+        "x-parameter-constraints": [
+          "Pass either `product_id` or `url`."
+        ],
+        "parameters": [
+          {
+            "name": "product_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "description": "Numeric eBay item id, e.g. 166619046796",
+              "type": "string"
+            }
+          },
+          {
+            "name": "url",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "description": "eBay listing URL, e.g. https://www.ebay.com/itm/166619046796",
+              "type": "string"
+            }
+          },
+          {
+            "name": "tld",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "description": "eBay marketplace, default com. One of: com, co.uk, com.au, de, ca, fr, it, es, at, ch, com.sg, com.my, ph, ie, pl, nl",
+              "type": "string"
+            }
+          },
+          {
+            "name": "country_code",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "cache_max_age",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "include_raw",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "security": [
+          {
+            "apiKeyAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "400": {
+            "description": "invalid_request — not charged"
+          },
+          "401": {
+            "description": "missing_api_key / invalid_api_key / revoked_api_key — never a billing error"
+          },
+          "402": {
+            "description": "insufficient_credits — the key is valid, the balance is not"
+          },
+          "429": {
+            "description": "daily_cap_exceeded or upstream_rate_limited — not charged"
+          },
+          "501": {
+            "description": "not_configured — server is missing credentials or proxies"
+          },
+          "502": {
+            "description": "upstream_blocked / upstream_schema_drift — not charged"
+          },
+          "504": {
+            "description": "upstream_timeout — not charged"
+          }
+        }
+      }
+    },
+    "/v1/ebay/search": {
+      "get": {
+        "summary": "Search eBay listings",
+        "description": "Public eBay search results for a query, with eBay's own filters and sort orders.\n**Cost:** 1 credit per live request.\n**Cache hits cost 0 credits.**\nFailed and empty responses are never charged.",
+        "operationId": "ebay_search",
+        "tags": [
+          "ebay"
+        ],
+        "x-credit-cost": 1,
+        "x-render-credit-multiplier": 3,
+        "x-cacheable": true,
+        "x-batchable": true,
+        "x-subscribable": false,
+        "x-experimental": true,
+        "parameters": [
+          {
+            "name": "query",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "description": "Search terms, e.g. \"iphone 13\"",
+              "type": "string"
+            }
+          },
+          {
+            "name": "tld",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "description": "eBay marketplace, default com. One of: com, co.uk, com.au, de, ca, fr, it, es, at, ch, com.sg, com.my, ph, ie, pl, nl",
+              "type": "string"
+            }
+          },
+          {
+            "name": "country_code",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "items_per_page",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "sort_by",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "ending_soonest",
+                "newly_listed",
+                "price_lowest",
+                "price_highest",
+                "distance_nearest",
+                "best_match"
+              ]
+            }
+          },
+          {
+            "name": "seller_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "condition",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "description": "Comma list: new, used, open_box, refurbished, for_parts, not_working",
+              "type": "string"
+            }
+          },
+          {
+            "name": "buying_format",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "description": "Comma list: buy_it_now, auction, accepts_offers",
+              "type": "string"
+            }
+          },
+          {
+            "name": "show_only",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "description": "Comma list: returns_accepted, authorized_seller, completed_items, sold_items, sale_items, listed_as_lots, search_in_description, benefits_charity, authenticity_guarantee",
               "type": "string"
             }
           },
@@ -851,7 +1470,6 @@
         "x-render-credit-multiplier": 3,
         "x-cacheable": true,
         "x-batchable": true,
-        "x-requires-residential-proxy": false,
         "x-subscribable": true,
         "parameters": [
           {
@@ -879,6 +1497,112 @@
             "schema": {
               "description": "Reached country used by the fallback scan",
               "default": "US",
+              "type": "string"
+            }
+          },
+          {
+            "name": "cache_max_age",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "include_raw",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "url",
+            "in": "query",
+            "required": false,
+            "deprecated": true,
+            "schema": {
+              "description": "Ad archive id, or an Ad Library URL containing `?id=`",
+              "type": "string"
+            },
+            "description": "Alias for `id`, accepted for compatibility. Sending both with different values is rejected."
+          }
+        ],
+        "security": [
+          {
+            "apiKeyAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "400": {
+            "description": "invalid_request — not charged"
+          },
+          "401": {
+            "description": "missing_api_key / invalid_api_key / revoked_api_key — never a billing error"
+          },
+          "402": {
+            "description": "insufficient_credits — the key is valid, the balance is not"
+          },
+          "429": {
+            "description": "daily_cap_exceeded or upstream_rate_limited — not charged"
+          },
+          "501": {
+            "description": "not_configured — server is missing credentials or proxies"
+          },
+          "502": {
+            "description": "upstream_blocked / upstream_schema_drift — not charged"
+          },
+          "504": {
+            "description": "upstream_timeout — not charged"
+          }
+        }
+      }
+    },
+    "/v1/facebook/ad-library/ad-transcript": {
+      "get": {
+        "summary": "Ad video transcript",
+        "description": "Retrieves a transcript for a single Facebook Ad Library video ad by ID or URL. If Facebook exposes captions for the ad's video, those are used (`source: \"captions\"`). An ad with no video, or a video with no caption track, returns an empty result and is not charged — the same answer every other transcript endpoint gives for the same fact. Credits are only deducted when a transcript is actually returned. Pass `transcribe_fallback=true` to have us transcribe the ad's audio when Facebook publishes no caption track: it adds 10 credits to this call, applies only to videos under 120 seconds, and the surcharge is refunded whenever we did not transcribe. It has to be enabled on this deployment; where it is not, a request carrying it answers `not_configured` (501) and is never charged. `source` says which path produced the text: `captions` for Facebook's own track, `asr` for ours.\n**Required:** Pass exactly one of `id` or `url`.\n**Cost:** 1 credit per live request.\n**Cache hits cost 0 credits.**\nFailed and empty responses are never charged.",
+        "operationId": "facebook_adTranscript",
+        "tags": [
+          "facebook"
+        ],
+        "x-credit-cost": 1,
+        "x-render-credit-multiplier": 3,
+        "x-cacheable": true,
+        "x-batchable": true,
+        "x-subscribable": true,
+        "x-experimental": true,
+        "x-parameter-constraints": [
+          "Pass exactly one of `id` or `url`."
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "description": "Ad archive id, or an Ad Library URL containing `?id=`",
+              "type": "string"
+            }
+          },
+          {
+            "name": "url",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "description": "An Ad Library URL containing `?id=`",
+              "type": "string"
+            }
+          },
+          {
+            "name": "language",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "description": "Preferred caption locale",
               "type": "string"
             }
           },
@@ -944,7 +1668,6 @@
         "x-render-credit-multiplier": 3,
         "x-cacheable": true,
         "x-batchable": true,
-        "x-requires-residential-proxy": false,
         "x-subscribable": false,
         "parameters": [
           {
@@ -1050,7 +1773,6 @@
         "x-render-credit-multiplier": 3,
         "x-cacheable": true,
         "x-batchable": true,
-        "x-requires-residential-proxy": false,
         "x-subscribable": true,
         "parameters": [
           {
@@ -1235,7 +1957,6 @@
         "x-render-credit-multiplier": 3,
         "x-cacheable": true,
         "x-batchable": true,
-        "x-requires-residential-proxy": false,
         "x-subscribable": true,
         "parameters": [
           {
@@ -1422,6 +2143,94 @@
         }
       }
     },
+    "/v1/facebook/city-events": {
+      "get": {
+        "summary": "Get the events of a city",
+        "description": "Public events Facebook is suggesting for a city, from its Events Explore feed — e.g. https://www.facebook.com/events/explore/saint-petersburg-florida/111326725552547. `time` narrows the window to today, this week, or next week; without it Facebook returns whatever it has queued as upcoming, in whatever order it ranks them. Only the first, server-rendered page: host, description and interested-count are not exposed on this listing (only on /v1/facebook/event), and further pages sit behind an authenticated scroll load — `raw.hasMoreBehindCursor` reports whether Facebook says there is more, which this endpoint cannot fetch.\n**Cost:** 1 credit per live request.\n**Cache hits cost 0 credits.**\nFailed and empty responses are never charged.",
+        "operationId": "facebook_cityEvents",
+        "tags": [
+          "facebook"
+        ],
+        "x-credit-cost": 1,
+        "x-render-credit-multiplier": 3,
+        "x-cacheable": true,
+        "x-batchable": true,
+        "x-subscribable": false,
+        "x-experimental": true,
+        "parameters": [
+          {
+            "name": "url",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "description": "Explore URL (\"facebook.com/events/explore/<city-slug>/<id>\") or a bare \"<city-slug>/<id>\" pair",
+              "type": "string"
+            }
+          },
+          {
+            "name": "time",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "description": "Narrow to Facebook's own window. Defaults to all upcoming.",
+              "type": "string",
+              "enum": [
+                "today",
+                "this_week",
+                "next_week"
+              ]
+            }
+          },
+          {
+            "name": "cache_max_age",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "include_raw",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "security": [
+          {
+            "apiKeyAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "400": {
+            "description": "invalid_request — not charged"
+          },
+          "401": {
+            "description": "missing_api_key / invalid_api_key / revoked_api_key — never a billing error"
+          },
+          "402": {
+            "description": "insufficient_credits — the key is valid, the balance is not"
+          },
+          "429": {
+            "description": "daily_cap_exceeded or upstream_rate_limited — not charged"
+          },
+          "501": {
+            "description": "not_configured — server is missing credentials or proxies"
+          },
+          "502": {
+            "description": "upstream_blocked / upstream_schema_drift — not charged"
+          },
+          "504": {
+            "description": "upstream_timeout — not charged"
+          }
+        }
+      }
+    },
     "/v1/facebook/comment-replies": {
       "get": {
         "summary": "Replies to a comment",
@@ -1434,7 +2243,6 @@
         "x-render-credit-multiplier": 3,
         "x-cacheable": true,
         "x-batchable": true,
-        "x-requires-residential-proxy": true,
         "x-subscribable": false,
         "parameters": [
           {
@@ -1517,7 +2325,6 @@
         "x-render-credit-multiplier": 3,
         "x-cacheable": true,
         "x-batchable": true,
-        "x-requires-residential-proxy": true,
         "x-subscribable": true,
         "parameters": [
           {
@@ -1591,7 +2398,6 @@
         "x-render-credit-multiplier": 3,
         "x-cacheable": true,
         "x-batchable": true,
-        "x-requires-residential-proxy": true,
         "x-subscribable": false,
         "parameters": [
           {
@@ -1665,7 +2471,6 @@
         "x-render-credit-multiplier": 3,
         "x-cacheable": true,
         "x-batchable": true,
-        "x-requires-residential-proxy": true,
         "x-subscribable": true,
         "parameters": [
           {
@@ -1739,7 +2544,6 @@
         "x-render-credit-multiplier": 3,
         "x-cacheable": true,
         "x-batchable": true,
-        "x-requires-residential-proxy": true,
         "x-subscribable": true,
         "parameters": [
           {
@@ -1813,7 +2617,6 @@
         "x-render-credit-multiplier": 3,
         "x-cacheable": true,
         "x-batchable": true,
-        "x-requires-residential-proxy": true,
         "x-subscribable": true,
         "parameters": [
           {
@@ -1887,7 +2690,6 @@
         "x-render-credit-multiplier": 3,
         "x-cacheable": true,
         "x-batchable": true,
-        "x-requires-residential-proxy": true,
         "x-subscribable": false,
         "parameters": [
           {
@@ -1961,7 +2763,6 @@
         "x-render-credit-multiplier": 3,
         "x-cacheable": true,
         "x-batchable": true,
-        "x-requires-residential-proxy": true,
         "x-subscribable": false,
         "parameters": [
           {
@@ -2109,7 +2910,6 @@
         "x-render-credit-multiplier": 3,
         "x-cacheable": true,
         "x-batchable": true,
-        "x-requires-residential-proxy": true,
         "x-subscribable": true,
         "parameters": [
           {
@@ -2183,7 +2983,6 @@
         "x-render-credit-multiplier": 3,
         "x-cacheable": true,
         "x-batchable": true,
-        "x-requires-residential-proxy": true,
         "x-subscribable": true,
         "parameters": [
           {
@@ -2257,7 +3056,6 @@
         "x-render-credit-multiplier": 3,
         "x-cacheable": true,
         "x-batchable": true,
-        "x-requires-residential-proxy": true,
         "x-subscribable": true,
         "parameters": [
           {
@@ -2331,7 +3129,6 @@
         "x-render-credit-multiplier": 3,
         "x-cacheable": true,
         "x-batchable": true,
-        "x-requires-residential-proxy": true,
         "x-subscribable": false,
         "parameters": [
           {
@@ -2396,7 +3193,7 @@
     "/v1/facebook/post-transcript": {
       "get": {
         "summary": "Video transcript",
-        "description": "Transcript for a public Facebook video or reel, as one text block plus timed cues. Reads the caption track Facebook publishes for the video — auto-generated when the uploader added none. Videos with captions disabled return an empty result and are not charged.\n**Cost:** 1 credit per live request.\n**Cache hits cost 0 credits.**\nFailed and empty responses are never charged.",
+        "description": "Transcript for a public Facebook video or reel, as one text block plus timed cues. Reads the caption track Facebook publishes for the video — auto-generated when the uploader added none. Videos with captions disabled return an empty result and are not charged. Pass `transcribe_fallback=true` to have us transcribe the audio instead when Facebook publishes no caption track: it adds 10 credits to this call, applies only to videos under 120 seconds, and the surcharge is refunded whenever we did not transcribe — captions turned up, the video was over that limit, or no downloadable video was published. It has to be enabled on this deployment; where it is not, a request carrying it answers `not_configured` (501) and is never charged. `source` says which path produced the text: `captions` for Facebook's own track, `asr` for ours.\n**Cost:** 1 credit per live request.\n**Cache hits cost 0 credits.**\nFailed and empty responses are never charged.",
         "operationId": "facebook_postTranscript",
         "tags": [
           "facebook"
@@ -2405,7 +3202,6 @@
         "x-render-credit-multiplier": 3,
         "x-cacheable": true,
         "x-batchable": true,
-        "x-requires-residential-proxy": true,
         "x-subscribable": true,
         "parameters": [
           {
@@ -2488,7 +3284,6 @@
         "x-render-credit-multiplier": 3,
         "x-cacheable": true,
         "x-batchable": true,
-        "x-requires-residential-proxy": true,
         "x-subscribable": true,
         "parameters": [
           {
@@ -2562,7 +3357,6 @@
         "x-render-credit-multiplier": 3,
         "x-cacheable": true,
         "x-batchable": true,
-        "x-requires-residential-proxy": true,
         "x-subscribable": true,
         "parameters": [
           {
@@ -2636,7 +3430,6 @@
         "x-render-credit-multiplier": 3,
         "x-cacheable": true,
         "x-batchable": true,
-        "x-requires-residential-proxy": true,
         "x-subscribable": true,
         "parameters": [
           {
@@ -2645,6 +3438,97 @@
             "required": true,
             "schema": {
               "description": "Page URL, @handle, slug, or numeric page id",
+              "type": "string"
+            }
+          },
+          {
+            "name": "cache_max_age",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "include_raw",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "security": [
+          {
+            "apiKeyAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "400": {
+            "description": "invalid_request — not charged"
+          },
+          "401": {
+            "description": "missing_api_key / invalid_api_key / revoked_api_key — never a billing error"
+          },
+          "402": {
+            "description": "insufficient_credits — the key is valid, the balance is not"
+          },
+          "429": {
+            "description": "daily_cap_exceeded or upstream_rate_limited — not charged"
+          },
+          "501": {
+            "description": "not_configured — server is missing credentials or proxies"
+          },
+          "502": {
+            "description": "upstream_blocked / upstream_schema_drift — not charged"
+          },
+          "504": {
+            "description": "upstream_timeout — not charged"
+          }
+        }
+      }
+    },
+    "/v1/find-social-profiles": {
+      "get": {
+        "summary": "Find a creator's other social profiles",
+        "description": "Starts from one public profile and reports the other accounts that profile can be shown to own: profiles it links to directly, profiles reached through a recognised link-in-bio page (Linktree, Komi, Pillar, Lnk.Bio, LinkMe), and same-handle accounts on the other supported platforms that link back to the source or share a website only the owner controls. Covers Instagram, TikTok, YouTube, X and Facebook. A same-handle account with no corroboration is reported under `candidates`, never as a profile — the handle matching is a fact handed over, not a claim. There is no search-engine discovery and no display-name matching; neither is evidence of ownership. Every result carries the evidence type it rests on. Each entry in `failures` carries the inner error’s `code` and `message`, so \"we checked and found nothing\" (`upstream_not_found`, `empty_result`) stays distinguishable from \"we could not check\" (`upstream_blocked`, `not_configured`); only the second kind sets `partial`. Not covered: any platform outside the five, and links a creator has not published. An X/Twitter source can only be resolved by same-handle probing, because X exposes no bio links at all to a logged-out caller. The 20-second budget stops the composite scheduling new inner fetches; it does not abort one already in flight, so a slow leg is reported as a timeout while its request finishes unread. Link-in-bio expansion is verified against fixtures only — no channel sampled live from our network published a link-in-bio URL to expand. A `partial: true` answer is cached for the same seven days as a complete one, so pass `cache_max_age=0` to refetch after a transient block rather than being served the gap for a week. Pricing is per source checked: the 10 credits buy the legs this call runs — the starting profile, each link-in-bio page expanded, and each same-handle probe — and a leg listed in `unchecked` is not charged for, so a partial answer costs `ceil(10 x legs answered / legs attempted)` and never more than 10. **Any response with an empty `profiles` AND an empty `candidates` costs nothing at all**, whatever `unchecked` says: an answer carrying no account has delivered nothing to charge for, and the `unchecked` disclosure ships free. When every leg was checked and none carries another account that free answer is an `empty_result`; when nothing beyond the starting profile could be checked it is an error, because \"no other accounts\" would then be a fact we did not establish.\n**Cost:** 10 credits per live request.\n**Cache hits cost 0 credits.**\nFailed and empty responses are never charged.",
+        "operationId": "identity_findSocialProfiles",
+        "tags": [
+          "identity"
+        ],
+        "x-credit-cost": 10,
+        "x-render-credit-multiplier": 3,
+        "x-cacheable": true,
+        "x-batchable": true,
+        "x-subscribable": false,
+        "x-experimental": true,
+        "parameters": [
+          {
+            "name": "platform",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "description": "Platform the handle belongs to. `x` is an alias for `twitter`.",
+              "type": "string",
+              "enum": [
+                "instagram",
+                "tiktok",
+                "youtube",
+                "x",
+                "twitter",
+                "facebook"
+              ]
+            }
+          },
+          {
+            "name": "handle",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "description": "Bare handle (@nasa). YouTube also accepts a UC… channel id. URLs are rejected.",
               "type": "string"
             }
           },
@@ -2710,7 +3594,6 @@
         "x-render-credit-multiplier": 3,
         "x-cacheable": true,
         "x-batchable": true,
-        "x-requires-residential-proxy": false,
         "x-subscribable": true,
         "parameters": [
           {
@@ -2784,7 +3667,6 @@
         "x-render-credit-multiplier": 3,
         "x-cacheable": true,
         "x-batchable": false,
-        "x-requires-residential-proxy": false,
         "x-subscribable": false,
         "parameters": [
           {
@@ -2872,7 +3754,6 @@
         "x-render-credit-multiplier": 3,
         "x-cacheable": true,
         "x-batchable": false,
-        "x-requires-residential-proxy": false,
         "x-subscribable": false,
         "parameters": [
           {
@@ -2969,7 +3850,6 @@
         "x-render-credit-multiplier": 3,
         "x-cacheable": true,
         "x-batchable": true,
-        "x-requires-residential-proxy": false,
         "x-subscribable": true,
         "x-parameter-constraints": [
           "Pass either `handle` or `url`."
@@ -3055,7 +3935,6 @@
         "x-render-credit-multiplier": 3,
         "x-cacheable": true,
         "x-batchable": true,
-        "x-requires-residential-proxy": false,
         "x-subscribable": true,
         "x-parameter-constraints": [
           "Pass either `handle` or `url`."
@@ -3150,7 +4029,6 @@
         "x-render-credit-multiplier": 3,
         "x-cacheable": true,
         "x-batchable": true,
-        "x-requires-residential-proxy": false,
         "x-subscribable": true,
         "x-parameter-constraints": [
           "Pass either `handle` or `url`."
@@ -3245,7 +4123,6 @@
         "x-render-credit-multiplier": 3,
         "x-cacheable": true,
         "x-batchable": true,
-        "x-requires-residential-proxy": false,
         "x-subscribable": true,
         "x-parameter-constraints": [
           "Pass either `handle` or `url`."
@@ -3340,7 +4217,6 @@
         "x-render-credit-multiplier": 3,
         "x-cacheable": true,
         "x-batchable": true,
-        "x-requires-residential-proxy": false,
         "x-subscribable": true,
         "x-parameter-constraints": [
           "Pass either `handle` or `url`."
@@ -3435,7 +4311,6 @@
         "x-render-credit-multiplier": 3,
         "x-cacheable": true,
         "x-batchable": true,
-        "x-requires-residential-proxy": false,
         "x-subscribable": true,
         "parameters": [
           {
@@ -3536,7 +4411,6 @@
         "x-render-credit-multiplier": 3,
         "x-cacheable": true,
         "x-batchable": true,
-        "x-requires-residential-proxy": false,
         "x-subscribable": true,
         "x-parameter-constraints": [
           "Pass either `handle` or `url`."
@@ -3673,7 +4547,6 @@
         "x-render-credit-multiplier": 3,
         "x-cacheable": true,
         "x-batchable": true,
-        "x-requires-residential-proxy": false,
         "x-subscribable": true,
         "parameters": [
           {
@@ -3756,7 +4629,6 @@
         "x-render-credit-multiplier": 3,
         "x-cacheable": true,
         "x-batchable": true,
-        "x-requires-residential-proxy": false,
         "x-subscribable": true,
         "x-parameter-constraints": [
           "Pass either `domain` or `advertiser_id`."
@@ -3861,7 +4733,6 @@
         "x-render-credit-multiplier": 3,
         "x-cacheable": true,
         "x-batchable": true,
-        "x-requires-residential-proxy": false,
         "x-subscribable": false,
         "parameters": [
           {
@@ -3933,10 +4804,431 @@
         }
       }
     },
+    "/v1/google/jobs": {
+      "get": {
+        "summary": "Google Jobs results",
+        "description": "Job postings for a query — title, company, location and the board it was syndicated from. Shares the `/search` anti-bot gate `google.search` already documents; a blocked attempt returns `upstream_blocked` and is not charged.\n**Cost:** 5 credits per live request.\n**Cache hits cost 0 credits.**\nFailed and empty responses are never charged.",
+        "operationId": "google_jobs",
+        "tags": [
+          "google"
+        ],
+        "x-credit-cost": 5,
+        "x-render-credit-multiplier": 3,
+        "x-cacheable": true,
+        "x-batchable": true,
+        "x-subscribable": true,
+        "parameters": [
+          {
+            "name": "query",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "description": "Search query",
+              "type": "string"
+            }
+          },
+          {
+            "name": "tld",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "description": "Google marketplace TLD. One of: com, co.uk, ca, de, es, fr, it, co.jp, in, cn, com.sg, com.mx, ae, com.br, nl, com.au, com.tr, sa, se, pl. Defaults to \"com\".",
+              "default": "com",
+              "type": "string"
+            }
+          },
+          {
+            "name": "country_code",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "description": "Two-letter country code. Sets `gl` when `gl` is not given.",
+              "type": "string"
+            }
+          },
+          {
+            "name": "hl",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "description": "Host language for the results page, e.g. \"en\", \"de\". Defaults to \"en\".",
+              "default": "en",
+              "type": "string"
+            }
+          },
+          {
+            "name": "gl",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "description": "Two-letter country code Google should bias results toward.",
+              "type": "string"
+            }
+          },
+          {
+            "name": "uule",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "description": "Encoded Google location string for precise geo-targeting.",
+              "type": "string"
+            }
+          },
+          {
+            "name": "start",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "description": "0-based result offset.",
+              "type": "number"
+            }
+          },
+          {
+            "name": "cache_max_age",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "include_raw",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "security": [
+          {
+            "apiKeyAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "400": {
+            "description": "invalid_request — not charged"
+          },
+          "401": {
+            "description": "missing_api_key / invalid_api_key / revoked_api_key — never a billing error"
+          },
+          "402": {
+            "description": "insufficient_credits — the key is valid, the balance is not"
+          },
+          "429": {
+            "description": "daily_cap_exceeded or upstream_rate_limited — not charged"
+          },
+          "501": {
+            "description": "not_configured — server is missing credentials or proxies"
+          },
+          "502": {
+            "description": "upstream_blocked / upstream_schema_drift — not charged"
+          },
+          "504": {
+            "description": "upstream_timeout — not charged"
+          }
+        }
+      }
+    },
+    "/v1/google/maps-search": {
+      "get": {
+        "summary": "Google Maps place search",
+        "description": "Business listings near a coordinate — name, address, phone, rating and hours. Google Maps requires JavaScript to render its result list; an unrendered response returns `upstream_blocked` and is not charged, rather than a silent empty success.\n**Cost:** 5 credits per live request.\n**Cache hits cost 0 credits.**\nFailed and empty responses are never charged.",
+        "operationId": "google_mapsSearch",
+        "tags": [
+          "google"
+        ],
+        "x-credit-cost": 5,
+        "x-render-credit-multiplier": 3,
+        "x-cacheable": true,
+        "x-batchable": true,
+        "x-subscribable": false,
+        "parameters": [
+          {
+            "name": "query",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "description": "Search query",
+              "type": "string"
+            }
+          },
+          {
+            "name": "tld",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "description": "Google marketplace TLD. One of: com, co.uk, ca, de, es, fr, it, co.jp, in, cn, com.sg, com.mx, ae, com.br, nl, com.au, com.tr, sa, se, pl. Defaults to \"com\".",
+              "default": "com",
+              "type": "string"
+            }
+          },
+          {
+            "name": "country_code",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "description": "Two-letter country code. Sets `gl` when `gl` is not given.",
+              "type": "string"
+            }
+          },
+          {
+            "name": "hl",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "description": "Host language for the results page, e.g. \"en\", \"de\". Defaults to \"en\".",
+              "default": "en",
+              "type": "string"
+            }
+          },
+          {
+            "name": "gl",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "description": "Two-letter country code Google should bias results toward.",
+              "type": "string"
+            }
+          },
+          {
+            "name": "uule",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "description": "Encoded Google location string for precise geo-targeting.",
+              "type": "string"
+            }
+          },
+          {
+            "name": "start",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "description": "0-based result offset.",
+              "type": "number"
+            }
+          },
+          {
+            "name": "cache_max_age",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "include_raw",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "latitude",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "description": "Latitude of the search centre",
+              "type": "number"
+            }
+          },
+          {
+            "name": "longitude",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "description": "Longitude of the search centre",
+              "type": "number"
+            }
+          }
+        ],
+        "security": [
+          {
+            "apiKeyAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "400": {
+            "description": "invalid_request — not charged"
+          },
+          "401": {
+            "description": "missing_api_key / invalid_api_key / revoked_api_key — never a billing error"
+          },
+          "402": {
+            "description": "insufficient_credits — the key is valid, the balance is not"
+          },
+          "429": {
+            "description": "daily_cap_exceeded or upstream_rate_limited — not charged"
+          },
+          "501": {
+            "description": "not_configured — server is missing credentials or proxies"
+          },
+          "502": {
+            "description": "upstream_blocked / upstream_schema_drift — not charged"
+          },
+          "504": {
+            "description": "upstream_timeout — not charged"
+          }
+        }
+      }
+    },
+    "/v1/google/news": {
+      "get": {
+        "summary": "Google News results",
+        "description": "News articles for a query — title, source, and published time. Shares the `/search` anti-bot gate `google.search` already documents; a blocked attempt returns `upstream_blocked` and is not charged.\n**Cost:** 5 credits per live request.\n**Cache hits cost 0 credits.**\nFailed and empty responses are never charged.",
+        "operationId": "google_news",
+        "tags": [
+          "google"
+        ],
+        "x-credit-cost": 5,
+        "x-render-credit-multiplier": 3,
+        "x-cacheable": true,
+        "x-batchable": true,
+        "x-subscribable": true,
+        "parameters": [
+          {
+            "name": "query",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "description": "Search query",
+              "type": "string"
+            }
+          },
+          {
+            "name": "tld",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "description": "Google marketplace TLD. One of: com, co.uk, ca, de, es, fr, it, co.jp, in, cn, com.sg, com.mx, ae, com.br, nl, com.au, com.tr, sa, se, pl. Defaults to \"com\".",
+              "default": "com",
+              "type": "string"
+            }
+          },
+          {
+            "name": "country_code",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "description": "Two-letter country code. Sets `gl` when `gl` is not given.",
+              "type": "string"
+            }
+          },
+          {
+            "name": "hl",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "description": "Host language for the results page, e.g. \"en\", \"de\". Defaults to \"en\".",
+              "default": "en",
+              "type": "string"
+            }
+          },
+          {
+            "name": "gl",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "description": "Two-letter country code Google should bias results toward.",
+              "type": "string"
+            }
+          },
+          {
+            "name": "uule",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "description": "Encoded Google location string for precise geo-targeting.",
+              "type": "string"
+            }
+          },
+          {
+            "name": "start",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "description": "0-based result offset.",
+              "type": "number"
+            }
+          },
+          {
+            "name": "cache_max_age",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "include_raw",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "tbs",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "description": "Time filter: hour/day/week/month/year, as Google's own `qdr` code.",
+              "type": "string",
+              "enum": [
+                "h",
+                "d",
+                "w",
+                "m",
+                "y"
+              ]
+            }
+          }
+        ],
+        "security": [
+          {
+            "apiKeyAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "400": {
+            "description": "invalid_request — not charged"
+          },
+          "401": {
+            "description": "missing_api_key / invalid_api_key / revoked_api_key — never a billing error"
+          },
+          "402": {
+            "description": "insufficient_credits — the key is valid, the balance is not"
+          },
+          "429": {
+            "description": "daily_cap_exceeded or upstream_rate_limited — not charged"
+          },
+          "501": {
+            "description": "not_configured — server is missing credentials or proxies"
+          },
+          "502": {
+            "description": "upstream_blocked / upstream_schema_drift — not charged"
+          },
+          "504": {
+            "description": "upstream_timeout — not charged"
+          }
+        }
+      }
+    },
     "/v1/google/search": {
       "get": {
         "summary": "Web search results",
-        "description": "Organic Google results for a query. Requires residential proxies or the scraper API — Google refuses a datacenter IP.\n**Cost:** 1 credit per live request.\n**Cache hits cost 0 credits.**\nFailed and empty responses are never charged.",
+        "description": "Organic Google results for a query. Google blocks automated queries harder than any other source here, so this endpoint fails more often than the rest; a blocked attempt returns `upstream_blocked` and is not charged.\n**Cost:** 1 credit per live request.\n**Cache hits cost 0 credits.**\nFailed and empty responses are never charged.",
         "operationId": "google_search",
         "tags": [
           "google"
@@ -3945,7 +5237,6 @@
         "x-render-credit-multiplier": 3,
         "x-cacheable": true,
         "x-batchable": true,
-        "x-requires-residential-proxy": true,
         "x-subscribable": false,
         "parameters": [
           {
@@ -4040,6 +5331,151 @@
         }
       }
     },
+    "/v1/google/shopping": {
+      "get": {
+        "summary": "Google Shopping results",
+        "description": "Shopping tiles for a query — title, price, currency and merchant. Shares the `/search` anti-bot gate `google.search` already documents; a blocked attempt returns `upstream_blocked` and is not charged.\n**Cost:** 5 credits per live request.\n**Cache hits cost 0 credits.**\nFailed and empty responses are never charged.",
+        "operationId": "google_shopping",
+        "tags": [
+          "google"
+        ],
+        "x-credit-cost": 5,
+        "x-render-credit-multiplier": 3,
+        "x-cacheable": true,
+        "x-batchable": true,
+        "x-subscribable": false,
+        "parameters": [
+          {
+            "name": "query",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "description": "Search query",
+              "type": "string"
+            }
+          },
+          {
+            "name": "tld",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "description": "Google marketplace TLD. One of: com, co.uk, ca, de, es, fr, it, co.jp, in, cn, com.sg, com.mx, ae, com.br, nl, com.au, com.tr, sa, se, pl. Defaults to \"com\".",
+              "default": "com",
+              "type": "string"
+            }
+          },
+          {
+            "name": "country_code",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "description": "Two-letter country code. Sets `gl` when `gl` is not given.",
+              "type": "string"
+            }
+          },
+          {
+            "name": "hl",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "description": "Host language for the results page, e.g. \"en\", \"de\". Defaults to \"en\".",
+              "default": "en",
+              "type": "string"
+            }
+          },
+          {
+            "name": "gl",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "description": "Two-letter country code Google should bias results toward.",
+              "type": "string"
+            }
+          },
+          {
+            "name": "uule",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "description": "Encoded Google location string for precise geo-targeting.",
+              "type": "string"
+            }
+          },
+          {
+            "name": "start",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "description": "0-based result offset.",
+              "type": "number"
+            }
+          },
+          {
+            "name": "cache_max_age",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "include_raw",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "tbs",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "description": "Time filter: hour/day/week/month/year, as Google's own `qdr` code.",
+              "type": "string",
+              "enum": [
+                "h",
+                "d",
+                "w",
+                "m",
+                "y"
+              ]
+            }
+          }
+        ],
+        "security": [
+          {
+            "apiKeyAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "400": {
+            "description": "invalid_request — not charged"
+          },
+          "401": {
+            "description": "missing_api_key / invalid_api_key / revoked_api_key — never a billing error"
+          },
+          "402": {
+            "description": "insufficient_credits — the key is valid, the balance is not"
+          },
+          "429": {
+            "description": "daily_cap_exceeded or upstream_rate_limited — not charged"
+          },
+          "501": {
+            "description": "not_configured — server is missing credentials or proxies"
+          },
+          "502": {
+            "description": "upstream_blocked / upstream_schema_drift — not charged"
+          },
+          "504": {
+            "description": "upstream_timeout — not charged"
+          }
+        }
+      }
+    },
     "/v1/instagram/audio-reels": {
       "get": {
         "summary": "Reels using a sound",
@@ -4052,7 +5488,6 @@
         "x-render-credit-multiplier": 3,
         "x-cacheable": true,
         "x-batchable": true,
-        "x-requires-residential-proxy": true,
         "x-subscribable": false,
         "x-experimental": true,
         "parameters": [
@@ -4133,93 +5568,6 @@
         }
       }
     },
-    "/v1/instagram/basic-profile": {
-      "get": {
-        "summary": "Profile by numeric id",
-        "description": "The lightweight profile payload, addressed by numeric user id. Use this when you already hold an id — it skips the handle lookup and returns a smaller object than /v1/instagram/profile, which stays the right call when you have a handle and want everything.\n**Required:** Pass either `handle` or `user_id`.\n**Cost:** 1 credit per live request.\n**Cache hits cost 0 credits.**\nFailed and empty responses are never charged.",
-        "operationId": "instagram_basicProfile",
-        "tags": [
-          "instagram"
-        ],
-        "x-credit-cost": 1,
-        "x-render-credit-multiplier": 3,
-        "x-cacheable": true,
-        "x-batchable": true,
-        "x-requires-residential-proxy": true,
-        "x-subscribable": true,
-        "x-experimental": true,
-        "x-parameter-constraints": [
-          "Pass either `handle` or `user_id`."
-        ],
-        "parameters": [
-          {
-            "name": "handle",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "description": "Handle (@nike), or a full instagram.com profile URL. Optional if `user_id` is given.",
-              "type": "string"
-            }
-          },
-          {
-            "name": "user_id",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "description": "Numeric user id. Skips a lookup — take it from `data.items[].authorId`.",
-              "type": "string"
-            }
-          },
-          {
-            "name": "cache_max_age",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "include_raw",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "boolean"
-            }
-          }
-        ],
-        "security": [
-          {
-            "apiKeyAuth": []
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Success"
-          },
-          "400": {
-            "description": "invalid_request — not charged"
-          },
-          "401": {
-            "description": "missing_api_key / invalid_api_key / revoked_api_key — never a billing error"
-          },
-          "402": {
-            "description": "insufficient_credits — the key is valid, the balance is not"
-          },
-          "429": {
-            "description": "daily_cap_exceeded or upstream_rate_limited — not charged"
-          },
-          "501": {
-            "description": "not_configured — server is missing credentials or proxies"
-          },
-          "502": {
-            "description": "upstream_blocked / upstream_schema_drift — not charged"
-          },
-          "504": {
-            "description": "upstream_timeout — not charged"
-          }
-        }
-      }
-    },
     "/v1/instagram/comment-replies": {
       "get": {
         "summary": "Replies under one comment",
@@ -4232,7 +5580,6 @@
         "x-render-credit-multiplier": 3,
         "x-cacheable": true,
         "x-batchable": false,
-        "x-requires-residential-proxy": true,
         "x-subscribable": true,
         "x-experimental": true,
         "parameters": [
@@ -4334,7 +5681,6 @@
         "x-render-credit-multiplier": 3,
         "x-cacheable": true,
         "x-batchable": true,
-        "x-requires-residential-proxy": true,
         "x-subscribable": false,
         "x-experimental": true,
         "parameters": [
@@ -4432,7 +5778,6 @@
         "x-render-credit-multiplier": 3,
         "x-cacheable": true,
         "x-batchable": true,
-        "x-requires-residential-proxy": true,
         "x-subscribable": true,
         "x-experimental": true,
         "parameters": [
@@ -4507,7 +5852,6 @@
         "x-render-credit-multiplier": 3,
         "x-cacheable": true,
         "x-batchable": true,
-        "x-requires-residential-proxy": true,
         "x-subscribable": false,
         "x-experimental": true,
         "parameters": [
@@ -4582,7 +5926,7 @@
     "/v1/instagram/post": {
       "get": {
         "summary": "Post or reel details",
-        "description": "One public post, reel or carousel with its caption, media URLs and engagement counts. Falls back to Instagram's public embed payload when the web client's persisted query is unavailable, so a Meta client release degrades this rather than breaking it.\n**Cost:** 1 credit per live request.\n**Cache hits cost 0 credits.**\nFailed and empty responses are never charged.",
+        "description": "One public post, reel or carousel with its caption, media URLs and engagement counts. Falls back to Instagram's public embed payload when the web client's persisted query is unavailable, so a Meta client release degrades this rather than breaking it. Play counts arrive in this same request, so there is no second fetch to skip and no play-count parameter to pass.\n**Cost:** 1 credit per live request.\n**Cache hits cost 0 credits.**\nFailed and empty responses are never charged.",
         "operationId": "instagram_post",
         "tags": [
           "instagram"
@@ -4591,7 +5935,6 @@
         "x-render-credit-multiplier": 3,
         "x-cacheable": true,
         "x-batchable": true,
-        "x-requires-residential-proxy": true,
         "x-subscribable": true,
         "x-experimental": true,
         "parameters": [
@@ -4666,7 +6009,6 @@
         "x-render-credit-multiplier": 3,
         "x-cacheable": true,
         "x-batchable": true,
-        "x-requires-residential-proxy": true,
         "x-subscribable": true,
         "x-experimental": true,
         "parameters": [
@@ -4768,7 +6110,80 @@
         "x-render-credit-multiplier": 3,
         "x-cacheable": true,
         "x-batchable": true,
-        "x-requires-residential-proxy": true,
+        "x-subscribable": true,
+        "x-experimental": true,
+        "parameters": [
+          {
+            "name": "handle",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "description": "Handle (@nike), or a full instagram.com profile URL",
+              "type": "string"
+            }
+          },
+          {
+            "name": "cache_max_age",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "include_raw",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "security": [
+          {
+            "apiKeyAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "400": {
+            "description": "invalid_request — not charged"
+          },
+          "401": {
+            "description": "missing_api_key / invalid_api_key / revoked_api_key — never a billing error"
+          },
+          "402": {
+            "description": "insufficient_credits — the key is valid, the balance is not"
+          },
+          "429": {
+            "description": "daily_cap_exceeded or upstream_rate_limited — not charged"
+          },
+          "501": {
+            "description": "not_configured — server is missing credentials or proxies"
+          },
+          "502": {
+            "description": "upstream_blocked / upstream_schema_drift — not charged"
+          },
+          "504": {
+            "description": "upstream_timeout — not charged"
+          }
+        }
+      }
+    },
+    "/v1/instagram/profile-post-count": {
+      "get": {
+        "summary": "Post count for a profile",
+        "description": "The total post count shown on a public Instagram profile, projected from the same fetch /v1/instagram/profile makes — call this when a fuller profile is not needed. Checks both dialects Instagram ships a count in (`edge_owner_to_timeline_media.count` and `media_count`) and reports which one answered in `source`. Instagram does not expose this metadata for every profile: when neither is present, `postCount` is null and the request is not charged.\n**Cost:** 1 credit per live request.\n**Cache hits cost 0 credits.**\nFailed and empty responses are never charged.",
+        "operationId": "instagram_profilePostCount",
+        "tags": [
+          "instagram"
+        ],
+        "x-credit-cost": 1,
+        "x-render-credit-multiplier": 3,
+        "x-cacheable": true,
+        "x-batchable": true,
         "x-subscribable": true,
         "x-experimental": true,
         "parameters": [
@@ -4843,7 +6258,6 @@
         "x-render-credit-multiplier": 3,
         "x-cacheable": true,
         "x-batchable": true,
-        "x-requires-residential-proxy": true,
         "x-subscribable": false,
         "x-experimental": true,
         "parameters": [
@@ -4918,7 +6332,6 @@
         "x-render-credit-multiplier": 3,
         "x-cacheable": true,
         "x-batchable": true,
-        "x-requires-residential-proxy": true,
         "x-subscribable": false,
         "x-experimental": true,
         "parameters": [
@@ -5002,7 +6415,6 @@
         "x-render-credit-multiplier": 3,
         "x-cacheable": true,
         "x-batchable": true,
-        "x-requires-residential-proxy": true,
         "x-subscribable": false,
         "x-experimental": true,
         "parameters": [
@@ -5093,7 +6505,6 @@
         "x-render-credit-multiplier": 3,
         "x-cacheable": true,
         "x-batchable": true,
-        "x-requires-residential-proxy": true,
         "x-subscribable": true,
         "x-experimental": true,
         "parameters": [
@@ -5168,7 +6579,6 @@
         "x-render-credit-multiplier": 3,
         "x-cacheable": true,
         "x-batchable": false,
-        "x-requires-residential-proxy": true,
         "x-subscribable": false,
         "x-experimental": true,
         "parameters": [
@@ -5252,7 +6662,6 @@
         "x-render-credit-multiplier": 3,
         "x-cacheable": true,
         "x-batchable": true,
-        "x-requires-residential-proxy": true,
         "x-subscribable": true,
         "x-experimental": true,
         "parameters": [
@@ -5327,7 +6736,6 @@
         "x-render-credit-multiplier": 3,
         "x-cacheable": true,
         "x-batchable": true,
-        "x-requires-residential-proxy": true,
         "x-subscribable": true,
         "x-experimental": true,
         "x-parameter-constraints": [
@@ -5405,7 +6813,7 @@
     "/v1/instagram/user-posts": {
       "get": {
         "summary": "Posts and reels from a profile",
-        "description": "A profile grid, newest first. The first page comes from the same payload as the profile and is the reliable one; pass `cursor` (and ideally `user_id`) for older pages, which Instagram serves far less consistently to logged-out callers.\n**Cost:** 1 credit per live request.\n**Cache hits cost 0 credits.**\nFailed and empty responses are never charged.",
+        "description": "A profile grid, newest first. Returns ONE PAGE of roughly twelve posts. Instagram gates the paginating surface behind a login, so there is no cursor to follow and none is returned: `hasMore` may be true with `cursor: null`, meaning the account has more posts that a logged-out caller cannot reach. Engagement counts are null here because the grid does not carry them — fetch /v1/instagram/post for a specific post to get likes and comments. `authorHandle` is read per post: a collab or tagged post appears in a profile grid owned by the OTHER account, and this reports the real owner rather than the handle you asked for.\n**Cost:** 1 credit per live request.\n**Cache hits cost 0 credits.**\nFailed and empty responses are never charged.",
         "operationId": "instagram_userPosts",
         "tags": [
           "instagram"
@@ -5414,7 +6822,6 @@
         "x-render-credit-multiplier": 3,
         "x-cacheable": true,
         "x-batchable": true,
-        "x-requires-residential-proxy": true,
         "x-subscribable": true,
         "x-experimental": true,
         "parameters": [
@@ -5469,6 +6876,17 @@
             "schema": {
               "type": "boolean"
             }
+          },
+          {
+            "name": "next_max_id",
+            "in": "query",
+            "required": false,
+            "deprecated": true,
+            "schema": {
+              "description": "`pagination.cursor` from a previous response",
+              "type": "string"
+            },
+            "description": "Alias for `cursor`, accepted for compatibility. Sending both with different values is rejected."
           }
         ],
         "security": [
@@ -5507,7 +6925,7 @@
     "/v1/instagram/user-reels": {
       "get": {
         "summary": "Reels from a profile",
-        "description": "A profile's reels, newest first. Primary path is the reels tab's own feed; if Instagram declines it, this falls back to filtering the profile grid down to clips, so the endpoint degrades in density rather than going dark. `raw.via` says which answered.\n**Required:** Pass either `handle` or `user_id`.\n**Cost:** 1 credit per live request.\n**Cache hits cost 0 credits.**\nFailed and empty responses are never charged.",
+        "description": "A profile's reels, newest first. Primary path is the reels tab's own feed; if Instagram declines it, this falls back to filtering the profile grid down to clips, so the endpoint degrades in density rather than going dark. The fallback returns ONE PAGE and no cursor — the paginating surface is login-gated — and its engagement counts are null, since the grid does not carry them. An account whose grid holds no clips is an empty result, not an error, and is not charged. `raw.source` says which path answered.\n**Required:** Pass either `handle` or `user_id`.\n**Cost:** 1 credit per live request.\n**Cache hits cost 0 credits.**\nFailed and empty responses are never charged.",
         "operationId": "instagram_userReels",
         "tags": [
           "instagram"
@@ -5516,7 +6934,6 @@
         "x-render-credit-multiplier": 3,
         "x-cacheable": true,
         "x-batchable": true,
-        "x-requires-residential-proxy": true,
         "x-subscribable": true,
         "x-experimental": true,
         "x-parameter-constraints": [
@@ -5574,6 +6991,17 @@
             "schema": {
               "type": "boolean"
             }
+          },
+          {
+            "name": "max_id",
+            "in": "query",
+            "required": false,
+            "deprecated": true,
+            "schema": {
+              "description": "`pagination.cursor` from a previous response",
+              "type": "string"
+            },
+            "description": "Alias for `cursor`, accepted for compatibility. Sending both with different values is rejected."
           }
         ],
         "security": [
@@ -5621,7 +7049,6 @@
         "x-render-credit-multiplier": 3,
         "x-cacheable": true,
         "x-batchable": true,
-        "x-requires-residential-proxy": true,
         "x-subscribable": true,
         "x-experimental": true,
         "x-parameter-constraints": [
@@ -5726,7 +7153,6 @@
         "x-render-credit-multiplier": 3,
         "x-cacheable": true,
         "x-batchable": true,
-        "x-requires-residential-proxy": true,
         "x-subscribable": true,
         "parameters": [
           {
@@ -5800,7 +7226,6 @@
         "x-render-credit-multiplier": 3,
         "x-cacheable": true,
         "x-batchable": true,
-        "x-requires-residential-proxy": false,
         "x-subscribable": true,
         "parameters": [
           {
@@ -5874,7 +7299,6 @@
         "x-render-credit-multiplier": 3,
         "x-cacheable": true,
         "x-batchable": true,
-        "x-requires-residential-proxy": true,
         "x-subscribable": true,
         "parameters": [
           {
@@ -5948,7 +7372,6 @@
         "x-render-credit-multiplier": 3,
         "x-cacheable": true,
         "x-batchable": true,
-        "x-requires-residential-proxy": true,
         "x-subscribable": true,
         "parameters": [
           {
@@ -5975,6 +7398,17 @@
             "schema": {
               "type": "boolean"
             }
+          },
+          {
+            "name": "url",
+            "in": "query",
+            "required": false,
+            "deprecated": true,
+            "schema": {
+              "description": "Handle (@carlinhos) or a kwai.com profile URL",
+              "type": "string"
+            },
+            "description": "Alias for `handle`, accepted for compatibility. Sending both with different values is rejected."
           }
         ],
         "security": [
@@ -6022,7 +7456,6 @@
         "x-render-credit-multiplier": 3,
         "x-cacheable": true,
         "x-batchable": true,
-        "x-requires-residential-proxy": true,
         "x-subscribable": true,
         "parameters": [
           {
@@ -6049,6 +7482,17 @@
             "schema": {
               "type": "boolean"
             }
+          },
+          {
+            "name": "url",
+            "in": "query",
+            "required": false,
+            "deprecated": true,
+            "schema": {
+              "description": "Handle (@carlinhos) or a kwai.com profile URL",
+              "type": "string"
+            },
+            "description": "Alias for `handle`, accepted for compatibility. Sending both with different values is rejected."
           }
         ],
         "security": [
@@ -6096,7 +7540,6 @@
         "x-render-credit-multiplier": 3,
         "x-cacheable": true,
         "x-batchable": true,
-        "x-requires-residential-proxy": false,
         "x-subscribable": true,
         "parameters": [
           {
@@ -6170,7 +7613,6 @@
         "x-render-credit-multiplier": 3,
         "x-cacheable": true,
         "x-batchable": true,
-        "x-requires-residential-proxy": false,
         "x-subscribable": true,
         "parameters": [
           {
@@ -6244,7 +7686,6 @@
         "x-render-credit-multiplier": 3,
         "x-cacheable": true,
         "x-batchable": true,
-        "x-requires-residential-proxy": false,
         "x-subscribable": true,
         "x-parameter-constraints": [
           "Pass `company`, `keyword`, or both — the Ad Library will not return an unfiltered archive."
@@ -6357,7 +7798,6 @@
         "x-render-credit-multiplier": 3,
         "x-cacheable": true,
         "x-batchable": true,
-        "x-requires-residential-proxy": true,
         "x-subscribable": true,
         "parameters": [
           {
@@ -6431,7 +7871,6 @@
         "x-render-credit-multiplier": 3,
         "x-cacheable": true,
         "x-batchable": true,
-        "x-requires-residential-proxy": true,
         "x-subscribable": true,
         "parameters": [
           {
@@ -6505,7 +7944,6 @@
         "x-render-credit-multiplier": 3,
         "x-cacheable": true,
         "x-batchable": true,
-        "x-requires-residential-proxy": true,
         "x-subscribable": true,
         "parameters": [
           {
@@ -6579,7 +8017,6 @@
         "x-render-credit-multiplier": 3,
         "x-cacheable": true,
         "x-batchable": true,
-        "x-requires-residential-proxy": true,
         "x-subscribable": true,
         "x-experimental": true,
         "parameters": [
@@ -6654,7 +8091,6 @@
         "x-render-credit-multiplier": 3,
         "x-cacheable": true,
         "x-batchable": true,
-        "x-requires-residential-proxy": true,
         "x-subscribable": true,
         "parameters": [
           {
@@ -6728,7 +8164,6 @@
         "x-render-credit-multiplier": 3,
         "x-cacheable": true,
         "x-batchable": false,
-        "x-requires-residential-proxy": true,
         "x-subscribable": false,
         "x-experimental": true,
         "parameters": [
@@ -6826,7 +8261,6 @@
         "x-render-credit-multiplier": 3,
         "x-cacheable": true,
         "x-batchable": true,
-        "x-requires-residential-proxy": true,
         "x-subscribable": true,
         "parameters": [
           {
@@ -6900,7 +8334,6 @@
         "x-render-credit-multiplier": 3,
         "x-cacheable": true,
         "x-batchable": true,
-        "x-requires-residential-proxy": false,
         "x-subscribable": true,
         "parameters": [
           {
@@ -6909,6 +8342,79 @@
             "required": true,
             "schema": {
               "description": "Page URL (https://linktr.ee/<username>) or just the username",
+              "type": "string"
+            }
+          },
+          {
+            "name": "cache_max_age",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "include_raw",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "security": [
+          {
+            "apiKeyAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "400": {
+            "description": "invalid_request — not charged"
+          },
+          "401": {
+            "description": "missing_api_key / invalid_api_key / revoked_api_key — never a billing error"
+          },
+          "402": {
+            "description": "insufficient_credits — the key is valid, the balance is not"
+          },
+          "429": {
+            "description": "daily_cap_exceeded or upstream_rate_limited — not charged"
+          },
+          "501": {
+            "description": "not_configured — server is missing credentials or proxies"
+          },
+          "502": {
+            "description": "upstream_blocked / upstream_schema_drift — not charged"
+          },
+          "504": {
+            "description": "upstream_timeout — not charged"
+          }
+        }
+      }
+    },
+    "/v1/milkshake": {
+      "get": {
+        "summary": "Milkshake page",
+        "description": "Public Milkshake page as a creator profile: display name, bio, avatar, and every outbound link in order.\n**Cost:** 1 credit per live request.\n**Cache hits cost 0 credits.**\nFailed and empty responses are never charged.",
+        "operationId": "milkshake_page",
+        "tags": [
+          "milkshake"
+        ],
+        "x-credit-cost": 1,
+        "x-render-credit-multiplier": 3,
+        "x-cacheable": true,
+        "x-batchable": true,
+        "x-subscribable": true,
+        "parameters": [
+          {
+            "name": "url",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "description": "Page URL (https://msha.ke/<username>) or just the username",
               "type": "string"
             }
           },
@@ -6974,7 +8480,6 @@
         "x-render-credit-multiplier": 3,
         "x-cacheable": true,
         "x-batchable": true,
-        "x-requires-residential-proxy": true,
         "x-subscribable": true,
         "parameters": [
           {
@@ -7048,7 +8553,6 @@
         "x-render-credit-multiplier": 3,
         "x-cacheable": true,
         "x-batchable": true,
-        "x-requires-residential-proxy": false,
         "x-subscribable": true,
         "parameters": [
           {
@@ -7131,7 +8635,6 @@
         "x-render-credit-multiplier": 3,
         "x-cacheable": true,
         "x-batchable": true,
-        "x-requires-residential-proxy": false,
         "x-subscribable": true,
         "parameters": [
           {
@@ -7205,7 +8708,6 @@
         "x-render-credit-multiplier": 3,
         "x-cacheable": true,
         "x-batchable": true,
-        "x-requires-residential-proxy": false,
         "x-subscribable": false,
         "parameters": [
           {
@@ -7288,7 +8790,6 @@
         "x-render-credit-multiplier": 3,
         "x-cacheable": true,
         "x-batchable": true,
-        "x-requires-residential-proxy": false,
         "x-subscribable": true,
         "parameters": [
           {
@@ -7371,7 +8872,6 @@
         "x-render-credit-multiplier": 3,
         "x-cacheable": true,
         "x-batchable": true,
-        "x-requires-residential-proxy": true,
         "x-subscribable": true,
         "parameters": [
           {
@@ -7445,7 +8945,6 @@
         "x-render-credit-multiplier": 3,
         "x-cacheable": true,
         "x-batchable": true,
-        "x-requires-residential-proxy": true,
         "x-subscribable": true,
         "parameters": [
           {
@@ -7545,7 +9044,6 @@
         "x-render-credit-multiplier": 3,
         "x-cacheable": true,
         "x-batchable": true,
-        "x-requires-residential-proxy": true,
         "x-subscribable": true,
         "parameters": [
           {
@@ -7643,6 +9141,90 @@
         }
       }
     },
+    "/v1/reddit/post/transcript": {
+      "get": {
+        "summary": "Video transcript",
+        "description": "Transcript for a Reddit-hosted video, from a direct v.redd.it URL, a post URL, or a post id. Reddit auto-captions much of its hosted video and publishes the result as a WebVTT file beside the video; this returns it as one text block plus timed cues, with the raw WebVTT in `raw.rawVtt`. English is the only caption language observed. Videos with no caption file return an empty result and are not charged. A caption track Reddit advertises only in segmented form — named by the playlist with no flat `.vtt` beside the video — is reported as `upstream_schema_drift` today and is likewise never charged. Covers Reddit-hosted video only — a post linking to YouTube or another site has no Reddit caption file and returns an empty result. The two input forms take different routes: a `v.redd.it` URL is read straight from the CDN and is verified live, while a post URL or id is first resolved through the public JSON surface, which is blocked from every network position we have measured. Pass the `v.redd.it` URL where you have it.\n**Cost:** 1 credit per live request.\n**Cache hits cost 0 credits.**\nFailed and empty responses are never charged.",
+        "operationId": "reddit_postTranscript",
+        "tags": [
+          "reddit"
+        ],
+        "x-credit-cost": 1,
+        "x-render-credit-multiplier": 3,
+        "x-cacheable": true,
+        "x-batchable": true,
+        "x-subscribable": true,
+        "x-experimental": true,
+        "parameters": [
+          {
+            "name": "url",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "description": "Post URL (reddit.com/r/.../comments/...), a post id, or a v.redd.it URL",
+              "type": "string"
+            }
+          },
+          {
+            "name": "language",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "description": "Preferred caption language. Reddit has only been observed publishing \"en\".",
+              "default": "en",
+              "type": "string"
+            }
+          },
+          {
+            "name": "cache_max_age",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "include_raw",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "security": [
+          {
+            "apiKeyAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "400": {
+            "description": "invalid_request — not charged"
+          },
+          "401": {
+            "description": "missing_api_key / invalid_api_key / revoked_api_key — never a billing error"
+          },
+          "402": {
+            "description": "insufficient_credits — the key is valid, the balance is not"
+          },
+          "429": {
+            "description": "daily_cap_exceeded or upstream_rate_limited — not charged"
+          },
+          "501": {
+            "description": "not_configured — server is missing credentials or proxies"
+          },
+          "502": {
+            "description": "upstream_blocked / upstream_schema_drift — not charged"
+          },
+          "504": {
+            "description": "upstream_timeout — not charged"
+          }
+        }
+      }
+    },
     "/v1/reddit/search": {
       "get": {
         "summary": "Search posts",
@@ -7655,7 +9237,6 @@
         "x-render-credit-multiplier": 3,
         "x-cacheable": true,
         "x-batchable": true,
-        "x-requires-residential-proxy": false,
         "x-subscribable": false,
         "parameters": [
           {
@@ -7742,6 +9323,17 @@
             "schema": {
               "type": "boolean"
             }
+          },
+          {
+            "name": "after",
+            "in": "query",
+            "required": false,
+            "deprecated": true,
+            "schema": {
+              "description": "`pagination.cursor` from a previous response",
+              "type": "string"
+            },
+            "description": "Alias for `cursor`, accepted for compatibility. Sending both with different values is rejected."
           }
         ],
         "security": [
@@ -7789,7 +9381,6 @@
         "x-render-credit-multiplier": 3,
         "x-cacheable": true,
         "x-batchable": true,
-        "x-requires-residential-proxy": true,
         "x-subscribable": false,
         "parameters": [
           {
@@ -7867,6 +9458,17 @@
             "schema": {
               "type": "boolean"
             }
+          },
+          {
+            "name": "after",
+            "in": "query",
+            "required": false,
+            "deprecated": true,
+            "schema": {
+              "description": "`pagination.cursor` from a previous response",
+              "type": "string"
+            },
+            "description": "Alias for `cursor`, accepted for compatibility. Sending both with different values is rejected."
           }
         ],
         "security": [
@@ -7914,7 +9516,6 @@
         "x-render-credit-multiplier": 3,
         "x-cacheable": true,
         "x-batchable": true,
-        "x-requires-residential-proxy": true,
         "x-subscribable": true,
         "parameters": [
           {
@@ -7941,6 +9542,17 @@
             "schema": {
               "type": "boolean"
             }
+          },
+          {
+            "name": "url",
+            "in": "query",
+            "required": false,
+            "deprecated": true,
+            "schema": {
+              "description": "Subreddit name (\"aww\", \"r/aww\") or a full reddit.com/r/... URL",
+              "type": "string"
+            },
+            "description": "Alias for `subreddit`, accepted for compatibility. Sending both with different values is rejected."
           }
         ],
         "security": [
@@ -7988,7 +9600,6 @@
         "x-render-credit-multiplier": 3,
         "x-cacheable": true,
         "x-batchable": true,
-        "x-requires-residential-proxy": true,
         "x-subscribable": true,
         "parameters": [
           {
@@ -8062,7 +9673,6 @@
         "x-render-credit-multiplier": 3,
         "x-cacheable": true,
         "x-batchable": true,
-        "x-requires-residential-proxy": true,
         "x-subscribable": false,
         "parameters": [
           {
@@ -8173,36 +9783,43 @@
         }
       }
     },
-    "/v1/rumble/channel/videos": {
+    "/v1/redfin/agent": {
       "get": {
-        "summary": "Channel videos",
-        "description": "A Rumble channel's public uploads, newest first, 25 per page. Pass the `cursor` from the previous response to page.\n**Cost:** 1 credit per live request.\n**Cache hits cost 0 credits.**\nFailed and empty responses are never charged.",
-        "operationId": "rumble_channelVideos",
+        "summary": "Real estate agent profile",
+        "description": "Public profile for a Redfin agent or partner agent: name, brokerage, contact and bio.\n**Cost:** 1 credit per live request.\n**Cache hits cost 0 credits.**\nFailed and empty responses are never charged.",
+        "operationId": "redfin_agent",
         "tags": [
-          "rumble"
+          "redfin"
         ],
         "x-credit-cost": 1,
         "x-render-credit-multiplier": 3,
         "x-cacheable": true,
         "x-batchable": true,
-        "x-requires-residential-proxy": true,
         "x-subscribable": true,
         "parameters": [
           {
-            "name": "handle",
+            "name": "url",
             "in": "query",
             "required": true,
             "schema": {
-              "description": "Channel handle (Asmongold), c/Handle, user/Handle, or a full rumble.com URL",
+              "description": "Redfin agent or partner-agent profile URL, e.g. https://www.redfin.com/real-estate-agents/the-home-team",
               "type": "string"
             }
           },
           {
-            "name": "cursor",
+            "name": "tld",
             "in": "query",
             "required": false,
             "schema": {
-              "description": "`pagination.cursor` from the previous response",
+              "description": "Redfin marketplace, default com. One of: com, ca",
+              "type": "string"
+            }
+          },
+          {
+            "name": "country_code",
+            "in": "query",
+            "required": false,
+            "schema": {
               "type": "string"
             }
           },
@@ -8256,6 +9873,369 @@
         }
       }
     },
+    "/v1/redfin/for-rent": {
+      "get": {
+        "summary": "For-rent property details",
+        "description": "Public details for one Redfin rental: price (or starting price for a multi-unit building), specs, availability and amenities.\n**Cost:** 1 credit per live request.\n**Cache hits cost 0 credits.**\nFailed and empty responses are never charged.",
+        "operationId": "redfin_forRent",
+        "tags": [
+          "redfin"
+        ],
+        "x-credit-cost": 1,
+        "x-render-credit-multiplier": 3,
+        "x-cacheable": true,
+        "x-batchable": true,
+        "x-subscribable": true,
+        "parameters": [
+          {
+            "name": "url",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "description": "Redfin rental URL, e.g. https://www.redfin.com/CA/San-Francisco/952-Sutter-St-94109/apartment/1594243",
+              "type": "string"
+            }
+          },
+          {
+            "name": "tld",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "description": "Redfin marketplace, default com. One of: com, ca",
+              "type": "string"
+            }
+          },
+          {
+            "name": "country_code",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "cache_max_age",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "include_raw",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "security": [
+          {
+            "apiKeyAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "400": {
+            "description": "invalid_request — not charged"
+          },
+          "401": {
+            "description": "missing_api_key / invalid_api_key / revoked_api_key — never a billing error"
+          },
+          "402": {
+            "description": "insufficient_credits — the key is valid, the balance is not"
+          },
+          "429": {
+            "description": "daily_cap_exceeded or upstream_rate_limited — not charged"
+          },
+          "501": {
+            "description": "not_configured — server is missing credentials or proxies"
+          },
+          "502": {
+            "description": "upstream_blocked / upstream_schema_drift — not charged"
+          },
+          "504": {
+            "description": "upstream_timeout — not charged"
+          }
+        }
+      }
+    },
+    "/v1/redfin/for-sale": {
+      "get": {
+        "summary": "For-sale property details",
+        "description": "Public details for one Redfin for-sale listing: price, specs, agent, price history and nearby schools.\n**Cost:** 1 credit per live request.\n**Cache hits cost 0 credits.**\nFailed and empty responses are never charged.",
+        "operationId": "redfin_forSale",
+        "tags": [
+          "redfin"
+        ],
+        "x-credit-cost": 1,
+        "x-render-credit-multiplier": 3,
+        "x-cacheable": true,
+        "x-batchable": true,
+        "x-subscribable": true,
+        "parameters": [
+          {
+            "name": "url",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "description": "Redfin for-sale listing URL, e.g. https://www.redfin.com/CA/San-Francisco/2040-Laguna-St-94115/unit-201/home/1642558",
+              "type": "string"
+            }
+          },
+          {
+            "name": "tld",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "description": "Redfin marketplace, default com. One of: com, ca",
+              "type": "string"
+            }
+          },
+          {
+            "name": "country_code",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "cache_max_age",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "include_raw",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "security": [
+          {
+            "apiKeyAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "400": {
+            "description": "invalid_request — not charged"
+          },
+          "401": {
+            "description": "missing_api_key / invalid_api_key / revoked_api_key — never a billing error"
+          },
+          "402": {
+            "description": "insufficient_credits — the key is valid, the balance is not"
+          },
+          "429": {
+            "description": "daily_cap_exceeded or upstream_rate_limited — not charged"
+          },
+          "501": {
+            "description": "not_configured — server is missing credentials or proxies"
+          },
+          "502": {
+            "description": "upstream_blocked / upstream_schema_drift — not charged"
+          },
+          "504": {
+            "description": "upstream_timeout — not charged"
+          }
+        }
+      }
+    },
+    "/v1/redfin/search": {
+      "get": {
+        "summary": "Search Redfin listing results",
+        "description": "Public results from a Redfin search or listing-results page URL (a city, zip code or filtered search).\n**Cost:** 1 credit per live request.\n**Cache hits cost 0 credits.**\nFailed and empty responses are never charged.",
+        "operationId": "redfin_search",
+        "tags": [
+          "redfin"
+        ],
+        "x-credit-cost": 1,
+        "x-render-credit-multiplier": 3,
+        "x-cacheable": true,
+        "x-batchable": true,
+        "x-subscribable": false,
+        "parameters": [
+          {
+            "name": "url",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "description": "Redfin search page URL, e.g. https://www.redfin.com/zipcode/94109",
+              "type": "string"
+            }
+          },
+          {
+            "name": "tld",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "description": "Redfin marketplace, default com. One of: com, ca",
+              "type": "string"
+            }
+          },
+          {
+            "name": "country_code",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "cache_max_age",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "include_raw",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "security": [
+          {
+            "apiKeyAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "400": {
+            "description": "invalid_request — not charged"
+          },
+          "401": {
+            "description": "missing_api_key / invalid_api_key / revoked_api_key — never a billing error"
+          },
+          "402": {
+            "description": "insufficient_credits — the key is valid, the balance is not"
+          },
+          "429": {
+            "description": "daily_cap_exceeded or upstream_rate_limited — not charged"
+          },
+          "501": {
+            "description": "not_configured — server is missing credentials or proxies"
+          },
+          "502": {
+            "description": "upstream_blocked / upstream_schema_drift — not charged"
+          },
+          "504": {
+            "description": "upstream_timeout — not charged"
+          }
+        }
+      }
+    },
+    "/v1/rumble/channel/videos": {
+      "get": {
+        "summary": "Channel videos",
+        "description": "A Rumble channel's public uploads, newest first, 25 per page. Pass the `cursor` from the previous response to page.\n**Cost:** 1 credit per live request.\n**Cache hits cost 0 credits.**\nFailed and empty responses are never charged.",
+        "operationId": "rumble_channelVideos",
+        "tags": [
+          "rumble"
+        ],
+        "x-credit-cost": 1,
+        "x-render-credit-multiplier": 3,
+        "x-cacheable": true,
+        "x-batchable": true,
+        "x-subscribable": true,
+        "parameters": [
+          {
+            "name": "handle",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "description": "Channel handle (Asmongold), c/Handle, user/Handle, or a full rumble.com URL",
+              "type": "string"
+            }
+          },
+          {
+            "name": "cursor",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "description": "`pagination.cursor` from the previous response",
+              "type": "string"
+            }
+          },
+          {
+            "name": "cache_max_age",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "include_raw",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "url",
+            "in": "query",
+            "required": false,
+            "deprecated": true,
+            "schema": {
+              "description": "Channel handle (Asmongold), c/Handle, user/Handle, or a full rumble.com URL",
+              "type": "string"
+            },
+            "description": "Alias for `handle`, accepted for compatibility. Sending both with different values is rejected."
+          }
+        ],
+        "security": [
+          {
+            "apiKeyAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "400": {
+            "description": "invalid_request — not charged"
+          },
+          "401": {
+            "description": "missing_api_key / invalid_api_key / revoked_api_key — never a billing error"
+          },
+          "402": {
+            "description": "insufficient_credits — the key is valid, the balance is not"
+          },
+          "429": {
+            "description": "daily_cap_exceeded or upstream_rate_limited — not charged"
+          },
+          "501": {
+            "description": "not_configured — server is missing credentials or proxies"
+          },
+          "502": {
+            "description": "upstream_blocked / upstream_schema_drift — not charged"
+          },
+          "504": {
+            "description": "upstream_timeout — not charged"
+          }
+        }
+      }
+    },
     "/v1/rumble/search": {
       "get": {
         "summary": "Search videos",
@@ -8268,7 +10248,6 @@
         "x-render-credit-multiplier": 3,
         "x-cacheable": true,
         "x-batchable": true,
-        "x-requires-residential-proxy": true,
         "x-subscribable": false,
         "parameters": [
           {
@@ -8365,7 +10344,6 @@
         "x-render-credit-multiplier": 3,
         "x-cacheable": true,
         "x-batchable": true,
-        "x-requires-residential-proxy": true,
         "x-subscribable": true,
         "parameters": [
           {
@@ -8439,7 +10417,6 @@
         "x-render-credit-multiplier": 3,
         "x-cacheable": true,
         "x-batchable": true,
-        "x-requires-residential-proxy": true,
         "x-subscribable": true,
         "parameters": [
           {
@@ -8513,7 +10490,6 @@
         "x-render-credit-multiplier": 3,
         "x-cacheable": true,
         "x-batchable": true,
-        "x-requires-residential-proxy": true,
         "x-subscribable": true,
         "parameters": [
           {
@@ -8596,7 +10572,6 @@
         "x-render-credit-multiplier": 3,
         "x-cacheable": true,
         "x-batchable": true,
-        "x-requires-residential-proxy": true,
         "x-subscribable": true,
         "parameters": [
           {
@@ -8670,7 +10645,6 @@
         "x-render-credit-multiplier": 3,
         "x-cacheable": true,
         "x-batchable": true,
-        "x-requires-residential-proxy": true,
         "x-subscribable": true,
         "parameters": [
           {
@@ -8744,7 +10718,6 @@
         "x-render-credit-multiplier": 3,
         "x-cacheable": true,
         "x-batchable": true,
-        "x-requires-residential-proxy": true,
         "x-subscribable": true,
         "parameters": [
           {
@@ -8753,6 +10726,79 @@
             "required": true,
             "schema": {
               "description": "Spotlight URL (https://www.snapchat.com/spotlight/<id>)",
+              "type": "string"
+            }
+          },
+          {
+            "name": "cache_max_age",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "include_raw",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "security": [
+          {
+            "apiKeyAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "400": {
+            "description": "invalid_request — not charged"
+          },
+          "401": {
+            "description": "missing_api_key / invalid_api_key / revoked_api_key — never a billing error"
+          },
+          "402": {
+            "description": "insufficient_credits — the key is valid, the balance is not"
+          },
+          "429": {
+            "description": "daily_cap_exceeded or upstream_rate_limited — not charged"
+          },
+          "501": {
+            "description": "not_configured — server is missing credentials or proxies"
+          },
+          "502": {
+            "description": "upstream_blocked / upstream_schema_drift — not charged"
+          },
+          "504": {
+            "description": "upstream_timeout — not charged"
+          }
+        }
+      }
+    },
+    "/v1/solo": {
+      "get": {
+        "summary": "Solo page",
+        "description": "Public Solo page as a creator profile: display name, bio, avatar, and every outbound link in order.\n**Cost:** 1 credit per live request.\n**Cache hits cost 0 credits.**\nFailed and empty responses are never charged.",
+        "operationId": "solo_page",
+        "tags": [
+          "solo"
+        ],
+        "x-credit-cost": 1,
+        "x-render-credit-multiplier": 3,
+        "x-cacheable": true,
+        "x-batchable": true,
+        "x-subscribable": true,
+        "parameters": [
+          {
+            "name": "url",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "description": "Page URL (https://solo.to/<username>) or just the username",
               "type": "string"
             }
           },
@@ -8818,7 +10864,6 @@
         "x-render-credit-multiplier": 3,
         "x-cacheable": true,
         "x-batchable": true,
-        "x-requires-residential-proxy": false,
         "x-subscribable": true,
         "parameters": [
           {
@@ -8845,6 +10890,17 @@
             "schema": {
               "type": "boolean"
             }
+          },
+          {
+            "name": "url",
+            "in": "query",
+            "required": false,
+            "deprecated": true,
+            "schema": {
+              "description": "Handle (flume), or a full soundcloud.com profile URL",
+              "type": "string"
+            },
+            "description": "Alias for `handle`, accepted for compatibility. Sending both with different values is rejected."
           }
         ],
         "security": [
@@ -8892,7 +10948,6 @@
         "x-render-credit-multiplier": 3,
         "x-cacheable": true,
         "x-batchable": true,
-        "x-requires-residential-proxy": false,
         "x-subscribable": true,
         "parameters": [
           {
@@ -8937,6 +10992,17 @@
             "schema": {
               "type": "boolean"
             }
+          },
+          {
+            "name": "url",
+            "in": "query",
+            "required": false,
+            "deprecated": true,
+            "schema": {
+              "description": "Handle (flume), or a full soundcloud.com profile URL",
+              "type": "string"
+            },
+            "description": "Alias for `handle`, accepted for compatibility. Sending both with different values is rejected."
           }
         ],
         "security": [
@@ -8984,7 +11050,6 @@
         "x-render-credit-multiplier": 3,
         "x-cacheable": true,
         "x-batchable": true,
-        "x-requires-residential-proxy": false,
         "x-subscribable": true,
         "parameters": [
           {
@@ -9058,7 +11123,6 @@
         "x-render-credit-multiplier": 3,
         "x-cacheable": true,
         "x-batchable": true,
-        "x-requires-residential-proxy": false,
         "x-subscribable": true,
         "parameters": [
           {
@@ -9085,6 +11149,17 @@
             "schema": {
               "type": "boolean"
             }
+          },
+          {
+            "name": "url",
+            "in": "query",
+            "required": false,
+            "deprecated": true,
+            "schema": {
+              "description": "Spotify album id, spotify:album: URI, or open.spotify.com album URL",
+              "type": "string"
+            },
+            "description": "Alias for `id`, accepted for compatibility. Sending both with different values is rejected."
           }
         ],
         "security": [
@@ -9132,7 +11207,6 @@
         "x-render-credit-multiplier": 3,
         "x-cacheable": true,
         "x-batchable": true,
-        "x-requires-residential-proxy": false,
         "x-subscribable": true,
         "parameters": [
           {
@@ -9141,6 +11215,112 @@
             "required": true,
             "schema": {
               "description": "Spotify artist id, spotify:artist: URI, or open.spotify.com artist URL",
+              "type": "string"
+            }
+          },
+          {
+            "name": "cache_max_age",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "include_raw",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "url",
+            "in": "query",
+            "required": false,
+            "deprecated": true,
+            "schema": {
+              "description": "Spotify artist id, spotify:artist: URI, or open.spotify.com artist URL",
+              "type": "string"
+            },
+            "description": "Alias for `id`, accepted for compatibility. Sending both with different values is rejected."
+          }
+        ],
+        "security": [
+          {
+            "apiKeyAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "400": {
+            "description": "invalid_request — not charged"
+          },
+          "401": {
+            "description": "missing_api_key / invalid_api_key / revoked_api_key — never a billing error"
+          },
+          "402": {
+            "description": "insufficient_credits — the key is valid, the balance is not"
+          },
+          "429": {
+            "description": "daily_cap_exceeded or upstream_rate_limited — not charged"
+          },
+          "501": {
+            "description": "not_configured — server is missing credentials or proxies"
+          },
+          "502": {
+            "description": "upstream_blocked / upstream_schema_drift — not charged"
+          },
+          "504": {
+            "description": "upstream_timeout — not charged"
+          }
+        }
+      }
+    },
+    "/v1/spotify/playlist": {
+      "get": {
+        "summary": "Playlist contents",
+        "description": "Public Spotify playlist: name, owner, cover art and the tracks the public embed exposes, up to a cap Spotify enforces server-side (measured 100 items on a 150+ track playlist — see docs/verified-endpoints.md). This does not page through Spotify's Web API, so a playlist longer than that cap is served partially. `cursor` pages the tracks this endpoint already has, 50 per page; it never issues a second upstream request.\n**Required:** Pass exactly one of `id` or `url`.\n**Cost:** 1 credit per live request.\n**Cache hits cost 0 credits.**\nFailed and empty responses are never charged.",
+        "operationId": "spotify_playlist",
+        "tags": [
+          "spotify"
+        ],
+        "x-credit-cost": 1,
+        "x-render-credit-multiplier": 3,
+        "x-cacheable": true,
+        "x-batchable": true,
+        "x-subscribable": true,
+        "x-experimental": true,
+        "x-parameter-constraints": [
+          "Pass exactly one of `id` or `url`."
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "description": "Spotify playlist id, spotify:playlist: URI, or open.spotify.com playlist URL",
+              "type": "string"
+            }
+          },
+          {
+            "name": "url",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "description": "open.spotify.com playlist URL",
+              "type": "string"
+            }
+          },
+          {
+            "name": "cursor",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "description": "Offset into the track list — pass back `pagination.cursor`",
               "type": "string"
             }
           },
@@ -9206,7 +11386,6 @@
         "x-render-credit-multiplier": 3,
         "x-cacheable": true,
         "x-batchable": true,
-        "x-requires-residential-proxy": false,
         "x-subscribable": true,
         "parameters": [
           {
@@ -9243,6 +11422,17 @@
             "schema": {
               "type": "boolean"
             }
+          },
+          {
+            "name": "url",
+            "in": "query",
+            "required": false,
+            "deprecated": true,
+            "schema": {
+              "description": "Spotify show id, spotify:show: URI, or open.spotify.com show URL",
+              "type": "string"
+            },
+            "description": "Alias for `id`, accepted for compatibility. Sending both with different values is rejected."
           }
         ],
         "security": [
@@ -9290,7 +11480,6 @@
         "x-render-credit-multiplier": 3,
         "x-cacheable": true,
         "x-batchable": true,
-        "x-requires-residential-proxy": false,
         "x-subscribable": true,
         "parameters": [
           {
@@ -9345,6 +11534,17 @@
             "schema": {
               "type": "boolean"
             }
+          },
+          {
+            "name": "url",
+            "in": "query",
+            "required": false,
+            "deprecated": true,
+            "schema": {
+              "description": "Spotify show id, spotify:show: URI, or open.spotify.com show URL",
+              "type": "string"
+            },
+            "description": "Alias for `id`, accepted for compatibility. Sending both with different values is rejected."
           }
         ],
         "security": [
@@ -9392,7 +11592,6 @@
         "x-render-credit-multiplier": 3,
         "x-cacheable": true,
         "x-batchable": true,
-        "x-requires-residential-proxy": false,
         "x-subscribable": false,
         "parameters": [
           {
@@ -9501,7 +11700,6 @@
         "x-render-credit-multiplier": 3,
         "x-cacheable": true,
         "x-batchable": true,
-        "x-requires-residential-proxy": false,
         "x-subscribable": true,
         "parameters": [
           {
@@ -9510,6 +11708,321 @@
             "required": true,
             "schema": {
               "description": "Spotify track id, spotify:track: URI, or open.spotify.com track URL",
+              "type": "string"
+            }
+          },
+          {
+            "name": "cache_max_age",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "include_raw",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "url",
+            "in": "query",
+            "required": false,
+            "deprecated": true,
+            "schema": {
+              "description": "Spotify track id, spotify:track: URI, or open.spotify.com track URL",
+              "type": "string"
+            },
+            "description": "Alias for `id`, accepted for compatibility. Sending both with different values is rejected."
+          }
+        ],
+        "security": [
+          {
+            "apiKeyAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "400": {
+            "description": "invalid_request — not charged"
+          },
+          "401": {
+            "description": "missing_api_key / invalid_api_key / revoked_api_key — never a billing error"
+          },
+          "402": {
+            "description": "insufficient_credits — the key is valid, the balance is not"
+          },
+          "429": {
+            "description": "daily_cap_exceeded or upstream_rate_limited — not charged"
+          },
+          "501": {
+            "description": "not_configured — server is missing credentials or proxies"
+          },
+          "502": {
+            "description": "upstream_blocked / upstream_schema_drift — not charged"
+          },
+          "504": {
+            "description": "upstream_timeout — not charged"
+          }
+        }
+      }
+    },
+    "/v1/taplink": {
+      "get": {
+        "summary": "Taplink page",
+        "description": "Public Taplink page as a creator profile: display name, bio, avatar, and every outbound link in order.\n**Cost:** 1 credit per live request.\n**Cache hits cost 0 credits.**\nFailed and empty responses are never charged.",
+        "operationId": "taplink_page",
+        "tags": [
+          "taplink"
+        ],
+        "x-credit-cost": 1,
+        "x-render-credit-multiplier": 3,
+        "x-cacheable": true,
+        "x-batchable": true,
+        "x-subscribable": true,
+        "parameters": [
+          {
+            "name": "url",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "description": "Page URL (https://taplink.cc/<username>) or just the username",
+              "type": "string"
+            }
+          },
+          {
+            "name": "cache_max_age",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "include_raw",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "security": [
+          {
+            "apiKeyAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "400": {
+            "description": "invalid_request — not charged"
+          },
+          "401": {
+            "description": "missing_api_key / invalid_api_key / revoked_api_key — never a billing error"
+          },
+          "402": {
+            "description": "insufficient_credits — the key is valid, the balance is not"
+          },
+          "429": {
+            "description": "daily_cap_exceeded or upstream_rate_limited — not charged"
+          },
+          "501": {
+            "description": "not_configured — server is missing credentials or proxies"
+          },
+          "502": {
+            "description": "upstream_blocked / upstream_schema_drift — not charged"
+          },
+          "504": {
+            "description": "upstream_timeout — not charged"
+          }
+        }
+      }
+    },
+    "/v1/telegram/channel": {
+      "get": {
+        "summary": "Channel",
+        "description": "Public Telegram channel or group metadata including its name, description, avatar, verification status, subscriber or member count, and public media counters. Counts are Telegram's own rounded display values (\"9.66M\"), not exact figures — the original text is in `raw.counters`. Uses Telegram's public web preview and does not use a logged-in Telegram account, so private channels, invite-only groups and user accounts are not covered. An old username still resolves to the channel that took it over, so `handle` here is the header username and may differ from the one inside a post id — join on a post `id`, never on the handle.\n**Cost:** 1 credit per live request.\n**Cache hits cost 0 credits.**\nFailed and empty responses are never charged.",
+        "operationId": "telegram_channel",
+        "tags": [
+          "telegram"
+        ],
+        "x-credit-cost": 1,
+        "x-render-credit-multiplier": 3,
+        "x-cacheable": true,
+        "x-batchable": true,
+        "x-subscribable": true,
+        "x-experimental": true,
+        "parameters": [
+          {
+            "name": "handle",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "description": "Public channel or group username: @telegram, telegram, or https://t.me/telegram",
+              "type": "string"
+            }
+          },
+          {
+            "name": "cache_max_age",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "include_raw",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "security": [
+          {
+            "apiKeyAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "400": {
+            "description": "invalid_request — not charged"
+          },
+          "401": {
+            "description": "missing_api_key / invalid_api_key / revoked_api_key — never a billing error"
+          },
+          "402": {
+            "description": "insufficient_credits — the key is valid, the balance is not"
+          },
+          "429": {
+            "description": "daily_cap_exceeded or upstream_rate_limited — not charged"
+          },
+          "501": {
+            "description": "not_configured — server is missing credentials or proxies"
+          },
+          "502": {
+            "description": "upstream_blocked / upstream_schema_drift — not charged"
+          },
+          "504": {
+            "description": "upstream_timeout — not charged"
+          }
+        }
+      }
+    },
+    "/v1/telegram/channel-posts": {
+      "get": {
+        "summary": "Channel posts",
+        "description": "One public web-preview page of Telegram posts with text, publish date, views, reactions when exposed, forwards, media (photos and the playable video file), and link previews. Twenty posts per page, newest first. Pass the returned cursor to fetch the previous page. Empty and terminal pages are not charged. `viewCount` is Telegram's own rounded display value (\"1.37M\" → 1370000), not an exact count; the original text is in `raw.messages[].viewsText`. Reactions, the forward source and the link preview are under `raw`; the unified schema has no field for them. A post `id` carries the CANONICAL username of the channel, which differs from the one you asked for when an old username still resolves to it — join on `id`, not on the handle you passed.\n**Cost:** 1 credit per live request.\n**Cache hits cost 0 credits.**\nFailed and empty responses are never charged.",
+        "operationId": "telegram_channelPosts",
+        "tags": [
+          "telegram"
+        ],
+        "x-credit-cost": 1,
+        "x-render-credit-multiplier": 3,
+        "x-cacheable": true,
+        "x-batchable": true,
+        "x-subscribable": true,
+        "x-experimental": true,
+        "parameters": [
+          {
+            "name": "handle",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "description": "Public channel or group username: @telegram, telegram, or https://t.me/telegram",
+              "type": "string"
+            }
+          },
+          {
+            "name": "cursor",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "description": "`pagination.cursor` from a previous response",
+              "type": "string"
+            }
+          },
+          {
+            "name": "cache_max_age",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "include_raw",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "security": [
+          {
+            "apiKeyAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "400": {
+            "description": "invalid_request — not charged"
+          },
+          "401": {
+            "description": "missing_api_key / invalid_api_key / revoked_api_key — never a billing error"
+          },
+          "402": {
+            "description": "insufficient_credits — the key is valid, the balance is not"
+          },
+          "429": {
+            "description": "daily_cap_exceeded or upstream_rate_limited — not charged"
+          },
+          "501": {
+            "description": "not_configured — server is missing credentials or proxies"
+          },
+          "502": {
+            "description": "upstream_blocked / upstream_schema_drift — not charged"
+          },
+          "504": {
+            "description": "upstream_timeout — not charged"
+          }
+        }
+      }
+    },
+    "/v1/telegram/post": {
+      "get": {
+        "summary": "Post",
+        "description": "A single public Telegram post with its text, publish date, views, reactions when exposed, forward source, media (photos and the playable video file), and link preview. `viewCount` is Telegram's own rounded display value (\"1.37M\" → 1370000), not an exact count; the original text is in `raw.viewsText`. Reactions, the forward source and the link preview are under `raw`. Reads the public post embed and does not use a logged-in Telegram account.\n**Cost:** 1 credit per live request.\n**Cache hits cost 0 credits.**\nFailed and empty responses are never charged.",
+        "operationId": "telegram_post",
+        "tags": [
+          "telegram"
+        ],
+        "x-credit-cost": 1,
+        "x-render-credit-multiplier": 3,
+        "x-cacheable": true,
+        "x-batchable": true,
+        "x-subscribable": true,
+        "x-experimental": true,
+        "parameters": [
+          {
+            "name": "url",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "description": "Post link: https://t.me/<handle>/<message id>, for example https://t.me/telegram/441",
               "type": "string"
             }
           },
@@ -9575,7 +12088,6 @@
         "x-render-credit-multiplier": 3,
         "x-cacheable": true,
         "x-batchable": true,
-        "x-requires-residential-proxy": false,
         "x-subscribable": true,
         "parameters": [
           {
@@ -9649,7 +12161,6 @@
         "x-render-credit-multiplier": 3,
         "x-cacheable": true,
         "x-batchable": true,
-        "x-requires-residential-proxy": false,
         "x-subscribable": true,
         "parameters": [
           {
@@ -9723,7 +12234,6 @@
         "x-render-credit-multiplier": 3,
         "x-cacheable": true,
         "x-batchable": true,
-        "x-requires-residential-proxy": true,
         "x-subscribable": false,
         "parameters": [
           {
@@ -9797,7 +12307,6 @@
         "x-render-credit-multiplier": 3,
         "x-cacheable": true,
         "x-batchable": true,
-        "x-requires-residential-proxy": true,
         "x-subscribable": false,
         "parameters": [
           {
@@ -9871,7 +12380,6 @@
         "x-render-credit-multiplier": 3,
         "x-cacheable": true,
         "x-batchable": true,
-        "x-requires-residential-proxy": false,
         "x-subscribable": true,
         "parameters": [
           {
@@ -9880,6 +12388,181 @@
             "required": true,
             "schema": {
               "description": "Handle (@zuck) or a threads.com profile URL",
+              "type": "string"
+            }
+          },
+          {
+            "name": "cache_max_age",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "include_raw",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "security": [
+          {
+            "apiKeyAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "400": {
+            "description": "invalid_request — not charged"
+          },
+          "401": {
+            "description": "missing_api_key / invalid_api_key / revoked_api_key — never a billing error"
+          },
+          "402": {
+            "description": "insufficient_credits — the key is valid, the balance is not"
+          },
+          "429": {
+            "description": "daily_cap_exceeded or upstream_rate_limited — not charged"
+          },
+          "501": {
+            "description": "not_configured — server is missing credentials or proxies"
+          },
+          "502": {
+            "description": "upstream_blocked / upstream_schema_drift — not charged"
+          },
+          "504": {
+            "description": "upstream_timeout — not charged"
+          }
+        }
+      }
+    },
+    "/v1/tiktok/ad-library/ad": {
+      "get": {
+        "summary": "One TikTok ad",
+        "description": "One TikTok ad by id or URL. Two public surfaces carry ads and an id alone does not say which: Creative Center Top Ads (ads.tiktok.com) is checked first, then the Commercial Content Library (library.tiktok.com). Pass a URL from either and only that source is queried. Both return the same `Ad` shape; fields a source does not publish are null rather than inferred - Top Ads carries no flight dates or advertiser entity, and the library carries no performance metrics. `countries` here is the ad's own targeting, unlike a search result's, where it is the market that was searched. An id neither source knows is a 404; an id that only one source could be asked about is not, because a source that did not answer has not said no. Reach bands stay in `raw`, not in the impressions fields, because reach is not impressions.\n**Cost:** 1 credit per live request.\n**Cache hits cost 0 credits.**\nFailed and empty responses are never charged.",
+        "operationId": "tiktok_adLibraryAd",
+        "tags": [
+          "tiktok"
+        ],
+        "x-credit-cost": 1,
+        "x-render-credit-multiplier": 3,
+        "x-cacheable": true,
+        "x-batchable": true,
+        "x-subscribable": true,
+        "x-experimental": true,
+        "parameters": [
+          {
+            "name": "ad_id",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "description": "Numeric ad id, a library.tiktok.com `/ads/detail?ad_id=` URL, or an ads.tiktok.com Top Ads URL",
+              "type": "string"
+            }
+          },
+          {
+            "name": "cache_max_age",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "include_raw",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "security": [
+          {
+            "apiKeyAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "400": {
+            "description": "invalid_request — not charged"
+          },
+          "401": {
+            "description": "missing_api_key / invalid_api_key / revoked_api_key — never a billing error"
+          },
+          "402": {
+            "description": "insufficient_credits — the key is valid, the balance is not"
+          },
+          "429": {
+            "description": "daily_cap_exceeded or upstream_rate_limited — not charged"
+          },
+          "501": {
+            "description": "not_configured — server is missing credentials or proxies"
+          },
+          "502": {
+            "description": "upstream_blocked / upstream_schema_drift — not charged"
+          },
+          "504": {
+            "description": "upstream_timeout — not charged"
+          }
+        }
+      }
+    },
+    "/v1/tiktok/ad-library/search": {
+      "get": {
+        "summary": "Search the TikTok Ads Library",
+        "description": "Ads in TikTok's public Commercial Content Library, by keyword (`query`) or by advertiser (`advertiser_name`). An advertiser name is resolved through TikTok's own typeahead first, then searched as an entity, so it matches the registered legal name (\"NIKE Retail B.V.\") rather than a brand. Results are NOT global: TikTok publishes this archive per market and refuses a search without one, so `region` is required, validated against the market list the library itself publishes rather than a fixed list here, and every result ran in that market — which is what each ad's `countries` reports. TikTok returns its own relevance ranking; we ask for the most recently shown first, but that is only a tiebreak within it, so results are not ordered by date. Cursor-paginated 12 at a time, each ad carrying its public library.tiktok.com detail URL. Pages are not guaranteed disjoint: the archive re-ranks live, so an ad can repeat across pages. Political and election ads are outside the archive. Reach is published as a band and is not impressions, so it stays in `raw.estimated_audience` rather than the impressions fields.\n**Cost:** 1 credit per live request.\n**Cache hits cost 0 credits.**\nFailed and empty responses are never charged.",
+        "operationId": "tiktok_adLibrarySearch",
+        "tags": [
+          "tiktok"
+        ],
+        "x-credit-cost": 1,
+        "x-render-credit-multiplier": 3,
+        "x-cacheable": true,
+        "x-batchable": false,
+        "x-subscribable": true,
+        "x-experimental": true,
+        "parameters": [
+          {
+            "name": "query",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "description": "Keyword, matched against ad text and advertiser name",
+              "type": "string"
+            }
+          },
+          {
+            "name": "advertiser_name",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "description": "Advertiser name, resolved through TikTok's typeahead to one advertiser entity",
+              "type": "string"
+            }
+          },
+          {
+            "name": "region",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "description": "Market to search. TikTok publishes this archive per market; one of AT, BE, BG, CH, CY, CZ, DE, DK, EE, ES, FI, FR, GB, GR, HR, HU, IE, IS, IT, LI, LT, LU, LV, MT, NL, NO, PL, PT, RO, SE, SI, SK, TR.",
+              "type": "string"
+            }
+          },
+          {
+            "name": "cursor",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "description": "`pagination.cursor` from a previous response",
               "type": "string"
             }
           },
@@ -9945,7 +12628,6 @@
         "x-render-credit-multiplier": 3,
         "x-cacheable": true,
         "x-batchable": true,
-        "x-requires-residential-proxy": true,
         "x-subscribable": true,
         "x-experimental": true,
         "x-parameter-constraints": [
@@ -10050,7 +12732,6 @@
         "x-render-credit-multiplier": 3,
         "x-cacheable": true,
         "x-batchable": true,
-        "x-requires-residential-proxy": true,
         "x-subscribable": true,
         "x-experimental": true,
         "parameters": [
@@ -10152,7 +12833,6 @@
         "x-render-credit-multiplier": 3,
         "x-cacheable": true,
         "x-batchable": true,
-        "x-requires-residential-proxy": true,
         "x-subscribable": true,
         "x-experimental": true,
         "parameters": [
@@ -10245,7 +12925,6 @@
         "x-render-credit-multiplier": 3,
         "x-cacheable": true,
         "x-batchable": true,
-        "x-requires-residential-proxy": true,
         "x-subscribable": false,
         "x-experimental": true,
         "parameters": [
@@ -10368,7 +13047,6 @@
         "x-render-credit-multiplier": 3,
         "x-cacheable": true,
         "x-batchable": true,
-        "x-requires-residential-proxy": true,
         "x-subscribable": true,
         "x-experimental": true,
         "parameters": [
@@ -10461,7 +13139,6 @@
         "x-render-credit-multiplier": 3,
         "x-cacheable": true,
         "x-batchable": true,
-        "x-requires-residential-proxy": true,
         "x-subscribable": true,
         "x-experimental": true,
         "parameters": [
@@ -10554,7 +13231,6 @@
         "x-render-credit-multiplier": 3,
         "x-cacheable": true,
         "x-batchable": true,
-        "x-requires-residential-proxy": true,
         "x-subscribable": true,
         "x-experimental": true,
         "parameters": [
@@ -10629,7 +13305,6 @@
         "x-render-credit-multiplier": 3,
         "x-cacheable": true,
         "x-batchable": true,
-        "x-requires-residential-proxy": true,
         "x-subscribable": false,
         "x-experimental": true,
         "parameters": [
@@ -10713,7 +13388,7 @@
     "/v1/tiktok/live": {
       "get": {
         "summary": "Live stream info",
-        "description": "Details of a creator's stream while they are live: room id, title, cover, current viewers and start time. A creator who is not live returns `empty_result`, which is a real answer and costs nothing — that makes this usable as a cheap \"are they live?\" poll.\n**Cost:** 1 credit per live request.\n**Cache hits cost 0 credits.**\nFailed and empty responses are never charged.",
+        "description": "Details of a creator's stream while they are live: room id, title, cover, current viewers and start time. A creator who is not live returns `empty_result`, which is a real answer and costs nothing — that makes this usable as a cheap \"are they live?\" poll. Pass `room_id` (from a previous response's `roomId`) to look the room up directly on TikTok's own webcast surface — no third-party provider is involved. On the `room_id` path `handle` may come back empty if the webcast payload omits the room owner.\n**Required:** Pass either `handle` or `room_id`.\n**Cost:** 1 credit per live request.\n**Cache hits cost 0 credits.**\nFailed and empty responses are never charged.",
         "operationId": "tiktok_live",
         "tags": [
           "tiktok"
@@ -10722,16 +13397,27 @@
         "x-render-credit-multiplier": 3,
         "x-cacheable": true,
         "x-batchable": true,
-        "x-requires-residential-proxy": true,
-        "x-subscribable": true,
+        "x-subscribable": false,
         "x-experimental": true,
+        "x-parameter-constraints": [
+          "Pass either `handle` or `room_id`."
+        ],
         "parameters": [
           {
             "name": "handle",
             "in": "query",
-            "required": true,
+            "required": false,
             "schema": {
               "description": "Handle (@nike), or a full tiktok.com profile URL",
+              "type": "string"
+            }
+          },
+          {
+            "name": "room_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "description": "TikTok LIVE room id, e.g. from a previous tiktok.live response's `roomId`",
               "type": "string"
             }
           },
@@ -10797,7 +13483,6 @@
         "x-render-credit-multiplier": 3,
         "x-cacheable": true,
         "x-batchable": true,
-        "x-requires-residential-proxy": true,
         "x-subscribable": true,
         "x-experimental": true,
         "parameters": [
@@ -10890,7 +13575,6 @@
         "x-render-credit-multiplier": 3,
         "x-cacheable": true,
         "x-batchable": true,
-        "x-requires-residential-proxy": true,
         "x-subscribable": true,
         "x-experimental": true,
         "parameters": [
@@ -10983,7 +13667,6 @@
         "x-render-credit-multiplier": 3,
         "x-cacheable": true,
         "x-batchable": true,
-        "x-requires-residential-proxy": true,
         "x-subscribable": true,
         "x-experimental": true,
         "parameters": [
@@ -11067,7 +13750,6 @@
         "x-render-credit-multiplier": 3,
         "x-cacheable": true,
         "x-batchable": true,
-        "x-requires-residential-proxy": true,
         "x-subscribable": true,
         "x-experimental": true,
         "parameters": [
@@ -11142,7 +13824,6 @@
         "x-render-credit-multiplier": 3,
         "x-cacheable": true,
         "x-batchable": true,
-        "x-requires-residential-proxy": true,
         "x-subscribable": true,
         "x-experimental": true,
         "x-parameter-constraints": [
@@ -11229,7 +13910,6 @@
         "x-render-credit-multiplier": 3,
         "x-cacheable": true,
         "x-batchable": true,
-        "x-requires-residential-proxy": true,
         "x-subscribable": false,
         "x-experimental": true,
         "parameters": [
@@ -11354,7 +14034,6 @@
         "x-render-credit-multiplier": 3,
         "x-cacheable": true,
         "x-batchable": true,
-        "x-requires-residential-proxy": true,
         "x-subscribable": false,
         "x-experimental": true,
         "parameters": [
@@ -11429,7 +14108,6 @@
         "x-render-credit-multiplier": 3,
         "x-cacheable": true,
         "x-batchable": true,
-        "x-requires-residential-proxy": true,
         "x-subscribable": false,
         "x-experimental": true,
         "parameters": [
@@ -11522,7 +14200,6 @@
         "x-render-credit-multiplier": 3,
         "x-cacheable": true,
         "x-batchable": true,
-        "x-requires-residential-proxy": true,
         "x-subscribable": false,
         "x-experimental": true,
         "parameters": [
@@ -11615,7 +14292,6 @@
         "x-render-credit-multiplier": 3,
         "x-cacheable": true,
         "x-batchable": true,
-        "x-requires-residential-proxy": true,
         "x-subscribable": true,
         "x-experimental": true,
         "parameters": [
@@ -11717,7 +14393,6 @@
         "x-render-credit-multiplier": 3,
         "x-cacheable": true,
         "x-batchable": true,
-        "x-requires-residential-proxy": true,
         "x-subscribable": true,
         "x-experimental": true,
         "parameters": [
@@ -11819,7 +14494,6 @@
         "x-render-credit-multiplier": 3,
         "x-cacheable": true,
         "x-batchable": true,
-        "x-requires-residential-proxy": true,
         "x-subscribable": false,
         "x-experimental": true,
         "parameters": [
@@ -11921,7 +14595,6 @@
         "x-render-credit-multiplier": 3,
         "x-cacheable": true,
         "x-batchable": true,
-        "x-requires-residential-proxy": true,
         "x-subscribable": true,
         "x-experimental": true,
         "parameters": [
@@ -11996,7 +14669,6 @@
         "x-render-credit-multiplier": 3,
         "x-cacheable": true,
         "x-batchable": true,
-        "x-requires-residential-proxy": true,
         "x-subscribable": false,
         "x-experimental": true,
         "parameters": [
@@ -12089,7 +14761,6 @@
         "x-render-credit-multiplier": 3,
         "x-cacheable": true,
         "x-batchable": true,
-        "x-requires-residential-proxy": true,
         "x-subscribable": false,
         "x-experimental": true,
         "parameters": [
@@ -12197,7 +14868,6 @@
         "x-render-credit-multiplier": 3,
         "x-cacheable": true,
         "x-batchable": true,
-        "x-requires-residential-proxy": true,
         "x-subscribable": true,
         "x-experimental": true,
         "parameters": [
@@ -12281,7 +14951,6 @@
         "x-render-credit-multiplier": 3,
         "x-cacheable": true,
         "x-batchable": true,
-        "x-requires-residential-proxy": true,
         "x-subscribable": false,
         "x-experimental": true,
         "parameters": [
@@ -12366,7 +15035,6 @@
         "x-render-credit-multiplier": 3,
         "x-cacheable": true,
         "x-batchable": true,
-        "x-requires-residential-proxy": true,
         "x-subscribable": true,
         "x-experimental": true,
         "parameters": [
@@ -12412,6 +15080,17 @@
             "schema": {
               "type": "boolean"
             }
+          },
+          {
+            "name": "max_cursor",
+            "in": "query",
+            "required": false,
+            "deprecated": true,
+            "schema": {
+              "description": "`pagination.cursor` from a previous response",
+              "type": "string"
+            },
+            "description": "Alias for `cursor`, accepted for compatibility. Sending both with different values is rejected."
           }
         ],
         "security": [
@@ -12459,7 +15138,6 @@
         "x-render-credit-multiplier": 3,
         "x-cacheable": true,
         "x-batchable": true,
-        "x-requires-residential-proxy": true,
         "x-subscribable": true,
         "x-experimental": true,
         "parameters": [
@@ -12561,7 +15239,6 @@
         "x-render-credit-multiplier": 3,
         "x-cacheable": true,
         "x-batchable": true,
-        "x-requires-residential-proxy": true,
         "x-subscribable": true,
         "x-experimental": true,
         "parameters": [
@@ -12636,7 +15313,6 @@
         "x-render-credit-multiplier": 3,
         "x-cacheable": true,
         "x-batchable": true,
-        "x-requires-residential-proxy": true,
         "x-subscribable": false,
         "x-experimental": true,
         "parameters": [
@@ -12744,7 +15420,6 @@
         "x-render-credit-multiplier": 3,
         "x-cacheable": true,
         "x-batchable": true,
-        "x-requires-residential-proxy": true,
         "x-subscribable": true,
         "parameters": [
           {
@@ -12818,7 +15493,6 @@
         "x-render-credit-multiplier": 3,
         "x-cacheable": true,
         "x-batchable": true,
-        "x-requires-residential-proxy": true,
         "x-subscribable": true,
         "parameters": [
           {
@@ -12892,7 +15566,6 @@
         "x-render-credit-multiplier": 3,
         "x-cacheable": true,
         "x-batchable": true,
-        "x-requires-residential-proxy": true,
         "x-subscribable": true,
         "parameters": [
           {
@@ -13001,7 +15674,6 @@
         "x-render-credit-multiplier": 3,
         "x-cacheable": true,
         "x-batchable": true,
-        "x-requires-residential-proxy": false,
         "x-subscribable": true,
         "parameters": [
           {
@@ -13075,7 +15747,6 @@
         "x-render-credit-multiplier": 3,
         "x-cacheable": true,
         "x-batchable": true,
-        "x-requires-residential-proxy": false,
         "x-subscribable": true,
         "parameters": [
           {
@@ -13149,7 +15820,6 @@
         "x-render-credit-multiplier": 3,
         "x-cacheable": true,
         "x-batchable": true,
-        "x-requires-residential-proxy": false,
         "x-subscribable": false,
         "parameters": [
           {
@@ -13223,7 +15893,6 @@
         "x-render-credit-multiplier": 3,
         "x-cacheable": true,
         "x-batchable": true,
-        "x-requires-residential-proxy": false,
         "x-subscribable": true,
         "parameters": [
           {
@@ -13334,7 +16003,6 @@
         "x-render-credit-multiplier": 3,
         "x-cacheable": true,
         "x-batchable": true,
-        "x-requires-residential-proxy": true,
         "x-subscribable": true,
         "parameters": [
           {
@@ -13408,7 +16076,6 @@
         "x-render-credit-multiplier": 3,
         "x-cacheable": true,
         "x-batchable": true,
-        "x-requires-residential-proxy": true,
         "x-subscribable": false,
         "parameters": [
           {
@@ -13482,7 +16149,6 @@
         "x-render-credit-multiplier": 3,
         "x-cacheable": true,
         "x-batchable": true,
-        "x-requires-residential-proxy": true,
         "x-subscribable": true,
         "parameters": [
           {
@@ -13556,7 +16222,6 @@
         "x-render-credit-multiplier": 3,
         "x-cacheable": true,
         "x-batchable": true,
-        "x-requires-residential-proxy": false,
         "x-subscribable": true,
         "parameters": [
           {
@@ -13630,7 +16295,6 @@
         "x-render-credit-multiplier": 3,
         "x-cacheable": true,
         "x-batchable": true,
-        "x-requires-residential-proxy": false,
         "x-subscribable": true,
         "x-experimental": true,
         "parameters": [
@@ -13714,7 +16378,6 @@
         "x-render-credit-multiplier": 3,
         "x-cacheable": true,
         "x-batchable": true,
-        "x-requires-residential-proxy": true,
         "x-subscribable": true,
         "parameters": [
           {
@@ -13794,6 +16457,423 @@
         }
       }
     },
+    "/v1/walmart/category": {
+      "get": {
+        "summary": "Browse a Walmart category",
+        "description": "Public Walmart category listing: the same shape as `walmart.search`, keyed by category id instead of a query.\n**Cost:** 3 credits per live request.\n**Cache hits cost 0 credits.**\nFailed and empty responses are never charged.",
+        "operationId": "walmart_category",
+        "tags": [
+          "walmart"
+        ],
+        "x-credit-cost": 3,
+        "x-render-credit-multiplier": 3,
+        "x-cacheable": true,
+        "x-batchable": true,
+        "x-subscribable": false,
+        "parameters": [
+          {
+            "name": "category",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "description": "Walmart category id, e.g. \"3944_1089430_37807\"",
+              "type": "string"
+            }
+          },
+          {
+            "name": "tld",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "description": "Walmart marketplace, default com. One of: com, ca",
+              "type": "string"
+            }
+          },
+          {
+            "name": "country_code",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "cache_max_age",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "include_raw",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "security": [
+          {
+            "apiKeyAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "400": {
+            "description": "invalid_request — not charged"
+          },
+          "401": {
+            "description": "missing_api_key / invalid_api_key / revoked_api_key — never a billing error"
+          },
+          "402": {
+            "description": "insufficient_credits — the key is valid, the balance is not"
+          },
+          "429": {
+            "description": "daily_cap_exceeded or upstream_rate_limited — not charged"
+          },
+          "501": {
+            "description": "not_configured — server is missing credentials or proxies"
+          },
+          "502": {
+            "description": "upstream_blocked / upstream_schema_drift — not charged"
+          },
+          "504": {
+            "description": "upstream_timeout — not charged"
+          }
+        }
+      }
+    },
+    "/v1/walmart/product": {
+      "get": {
+        "summary": "Walmart product details",
+        "description": "Public details for a Walmart listing: title, price, availability, seller, ratings, images and specifications, read from the page's own __NEXT_DATA__ payload.\n**Cost:** 3 credits per live request.\n**Cache hits cost 0 credits.**\nFailed and empty responses are never charged.",
+        "operationId": "walmart_product",
+        "tags": [
+          "walmart"
+        ],
+        "x-credit-cost": 3,
+        "x-render-credit-multiplier": 3,
+        "x-cacheable": true,
+        "x-batchable": true,
+        "x-subscribable": true,
+        "parameters": [
+          {
+            "name": "product_id",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "description": "Numeric Walmart item id, the last path segment of an /ip/ URL, e.g. 18210919718",
+              "type": "string"
+            }
+          },
+          {
+            "name": "tld",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "description": "Walmart marketplace, default com. One of: com, ca",
+              "type": "string"
+            }
+          },
+          {
+            "name": "country_code",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "cache_max_age",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "include_raw",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "security": [
+          {
+            "apiKeyAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "400": {
+            "description": "invalid_request — not charged"
+          },
+          "401": {
+            "description": "missing_api_key / invalid_api_key / revoked_api_key — never a billing error"
+          },
+          "402": {
+            "description": "insufficient_credits — the key is valid, the balance is not"
+          },
+          "429": {
+            "description": "daily_cap_exceeded or upstream_rate_limited — not charged"
+          },
+          "501": {
+            "description": "not_configured — server is missing credentials or proxies"
+          },
+          "502": {
+            "description": "upstream_blocked / upstream_schema_drift — not charged"
+          },
+          "504": {
+            "description": "upstream_timeout — not charged"
+          }
+        }
+      }
+    },
+    "/v1/walmart/reviews": {
+      "get": {
+        "summary": "Walmart product reviews",
+        "description": "Paginated customer reviews for a Walmart product, from its dedicated reviews page.\n**Cost:** 3 credits per live request.\n**Cache hits cost 0 credits.**\nFailed and empty responses are never charged.",
+        "operationId": "walmart_reviews",
+        "tags": [
+          "walmart"
+        ],
+        "x-credit-cost": 3,
+        "x-render-credit-multiplier": 3,
+        "x-cacheable": true,
+        "x-batchable": true,
+        "x-subscribable": true,
+        "parameters": [
+          {
+            "name": "product_id",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "description": "Numeric Walmart item id, e.g. 18210919718",
+              "type": "string"
+            }
+          },
+          {
+            "name": "tld",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "description": "Walmart marketplace, default com. One of: com, ca",
+              "type": "string"
+            }
+          },
+          {
+            "name": "country_code",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "relevancy",
+                "helpful",
+                "submission-desc",
+                "submission-asc",
+                "rating-desc",
+                "rating-asc"
+              ]
+            }
+          },
+          {
+            "name": "ratings",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "description": "Comma list of star ratings to include, e.g. \"5,4\"",
+              "type": "string"
+            }
+          },
+          {
+            "name": "verified_purchase",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "cache_max_age",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "include_raw",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "security": [
+          {
+            "apiKeyAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "400": {
+            "description": "invalid_request — not charged"
+          },
+          "401": {
+            "description": "missing_api_key / invalid_api_key / revoked_api_key — never a billing error"
+          },
+          "402": {
+            "description": "insufficient_credits — the key is valid, the balance is not"
+          },
+          "429": {
+            "description": "daily_cap_exceeded or upstream_rate_limited — not charged"
+          },
+          "501": {
+            "description": "not_configured — server is missing credentials or proxies"
+          },
+          "502": {
+            "description": "upstream_blocked / upstream_schema_drift — not charged"
+          },
+          "504": {
+            "description": "upstream_timeout — not charged"
+          }
+        }
+      }
+    },
+    "/v1/walmart/search": {
+      "get": {
+        "summary": "Search Walmart",
+        "description": "Public Walmart search results for a query: position, price, rating and availability per item.\n**Cost:** 3 credits per live request.\n**Cache hits cost 0 credits.**\nFailed and empty responses are never charged.",
+        "operationId": "walmart_search",
+        "tags": [
+          "walmart"
+        ],
+        "x-credit-cost": 3,
+        "x-render-credit-multiplier": 3,
+        "x-cacheable": true,
+        "x-batchable": true,
+        "x-subscribable": false,
+        "parameters": [
+          {
+            "name": "query",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "description": "Search terms, e.g. \"laptop\"",
+              "type": "string"
+            }
+          },
+          {
+            "name": "tld",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "description": "Walmart marketplace, default com. One of: com, ca",
+              "type": "string"
+            }
+          },
+          {
+            "name": "country_code",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "cache_max_age",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "include_raw",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "security": [
+          {
+            "apiKeyAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "400": {
+            "description": "invalid_request — not charged"
+          },
+          "401": {
+            "description": "missing_api_key / invalid_api_key / revoked_api_key — never a billing error"
+          },
+          "402": {
+            "description": "insufficient_credits — the key is valid, the balance is not"
+          },
+          "429": {
+            "description": "daily_cap_exceeded or upstream_rate_limited — not charged"
+          },
+          "501": {
+            "description": "not_configured — server is missing credentials or proxies"
+          },
+          "502": {
+            "description": "upstream_blocked / upstream_schema_drift — not charged"
+          },
+          "504": {
+            "description": "upstream_timeout — not charged"
+          }
+        }
+      }
+    },
     "/v1/youtube/channel": {
       "get": {
         "summary": "Channel details",
@@ -13806,7 +16886,6 @@
         "x-render-credit-multiplier": 3,
         "x-cacheable": true,
         "x-batchable": true,
-        "x-requires-residential-proxy": false,
         "x-subscribable": true,
         "parameters": [
           {
@@ -13880,7 +16959,6 @@
         "x-render-credit-multiplier": 3,
         "x-cacheable": true,
         "x-batchable": true,
-        "x-requires-residential-proxy": false,
         "x-subscribable": true,
         "parameters": [
           {
@@ -13968,7 +17046,6 @@
         "x-render-credit-multiplier": 3,
         "x-cacheable": true,
         "x-batchable": true,
-        "x-requires-residential-proxy": false,
         "x-subscribable": true,
         "parameters": [
           {
@@ -14051,7 +17128,6 @@
         "x-render-credit-multiplier": 3,
         "x-cacheable": true,
         "x-batchable": true,
-        "x-requires-residential-proxy": false,
         "x-subscribable": true,
         "parameters": [
           {
@@ -14134,7 +17210,6 @@
         "x-render-credit-multiplier": 3,
         "x-cacheable": true,
         "x-batchable": true,
-        "x-requires-residential-proxy": false,
         "x-subscribable": true,
         "parameters": [
           {
@@ -14217,7 +17292,6 @@
         "x-render-credit-multiplier": 3,
         "x-cacheable": true,
         "x-batchable": true,
-        "x-requires-residential-proxy": false,
         "x-subscribable": true,
         "parameters": [
           {
@@ -14300,7 +17374,6 @@
         "x-render-credit-multiplier": 3,
         "x-cacheable": true,
         "x-batchable": true,
-        "x-requires-residential-proxy": false,
         "x-subscribable": true,
         "parameters": [
           {
@@ -14374,7 +17447,6 @@
         "x-render-credit-multiplier": 3,
         "x-cacheable": true,
         "x-batchable": true,
-        "x-requires-residential-proxy": false,
         "x-subscribable": true,
         "parameters": [
           {
@@ -14457,7 +17529,6 @@
         "x-render-credit-multiplier": 3,
         "x-cacheable": true,
         "x-batchable": true,
-        "x-requires-residential-proxy": false,
         "x-subscribable": false,
         "parameters": [
           {
@@ -14530,7 +17601,6 @@
         "x-render-credit-multiplier": 3,
         "x-cacheable": true,
         "x-batchable": true,
-        "x-requires-residential-proxy": false,
         "x-subscribable": false,
         "parameters": [
           {
@@ -14626,7 +17696,6 @@
         "x-render-credit-multiplier": 3,
         "x-cacheable": true,
         "x-batchable": true,
-        "x-requires-residential-proxy": false,
         "x-subscribable": false,
         "parameters": [
           {
@@ -14720,7 +17789,6 @@
         "x-render-credit-multiplier": 3,
         "x-cacheable": true,
         "x-batchable": true,
-        "x-requires-residential-proxy": false,
         "x-subscribable": false,
         "parameters": [
           {
@@ -14804,7 +17872,6 @@
         "x-render-credit-multiplier": 3,
         "x-cacheable": true,
         "x-batchable": true,
-        "x-requires-residential-proxy": false,
         "x-subscribable": true,
         "parameters": [
           {
@@ -14887,7 +17954,6 @@
         "x-render-credit-multiplier": 3,
         "x-cacheable": true,
         "x-batchable": true,
-        "x-requires-residential-proxy": false,
         "x-subscribable": true,
         "parameters": [
           {
@@ -14961,7 +18027,6 @@
         "x-render-credit-multiplier": 3,
         "x-cacheable": true,
         "x-batchable": true,
-        "x-requires-residential-proxy": false,
         "x-subscribable": true,
         "x-parameter-constraints": [
           "Pass either `cursor` (from `replyCursors` on /v1/youtube/video/comments), or both `url` and `comment_id`."
@@ -15056,7 +18121,6 @@
         "x-render-credit-multiplier": 3,
         "x-cacheable": true,
         "x-batchable": true,
-        "x-requires-residential-proxy": false,
         "x-subscribable": true,
         "parameters": [
           {
@@ -15152,7 +18216,6 @@
         "x-render-credit-multiplier": 3,
         "x-cacheable": true,
         "x-batchable": true,
-        "x-requires-residential-proxy": false,
         "x-subscribable": true,
         "x-experimental": true,
         "parameters": [
@@ -15163,6 +18226,272 @@
             "schema": {
               "description": "Video URL or 11-character video id",
               "type": "string"
+            }
+          },
+          {
+            "name": "cache_max_age",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "include_raw",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "security": [
+          {
+            "apiKeyAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "400": {
+            "description": "invalid_request — not charged"
+          },
+          "401": {
+            "description": "missing_api_key / invalid_api_key / revoked_api_key — never a billing error"
+          },
+          "402": {
+            "description": "insufficient_credits — the key is valid, the balance is not"
+          },
+          "429": {
+            "description": "daily_cap_exceeded or upstream_rate_limited — not charged"
+          },
+          "501": {
+            "description": "not_configured — server is missing credentials or proxies"
+          },
+          "502": {
+            "description": "upstream_blocked / upstream_schema_drift — not charged"
+          },
+          "504": {
+            "description": "upstream_timeout — not charged"
+          }
+        }
+      }
+    },
+    "/v1/zillow/agent": {
+      "get": {
+        "summary": "Zillow agent profile",
+        "description": "Public Zillow agent/team profile: brokerage, license, rating and review count, where published.\n**Cost:** 1 credit per live request.\n**Cache hits cost 0 credits.**\nFailed and empty responses are never charged.",
+        "operationId": "zillow_agent",
+        "tags": [
+          "zillow"
+        ],
+        "x-credit-cost": 1,
+        "x-render-credit-multiplier": 3,
+        "x-cacheable": true,
+        "x-batchable": true,
+        "x-subscribable": true,
+        "x-experimental": true,
+        "parameters": [
+          {
+            "name": "url",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "description": "Zillow agent profile URL, e.g. https://www.zillow.com/profile/<username>",
+              "type": "string"
+            }
+          },
+          {
+            "name": "cache_max_age",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "include_raw",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "security": [
+          {
+            "apiKeyAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "400": {
+            "description": "invalid_request — not charged"
+          },
+          "401": {
+            "description": "missing_api_key / invalid_api_key / revoked_api_key — never a billing error"
+          },
+          "402": {
+            "description": "insufficient_credits — the key is valid, the balance is not"
+          },
+          "429": {
+            "description": "daily_cap_exceeded or upstream_rate_limited — not charged"
+          },
+          "501": {
+            "description": "not_configured — server is missing credentials or proxies"
+          },
+          "502": {
+            "description": "upstream_blocked / upstream_schema_drift — not charged"
+          },
+          "504": {
+            "description": "upstream_timeout — not charged"
+          }
+        }
+      }
+    },
+    "/v1/zillow/property": {
+      "get": {
+        "summary": "Zillow listing details",
+        "description": "Public details for a Zillow listing: price, status, beds/baths, area, address and an inline photo set.\n**Required:** Pass either `zpid` or `url`.\n**Cost:** 1 credit per live request.\n**Cache hits cost 0 credits.**\nFailed and empty responses are never charged.",
+        "operationId": "zillow_property",
+        "tags": [
+          "zillow"
+        ],
+        "x-credit-cost": 1,
+        "x-render-credit-multiplier": 3,
+        "x-cacheable": true,
+        "x-batchable": true,
+        "x-subscribable": true,
+        "x-parameter-constraints": [
+          "Pass either `zpid` or `url`."
+        ],
+        "parameters": [
+          {
+            "name": "zpid",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "description": "Zillow property id (zpid), e.g. \"120900080\"",
+              "type": "string"
+            }
+          },
+          {
+            "name": "url",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "description": "Zillow listing URL, e.g. https://www.zillow.com/homedetails/<slug>/<zpid>_zpid/",
+              "type": "string"
+            }
+          },
+          {
+            "name": "cache_max_age",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "include_raw",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "security": [
+          {
+            "apiKeyAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "400": {
+            "description": "invalid_request — not charged"
+          },
+          "401": {
+            "description": "missing_api_key / invalid_api_key / revoked_api_key — never a billing error"
+          },
+          "402": {
+            "description": "insufficient_credits — the key is valid, the balance is not"
+          },
+          "429": {
+            "description": "daily_cap_exceeded or upstream_rate_limited — not charged"
+          },
+          "501": {
+            "description": "not_configured — server is missing credentials or proxies"
+          },
+          "502": {
+            "description": "upstream_blocked / upstream_schema_drift — not charged"
+          },
+          "504": {
+            "description": "upstream_timeout — not charged"
+          }
+        }
+      }
+    },
+    "/v1/zillow/search": {
+      "get": {
+        "summary": "Search Zillow listings by location",
+        "description": "Public Zillow search results for a location, as full listing records.\n**Required:** Pass either `location` or `url`.\n**Cost:** 1 credit per live request.\n**Cache hits cost 0 credits.**\nFailed and empty responses are never charged.",
+        "operationId": "zillow_search",
+        "tags": [
+          "zillow"
+        ],
+        "x-credit-cost": 1,
+        "x-render-credit-multiplier": 3,
+        "x-cacheable": true,
+        "x-batchable": true,
+        "x-subscribable": false,
+        "x-parameter-constraints": [
+          "Pass either `location` or `url`."
+        ],
+        "parameters": [
+          {
+            "name": "location",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "description": "City/state or ZIP, e.g. \"Austin, TX\"",
+              "type": "string"
+            }
+          },
+          {
+            "name": "url",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "description": "Zillow search URL, e.g. https://www.zillow.com/austin-tx/",
+              "type": "string"
+            }
+          },
+          {
+            "name": "listing_type",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "default": "sale",
+              "type": "string",
+              "enum": [
+                "sale",
+                "rent"
+              ]
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "default": 1,
+              "type": "number"
             }
           },
           {

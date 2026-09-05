@@ -12,9 +12,9 @@ tools and your agents.
 | **Agent skill** | `npx skills add TrueScrape/truescrape` | Teaching Claude Code, Cursor, Codex, Copilot, Gemini CLI or Windsurf how to use the API well |
 
 <!-- catalogue:start -->
-**173 endpoints across 28 platforms**, generated from the live API on 2026-09-02.
+**206 endpoints across 37 platforms**, generated from the live API on 2026-09-05.
 
-tiktok (30) · facebook (20) · instagram (19) · youtube (17) · github (10) · linkedin (8) · reddit (8) · spotify (6) · twitter (6) · rumble (5) · threads (5) · apple-music (4) · google (4) · pinterest (4) · twitch (4) · bluesky (3) · kwai (3) · snapchat (3) · soundcloud (3) · truthsocial (3) · amazon (1) · inference (1) · kick (1) · komi (1) · linkbio (1) · linkme (1) · linktree (1) · pillar (1)
+tiktok (32) · facebook (22) · instagram (19) · youtube (17) · github (10) · reddit (9) · google (8) · linkedin (8) · spotify (7) · twitter (6) · rumble (5) · threads (5) · amazon (4) · apple-music (4) · pinterest (4) · redfin (4) · twitch (4) · walmart (4) · bluesky (3) · kwai (3) · snapchat (3) · soundcloud (3) · telegram (3) · truthsocial (3) · zillow (3) · ebay (2) · identity (1) · inference (1) · kick (1) · komi (1) · linkbio (1) · linkme (1) · linktree (1) · milkshake (1) · pillar (1) · solo (1) · taplink (1)
 <!-- catalogue:end -->
 
 Get a key at [truescrape.com/dashboard](https://truescrape.com/dashboard).

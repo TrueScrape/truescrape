@@ -1,14 +1,179 @@
 {
-  "generatedAt": "2026-09-02T20:18:30.725Z",
+  "generatedAt": "2026-09-05T08:22:16.282Z",
   "source": "https://api.truescrape.com/openapi.json",
   "endpoints": [
+    {
+      "name": "amazon.offers",
+      "platform": "amazon",
+      "action": "offers",
+      "path": "/v1/amazon/offers",
+      "summary": "All seller offers for a product",
+      "description": "Every offer on an Amazon listing — price, seller, condition, Prime eligibility and shipping — alongside the product itself.",
+      "credits": 3,
+      "cacheable": true,
+      "batchable": true,
+      "experimental": false,
+      "constraints": [],
+      "params": [
+        {
+          "name": "asin",
+          "flag": "asin",
+          "type": "string",
+          "required": true,
+          "description": "Amazon ASIN, e.g. \"B08N5WRWNW\""
+        },
+        {
+          "name": "tld",
+          "flag": "tld",
+          "type": "string",
+          "required": false,
+          "description": "Marketplace TLD, default \"com\". One of: com, co.uk, ca, de, es, fr, ie, it, co.jp, co.za, in, cn, com.sg, com.mx, ae, com.br, nl, com.au, com.tr, sa, se, pl"
+        },
+        {
+          "name": "country_code",
+          "flag": "country-code",
+          "type": "string",
+          "required": false,
+          "description": "Best-effort locale hint (ISO 3166-1 alpha-2)."
+        },
+        {
+          "name": "condition",
+          "flag": "condition",
+          "type": "string",
+          "required": false,
+          "enum": [
+            "new",
+            "used_like_new",
+            "used_very_good",
+            "used_good",
+            "used_acceptable"
+          ],
+          "description": "Filter offers to one condition."
+        },
+        {
+          "name": "cache_max_age",
+          "flag": "cache-max-age",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "include_raw",
+          "flag": "include-raw",
+          "type": "boolean",
+          "required": false
+        }
+      ]
+    },
+    {
+      "name": "amazon.product",
+      "platform": "amazon",
+      "action": "product",
+      "path": "/v1/amazon/product",
+      "summary": "Product details",
+      "description": "Public details for one Amazon listing: title, brand, price, availability, rating, specifications and an inline review sample.",
+      "credits": 3,
+      "cacheable": true,
+      "batchable": true,
+      "experimental": false,
+      "constraints": [],
+      "params": [
+        {
+          "name": "asin",
+          "flag": "asin",
+          "type": "string",
+          "required": true,
+          "description": "Amazon ASIN, e.g. \"B08N5WRWNW\""
+        },
+        {
+          "name": "tld",
+          "flag": "tld",
+          "type": "string",
+          "required": false,
+          "description": "Marketplace TLD, default \"com\". One of: com, co.uk, ca, de, es, fr, ie, it, co.jp, co.za, in, cn, com.sg, com.mx, ae, com.br, nl, com.au, com.tr, sa, se, pl"
+        },
+        {
+          "name": "country_code",
+          "flag": "country-code",
+          "type": "string",
+          "required": false,
+          "description": "Best-effort locale hint (ISO 3166-1 alpha-2)."
+        },
+        {
+          "name": "cache_max_age",
+          "flag": "cache-max-age",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "include_raw",
+          "flag": "include-raw",
+          "type": "boolean",
+          "required": false
+        }
+      ]
+    },
+    {
+      "name": "amazon.search",
+      "platform": "amazon",
+      "action": "search",
+      "path": "/v1/amazon/search",
+      "summary": "Search results",
+      "description": "Public Amazon search results for a query: position, price, rating and badges per item.",
+      "credits": 3,
+      "cacheable": true,
+      "batchable": true,
+      "experimental": false,
+      "constraints": [],
+      "params": [
+        {
+          "name": "query",
+          "flag": "query",
+          "type": "string",
+          "required": true,
+          "description": "Search terms, e.g. \"wireless mouse\""
+        },
+        {
+          "name": "tld",
+          "flag": "tld",
+          "type": "string",
+          "required": false,
+          "description": "Marketplace TLD, default \"com\". One of: com, co.uk, ca, de, es, fr, ie, it, co.jp, co.za, in, cn, com.sg, com.mx, ae, com.br, nl, com.au, com.tr, sa, se, pl"
+        },
+        {
+          "name": "country_code",
+          "flag": "country-code",
+          "type": "string",
+          "required": false,
+          "description": "Best-effort locale hint (ISO 3166-1 alpha-2)."
+        },
+        {
+          "name": "page",
+          "flag": "page",
+          "type": "number",
+          "required": false,
+          "default": 1
+        },
+        {
+          "name": "cache_max_age",
+          "flag": "cache-max-age",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "include_raw",
+          "flag": "include-raw",
+          "type": "boolean",
+          "required": false
+        }
+      ]
+    },
     {
       "name": "amazon.shop",
       "platform": "amazon",
       "action": "shop",
       "path": "/v1/amazon/shop",
       "summary": "Amazon Shop page",
-      "description": "A creator's public Amazon storefront: their name, and the product links the page exposes.",
+      "description": "A creator's public Amazon storefront: their name, the product links the page exposes, and the storefront feed — idea lists (with Amazon's own item count), shoppable videos (id, title, thumbnail and attached ASINs) and shoppable photos. The first request needs no pageToken and already returns the videos embedded on the page. Pass `pagination.cursor` back as `pageToken`, unchanged, with the same shop URL for the next page; a page can carry lists, videos, photos or any mix. A continuation page carries the feed ONLY — Amazon serves it as a fragment with no profile markup, so every identity field (display name, bio, avatar) is null on page two onwards. ASINs are the products the storefront shows attached to an item, which for a long idea list is the first screenful rather than the whole list; `itemCount` is the true total.",
       "credits": 1,
       "cacheable": true,
       "batchable": true,
@@ -21,6 +186,13 @@
           "type": "string",
           "required": true,
           "description": "Storefront URL (https://www.amazon.com/shop/<handle>) or just the handle"
+        },
+        {
+          "name": "pageToken",
+          "flag": "pageToken",
+          "type": "string",
+          "required": false,
+          "description": "Opaque page token returned by a previous response for the same shop URL. Pass it back unchanged and do not infer the response type from its value."
         },
         {
           "name": "cache_max_age",
@@ -67,6 +239,13 @@
           "flag": "include-raw",
           "type": "boolean",
           "required": false
+        },
+        {
+          "name": "url",
+          "flag": "url",
+          "type": "string",
+          "required": false,
+          "description": "Alias for `id`, accepted for compatibility. Sending both with different values is rejected."
         }
       ]
     },
@@ -101,6 +280,13 @@
           "flag": "include-raw",
           "type": "boolean",
           "required": false
+        },
+        {
+          "name": "url",
+          "flag": "url",
+          "type": "string",
+          "required": false,
+          "description": "Alias for `id`, accepted for compatibility. Sending both with different values is rejected."
         }
       ]
     },
@@ -196,6 +382,13 @@
           "flag": "include-raw",
           "type": "boolean",
           "required": false
+        },
+        {
+          "name": "url",
+          "flag": "url",
+          "type": "string",
+          "required": false,
+          "description": "Alias for `id`, accepted for compatibility. Sending both with different values is rejected."
         }
       ]
     },
@@ -323,6 +516,162 @@
       ]
     },
     {
+      "name": "ebay.product",
+      "platform": "ebay",
+      "action": "product",
+      "path": "/v1/ebay/product",
+      "summary": "eBay listing details",
+      "description": "Public details for an eBay listing: title, price, condition, seller and an inline sample of reviews.",
+      "credits": 1,
+      "cacheable": true,
+      "batchable": true,
+      "experimental": true,
+      "constraints": [
+        "Pass either `product_id` or `url`."
+      ],
+      "params": [
+        {
+          "name": "product_id",
+          "flag": "product-id",
+          "type": "string",
+          "required": false,
+          "description": "Numeric eBay item id, e.g. 166619046796"
+        },
+        {
+          "name": "url",
+          "flag": "url",
+          "type": "string",
+          "required": false,
+          "description": "eBay listing URL, e.g. https://www.ebay.com/itm/166619046796"
+        },
+        {
+          "name": "tld",
+          "flag": "tld",
+          "type": "string",
+          "required": false,
+          "description": "eBay marketplace, default com. One of: com, co.uk, com.au, de, ca, fr, it, es, at, ch, com.sg, com.my, ph, ie, pl, nl"
+        },
+        {
+          "name": "country_code",
+          "flag": "country-code",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "cache_max_age",
+          "flag": "cache-max-age",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "include_raw",
+          "flag": "include-raw",
+          "type": "boolean",
+          "required": false
+        }
+      ]
+    },
+    {
+      "name": "ebay.search",
+      "platform": "ebay",
+      "action": "search",
+      "path": "/v1/ebay/search",
+      "summary": "Search eBay listings",
+      "description": "Public eBay search results for a query, with eBay's own filters and sort orders.",
+      "credits": 1,
+      "cacheable": true,
+      "batchable": true,
+      "experimental": true,
+      "constraints": [],
+      "params": [
+        {
+          "name": "query",
+          "flag": "query",
+          "type": "string",
+          "required": true,
+          "description": "Search terms, e.g. \"iphone 13\""
+        },
+        {
+          "name": "tld",
+          "flag": "tld",
+          "type": "string",
+          "required": false,
+          "description": "eBay marketplace, default com. One of: com, co.uk, com.au, de, ca, fr, it, es, at, ch, com.sg, com.my, ph, ie, pl, nl"
+        },
+        {
+          "name": "country_code",
+          "flag": "country-code",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "page",
+          "flag": "page",
+          "type": "number",
+          "required": false
+        },
+        {
+          "name": "items_per_page",
+          "flag": "items-per-page",
+          "type": "number",
+          "required": false
+        },
+        {
+          "name": "sort_by",
+          "flag": "sort-by",
+          "type": "string",
+          "required": false,
+          "enum": [
+            "ending_soonest",
+            "newly_listed",
+            "price_lowest",
+            "price_highest",
+            "distance_nearest",
+            "best_match"
+          ]
+        },
+        {
+          "name": "seller_id",
+          "flag": "seller-id",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "condition",
+          "flag": "condition",
+          "type": "string",
+          "required": false,
+          "description": "Comma list: new, used, open_box, refurbished, for_parts, not_working"
+        },
+        {
+          "name": "buying_format",
+          "flag": "buying-format",
+          "type": "string",
+          "required": false,
+          "description": "Comma list: buy_it_now, auction, accepts_offers"
+        },
+        {
+          "name": "show_only",
+          "flag": "show-only",
+          "type": "string",
+          "required": false,
+          "description": "Comma list: returns_accepted, authorized_seller, completed_items, sold_items, sale_items, listed_as_lots, search_in_description, benefits_charity, authenticity_guarantee"
+        },
+        {
+          "name": "cache_max_age",
+          "flag": "cache-max-age",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "include_raw",
+          "flag": "include-raw",
+          "type": "boolean",
+          "required": false
+        }
+      ]
+    },
+    {
       "name": "facebook.ad",
       "platform": "facebook",
       "action": "ad-library-ad",
@@ -356,6 +705,63 @@
           "required": false,
           "default": "US",
           "description": "Reached country used by the fallback scan"
+        },
+        {
+          "name": "cache_max_age",
+          "flag": "cache-max-age",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "include_raw",
+          "flag": "include-raw",
+          "type": "boolean",
+          "required": false
+        },
+        {
+          "name": "url",
+          "flag": "url",
+          "type": "string",
+          "required": false,
+          "description": "Alias for `id`, accepted for compatibility. Sending both with different values is rejected."
+        }
+      ]
+    },
+    {
+      "name": "facebook.adTranscript",
+      "platform": "facebook",
+      "action": "ad-library-ad-transcript",
+      "path": "/v1/facebook/ad-library/ad-transcript",
+      "summary": "Ad video transcript",
+      "description": "Retrieves a transcript for a single Facebook Ad Library video ad by ID or URL. If Facebook exposes captions for the ad's video, those are used (`source: \"captions\"`). An ad with no video, or a video with no caption track, returns an empty result and is not charged — the same answer every other transcript endpoint gives for the same fact. Credits are only deducted when a transcript is actually returned. Pass `transcribe_fallback=true` to have us transcribe the ad's audio when Facebook publishes no caption track: it adds 10 credits to this call, applies only to videos under 120 seconds, and the surcharge is refunded whenever we did not transcribe. It has to be enabled on this deployment; where it is not, a request carrying it answers `not_configured` (501) and is never charged. `source` says which path produced the text: `captions` for Facebook's own track, `asr` for ours.",
+      "credits": 1,
+      "cacheable": true,
+      "batchable": true,
+      "experimental": true,
+      "constraints": [
+        "Pass exactly one of `id` or `url`."
+      ],
+      "params": [
+        {
+          "name": "id",
+          "flag": "id",
+          "type": "string",
+          "required": false,
+          "description": "Ad archive id, or an Ad Library URL containing `?id=`"
+        },
+        {
+          "name": "url",
+          "flag": "url",
+          "type": "string",
+          "required": false,
+          "description": "An Ad Library URL containing `?id=`"
+        },
+        {
+          "name": "language",
+          "flag": "language",
+          "type": "string",
+          "required": false,
+          "description": "Preferred caption locale"
         },
         {
           "name": "cache_max_age",
@@ -678,6 +1084,52 @@
           "type": "string",
           "required": false,
           "description": "`pagination.cursor` from a previous response"
+        },
+        {
+          "name": "cache_max_age",
+          "flag": "cache-max-age",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "include_raw",
+          "flag": "include-raw",
+          "type": "boolean",
+          "required": false
+        }
+      ]
+    },
+    {
+      "name": "facebook.cityEvents",
+      "platform": "facebook",
+      "action": "city-events",
+      "path": "/v1/facebook/city-events",
+      "summary": "Get the events of a city",
+      "description": "Public events Facebook is suggesting for a city, from its Events Explore feed — e.g. https://www.facebook.com/events/explore/saint-petersburg-florida/111326725552547. `time` narrows the window to today, this week, or next week; without it Facebook returns whatever it has queued as upcoming, in whatever order it ranks them. Only the first, server-rendered page: host, description and interested-count are not exposed on this listing (only on /v1/facebook/event), and further pages sit behind an authenticated scroll load — `raw.hasMoreBehindCursor` reports whether Facebook says there is more, which this endpoint cannot fetch.",
+      "credits": 1,
+      "cacheable": true,
+      "batchable": true,
+      "experimental": true,
+      "constraints": [],
+      "params": [
+        {
+          "name": "url",
+          "flag": "url",
+          "type": "string",
+          "required": true,
+          "description": "Explore URL (\"facebook.com/events/explore/<city-slug>/<id>\") or a bare \"<city-slug>/<id>\" pair"
+        },
+        {
+          "name": "time",
+          "flag": "time",
+          "type": "string",
+          "required": false,
+          "enum": [
+            "today",
+            "this_week",
+            "next_week"
+          ],
+          "description": "Narrow to Facebook's own window. Defaults to all upcoming."
         },
         {
           "name": "cache_max_age",
@@ -1174,7 +1626,7 @@
       "action": "post-transcript",
       "path": "/v1/facebook/post-transcript",
       "summary": "Video transcript",
-      "description": "Transcript for a public Facebook video or reel, as one text block plus timed cues. Reads the caption track Facebook publishes for the video — auto-generated when the uploader added none. Videos with captions disabled return an empty result and are not charged.",
+      "description": "Transcript for a public Facebook video or reel, as one text block plus timed cues. Reads the caption track Facebook publishes for the video — auto-generated when the uploader added none. Videos with captions disabled return an empty result and are not charged. Pass `transcribe_fallback=true` to have us transcribe the audio instead when Facebook publishes no caption track: it adds 10 credits to this call, applies only to videos under 120 seconds, and the surcharge is refunded whenever we did not transcribe — captions turned up, the video was over that limit, or no downloadable video was published. It has to be enabled on this deployment; where it is not, a request carrying it answers `not_configured` (501) and is never charged. `source` says which path produced the text: `captions` for Facebook's own track, `asr` for ours.",
       "credits": 1,
       "cacheable": true,
       "batchable": true,
@@ -1970,12 +2422,274 @@
       ]
     },
     {
+      "name": "google.jobs",
+      "platform": "google",
+      "action": "jobs",
+      "path": "/v1/google/jobs",
+      "summary": "Google Jobs results",
+      "description": "Job postings for a query — title, company, location and the board it was syndicated from. Shares the `/search` anti-bot gate `google.search` already documents; a blocked attempt returns `upstream_blocked` and is not charged.",
+      "credits": 5,
+      "cacheable": true,
+      "batchable": true,
+      "experimental": false,
+      "constraints": [],
+      "params": [
+        {
+          "name": "query",
+          "flag": "query",
+          "type": "string",
+          "required": true,
+          "description": "Search query"
+        },
+        {
+          "name": "tld",
+          "flag": "tld",
+          "type": "string",
+          "required": false,
+          "default": "com",
+          "description": "Google marketplace TLD. One of: com, co.uk, ca, de, es, fr, it, co.jp, in, cn, com.sg, com.mx, ae, com.br, nl, com.au, com.tr, sa, se, pl. Defaults to \"com\"."
+        },
+        {
+          "name": "country_code",
+          "flag": "country-code",
+          "type": "string",
+          "required": false,
+          "description": "Two-letter country code. Sets `gl` when `gl` is not given."
+        },
+        {
+          "name": "hl",
+          "flag": "hl",
+          "type": "string",
+          "required": false,
+          "default": "en",
+          "description": "Host language for the results page, e.g. \"en\", \"de\". Defaults to \"en\"."
+        },
+        {
+          "name": "gl",
+          "flag": "gl",
+          "type": "string",
+          "required": false,
+          "description": "Two-letter country code Google should bias results toward."
+        },
+        {
+          "name": "uule",
+          "flag": "uule",
+          "type": "string",
+          "required": false,
+          "description": "Encoded Google location string for precise geo-targeting."
+        },
+        {
+          "name": "start",
+          "flag": "start",
+          "type": "number",
+          "required": false,
+          "description": "0-based result offset."
+        },
+        {
+          "name": "cache_max_age",
+          "flag": "cache-max-age",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "include_raw",
+          "flag": "include-raw",
+          "type": "boolean",
+          "required": false
+        }
+      ]
+    },
+    {
+      "name": "google.mapsSearch",
+      "platform": "google",
+      "action": "maps-search",
+      "path": "/v1/google/maps-search",
+      "summary": "Google Maps place search",
+      "description": "Business listings near a coordinate — name, address, phone, rating and hours. Google Maps requires JavaScript to render its result list; an unrendered response returns `upstream_blocked` and is not charged, rather than a silent empty success.",
+      "credits": 5,
+      "cacheable": true,
+      "batchable": true,
+      "experimental": false,
+      "constraints": [],
+      "params": [
+        {
+          "name": "query",
+          "flag": "query",
+          "type": "string",
+          "required": true,
+          "description": "Search query"
+        },
+        {
+          "name": "tld",
+          "flag": "tld",
+          "type": "string",
+          "required": false,
+          "default": "com",
+          "description": "Google marketplace TLD. One of: com, co.uk, ca, de, es, fr, it, co.jp, in, cn, com.sg, com.mx, ae, com.br, nl, com.au, com.tr, sa, se, pl. Defaults to \"com\"."
+        },
+        {
+          "name": "country_code",
+          "flag": "country-code",
+          "type": "string",
+          "required": false,
+          "description": "Two-letter country code. Sets `gl` when `gl` is not given."
+        },
+        {
+          "name": "hl",
+          "flag": "hl",
+          "type": "string",
+          "required": false,
+          "default": "en",
+          "description": "Host language for the results page, e.g. \"en\", \"de\". Defaults to \"en\"."
+        },
+        {
+          "name": "gl",
+          "flag": "gl",
+          "type": "string",
+          "required": false,
+          "description": "Two-letter country code Google should bias results toward."
+        },
+        {
+          "name": "uule",
+          "flag": "uule",
+          "type": "string",
+          "required": false,
+          "description": "Encoded Google location string for precise geo-targeting."
+        },
+        {
+          "name": "start",
+          "flag": "start",
+          "type": "number",
+          "required": false,
+          "description": "0-based result offset."
+        },
+        {
+          "name": "cache_max_age",
+          "flag": "cache-max-age",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "include_raw",
+          "flag": "include-raw",
+          "type": "boolean",
+          "required": false
+        },
+        {
+          "name": "latitude",
+          "flag": "latitude",
+          "type": "number",
+          "required": true,
+          "description": "Latitude of the search centre"
+        },
+        {
+          "name": "longitude",
+          "flag": "longitude",
+          "type": "number",
+          "required": true,
+          "description": "Longitude of the search centre"
+        }
+      ]
+    },
+    {
+      "name": "google.news",
+      "platform": "google",
+      "action": "news",
+      "path": "/v1/google/news",
+      "summary": "Google News results",
+      "description": "News articles for a query — title, source, and published time. Shares the `/search` anti-bot gate `google.search` already documents; a blocked attempt returns `upstream_blocked` and is not charged.",
+      "credits": 5,
+      "cacheable": true,
+      "batchable": true,
+      "experimental": false,
+      "constraints": [],
+      "params": [
+        {
+          "name": "query",
+          "flag": "query",
+          "type": "string",
+          "required": true,
+          "description": "Search query"
+        },
+        {
+          "name": "tld",
+          "flag": "tld",
+          "type": "string",
+          "required": false,
+          "default": "com",
+          "description": "Google marketplace TLD. One of: com, co.uk, ca, de, es, fr, it, co.jp, in, cn, com.sg, com.mx, ae, com.br, nl, com.au, com.tr, sa, se, pl. Defaults to \"com\"."
+        },
+        {
+          "name": "country_code",
+          "flag": "country-code",
+          "type": "string",
+          "required": false,
+          "description": "Two-letter country code. Sets `gl` when `gl` is not given."
+        },
+        {
+          "name": "hl",
+          "flag": "hl",
+          "type": "string",
+          "required": false,
+          "default": "en",
+          "description": "Host language for the results page, e.g. \"en\", \"de\". Defaults to \"en\"."
+        },
+        {
+          "name": "gl",
+          "flag": "gl",
+          "type": "string",
+          "required": false,
+          "description": "Two-letter country code Google should bias results toward."
+        },
+        {
+          "name": "uule",
+          "flag": "uule",
+          "type": "string",
+          "required": false,
+          "description": "Encoded Google location string for precise geo-targeting."
+        },
+        {
+          "name": "start",
+          "flag": "start",
+          "type": "number",
+          "required": false,
+          "description": "0-based result offset."
+        },
+        {
+          "name": "cache_max_age",
+          "flag": "cache-max-age",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "include_raw",
+          "flag": "include-raw",
+          "type": "boolean",
+          "required": false
+        },
+        {
+          "name": "tbs",
+          "flag": "tbs",
+          "type": "string",
+          "required": false,
+          "enum": [
+            "h",
+            "d",
+            "w",
+            "m",
+            "y"
+          ],
+          "description": "Time filter: hour/day/week/month/year, as Google's own `qdr` code."
+        }
+      ]
+    },
+    {
       "name": "google.search",
       "platform": "google",
       "action": "search",
       "path": "/v1/google/search",
       "summary": "Web search results",
-      "description": "Organic Google results for a query. Requires residential proxies or the scraper API — Google refuses a datacenter IP.",
+      "description": "Organic Google results for a query. Google blocks automated queries harder than any other source here, so this endpoint fails more often than the rest; a blocked attempt returns `upstream_blocked` and is not charged.",
       "credits": 1,
       "cacheable": true,
       "batchable": true,
@@ -2015,6 +2729,147 @@
           "type": "string",
           "required": false,
           "description": "1-based page number"
+        },
+        {
+          "name": "cache_max_age",
+          "flag": "cache-max-age",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "include_raw",
+          "flag": "include-raw",
+          "type": "boolean",
+          "required": false
+        }
+      ]
+    },
+    {
+      "name": "google.shopping",
+      "platform": "google",
+      "action": "shopping",
+      "path": "/v1/google/shopping",
+      "summary": "Google Shopping results",
+      "description": "Shopping tiles for a query — title, price, currency and merchant. Shares the `/search` anti-bot gate `google.search` already documents; a blocked attempt returns `upstream_blocked` and is not charged.",
+      "credits": 5,
+      "cacheable": true,
+      "batchable": true,
+      "experimental": false,
+      "constraints": [],
+      "params": [
+        {
+          "name": "query",
+          "flag": "query",
+          "type": "string",
+          "required": true,
+          "description": "Search query"
+        },
+        {
+          "name": "tld",
+          "flag": "tld",
+          "type": "string",
+          "required": false,
+          "default": "com",
+          "description": "Google marketplace TLD. One of: com, co.uk, ca, de, es, fr, it, co.jp, in, cn, com.sg, com.mx, ae, com.br, nl, com.au, com.tr, sa, se, pl. Defaults to \"com\"."
+        },
+        {
+          "name": "country_code",
+          "flag": "country-code",
+          "type": "string",
+          "required": false,
+          "description": "Two-letter country code. Sets `gl` when `gl` is not given."
+        },
+        {
+          "name": "hl",
+          "flag": "hl",
+          "type": "string",
+          "required": false,
+          "default": "en",
+          "description": "Host language for the results page, e.g. \"en\", \"de\". Defaults to \"en\"."
+        },
+        {
+          "name": "gl",
+          "flag": "gl",
+          "type": "string",
+          "required": false,
+          "description": "Two-letter country code Google should bias results toward."
+        },
+        {
+          "name": "uule",
+          "flag": "uule",
+          "type": "string",
+          "required": false,
+          "description": "Encoded Google location string for precise geo-targeting."
+        },
+        {
+          "name": "start",
+          "flag": "start",
+          "type": "number",
+          "required": false,
+          "description": "0-based result offset."
+        },
+        {
+          "name": "cache_max_age",
+          "flag": "cache-max-age",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "include_raw",
+          "flag": "include-raw",
+          "type": "boolean",
+          "required": false
+        },
+        {
+          "name": "tbs",
+          "flag": "tbs",
+          "type": "string",
+          "required": false,
+          "enum": [
+            "h",
+            "d",
+            "w",
+            "m",
+            "y"
+          ],
+          "description": "Time filter: hour/day/week/month/year, as Google's own `qdr` code."
+        }
+      ]
+    },
+    {
+      "name": "identity.findSocialProfiles",
+      "platform": "identity",
+      "action": "find-social-profiles",
+      "path": "/v1/find-social-profiles",
+      "summary": "Find a creator's other social profiles",
+      "description": "Starts from one public profile and reports the other accounts that profile can be shown to own: profiles it links to directly, profiles reached through a recognised link-in-bio page (Linktree, Komi, Pillar, Lnk.Bio, LinkMe), and same-handle accounts on the other supported platforms that link back to the source or share a website only the owner controls. Covers Instagram, TikTok, YouTube, X and Facebook. A same-handle account with no corroboration is reported under `candidates`, never as a profile — the handle matching is a fact handed over, not a claim. There is no search-engine discovery and no display-name matching; neither is evidence of ownership. Every result carries the evidence type it rests on. Each entry in `failures` carries the inner error’s `code` and `message`, so \"we checked and found nothing\" (`upstream_not_found`, `empty_result`) stays distinguishable from \"we could not check\" (`upstream_blocked`, `not_configured`); only the second kind sets `partial`. Not covered: any platform outside the five, and links a creator has not published. An X/Twitter source can only be resolved by same-handle probing, because X exposes no bio links at all to a logged-out caller. The 20-second budget stops the composite scheduling new inner fetches; it does not abort one already in flight, so a slow leg is reported as a timeout while its request finishes unread. Link-in-bio expansion is verified against fixtures only — no channel sampled live from our network published a link-in-bio URL to expand. A `partial: true` answer is cached for the same seven days as a complete one, so pass `cache_max_age=0` to refetch after a transient block rather than being served the gap for a week. Pricing is per source checked: the 10 credits buy the legs this call runs — the starting profile, each link-in-bio page expanded, and each same-handle probe — and a leg listed in `unchecked` is not charged for, so a partial answer costs `ceil(10 x legs answered / legs attempted)` and never more than 10. **Any response with an empty `profiles` AND an empty `candidates` costs nothing at all**, whatever `unchecked` says: an answer carrying no account has delivered nothing to charge for, and the `unchecked` disclosure ships free. When every leg was checked and none carries another account that free answer is an `empty_result`; when nothing beyond the starting profile could be checked it is an error, because \"no other accounts\" would then be a fact we did not establish.",
+      "credits": 10,
+      "cacheable": true,
+      "batchable": true,
+      "experimental": true,
+      "constraints": [],
+      "params": [
+        {
+          "name": "platform",
+          "flag": "platform",
+          "type": "string",
+          "required": true,
+          "enum": [
+            "instagram",
+            "tiktok",
+            "youtube",
+            "x",
+            "twitter",
+            "facebook"
+          ],
+          "description": "Platform the handle belongs to. `x` is an alias for `twitter`."
+        },
+        {
+          "name": "handle",
+          "flag": "handle",
+          "type": "string",
+          "required": true,
+          "description": "Bare handle (@nasa). YouTube also accepts a UC… channel id. URLs are rejected."
         },
         {
           "name": "cache_max_age",
@@ -2097,49 +2952,6 @@
           "type": "number",
           "required": false,
           "description": "Reels per page, 1-50. Default 12."
-        },
-        {
-          "name": "cache_max_age",
-          "flag": "cache-max-age",
-          "type": "string",
-          "required": false
-        },
-        {
-          "name": "include_raw",
-          "flag": "include-raw",
-          "type": "boolean",
-          "required": false
-        }
-      ]
-    },
-    {
-      "name": "instagram.basicProfile",
-      "platform": "instagram",
-      "action": "basic-profile",
-      "path": "/v1/instagram/basic-profile",
-      "summary": "Profile by numeric id",
-      "description": "The lightweight profile payload, addressed by numeric user id. Use this when you already hold an id — it skips the handle lookup and returns a smaller object than /v1/instagram/profile, which stays the right call when you have a handle and want everything.",
-      "credits": 1,
-      "cacheable": true,
-      "batchable": true,
-      "experimental": true,
-      "constraints": [
-        "Pass either `handle` or `user_id`."
-      ],
-      "params": [
-        {
-          "name": "handle",
-          "flag": "handle",
-          "type": "string",
-          "required": false,
-          "description": "Handle (@nike), or a full instagram.com profile URL. Optional if `user_id` is given."
-        },
-        {
-          "name": "user_id",
-          "flag": "user-id",
-          "type": "string",
-          "required": false,
-          "description": "Numeric user id. Skips a lookup — take it from `data.items[].authorId`."
         },
         {
           "name": "cache_max_age",
@@ -2344,7 +3156,7 @@
       "action": "post",
       "path": "/v1/instagram/post",
       "summary": "Post or reel details",
-      "description": "One public post, reel or carousel with its caption, media URLs and engagement counts. Falls back to Instagram's public embed payload when the web client's persisted query is unavailable, so a Meta client release degrades this rather than breaking it.",
+      "description": "One public post, reel or carousel with its caption, media URLs and engagement counts. Falls back to Instagram's public embed payload when the web client's persisted query is unavailable, so a Meta client release degrades this rather than breaking it. Play counts arrive in this same request, so there is no second fetch to skip and no play-count parameter to pass.",
       "credits": 1,
       "cacheable": true,
       "batchable": true,
@@ -2434,6 +3246,40 @@
       "path": "/v1/instagram/profile",
       "summary": "Profile details",
       "description": "Public profile for an Instagram account: followers, following, post count, bio, links and business category. Private accounts return their public shell with `isPrivate: true` rather than an error — that is a real answer.",
+      "credits": 1,
+      "cacheable": true,
+      "batchable": true,
+      "experimental": true,
+      "constraints": [],
+      "params": [
+        {
+          "name": "handle",
+          "flag": "handle",
+          "type": "string",
+          "required": true,
+          "description": "Handle (@nike), or a full instagram.com profile URL"
+        },
+        {
+          "name": "cache_max_age",
+          "flag": "cache-max-age",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "include_raw",
+          "flag": "include-raw",
+          "type": "boolean",
+          "required": false
+        }
+      ]
+    },
+    {
+      "name": "instagram.profilePostCount",
+      "platform": "instagram",
+      "action": "profile-post-count",
+      "path": "/v1/instagram/profile-post-count",
+      "summary": "Post count for a profile",
+      "description": "The total post count shown on a public Instagram profile, projected from the same fetch /v1/instagram/profile makes — call this when a fuller profile is not needed. Checks both dialects Instagram ships a count in (`edge_owner_to_timeline_media.count` and `media_count`) and reports which one answered in `source`. Instagram does not expose this metadata for every profile: when neither is present, `postCount` is null and the request is not charged.",
       "credits": 1,
       "cacheable": true,
       "batchable": true,
@@ -2742,7 +3588,7 @@
       "action": "user-posts",
       "path": "/v1/instagram/user-posts",
       "summary": "Posts and reels from a profile",
-      "description": "A profile grid, newest first. The first page comes from the same payload as the profile and is the reliable one; pass `cursor` (and ideally `user_id`) for older pages, which Instagram serves far less consistently to logged-out callers.",
+      "description": "A profile grid, newest first. Returns ONE PAGE of roughly twelve posts. Instagram gates the paginating surface behind a login, so there is no cursor to follow and none is returned: `hasMore` may be true with `cursor: null`, meaning the account has more posts that a logged-out caller cannot reach. Engagement counts are null here because the grid does not carry them — fetch /v1/instagram/post for a specific post to get likes and comments. `authorHandle` is read per post: a collab or tagged post appears in a profile grid owned by the OTHER account, and this reports the real owner rather than the handle you asked for.",
       "credits": 1,
       "cacheable": true,
       "batchable": true,
@@ -2788,6 +3634,13 @@
           "flag": "include-raw",
           "type": "boolean",
           "required": false
+        },
+        {
+          "name": "next_max_id",
+          "flag": "next-max-id",
+          "type": "string",
+          "required": false,
+          "description": "Alias for `cursor`, accepted for compatibility. Sending both with different values is rejected."
         }
       ]
     },
@@ -2797,7 +3650,7 @@
       "action": "user-reels",
       "path": "/v1/instagram/user-reels",
       "summary": "Reels from a profile",
-      "description": "A profile's reels, newest first. Primary path is the reels tab's own feed; if Instagram declines it, this falls back to filtering the profile grid down to clips, so the endpoint degrades in density rather than going dark. `raw.via` says which answered.",
+      "description": "A profile's reels, newest first. Primary path is the reels tab's own feed; if Instagram declines it, this falls back to filtering the profile grid down to clips, so the endpoint degrades in density rather than going dark. The fallback returns ONE PAGE and no cursor — the paginating surface is login-gated — and its engagement counts are null, since the grid does not carry them. An account whose grid holds no clips is an empty result, not an error, and is not charged. `raw.source` says which path answered.",
       "credits": 1,
       "cacheable": true,
       "batchable": true,
@@ -2845,6 +3698,13 @@
           "flag": "include-raw",
           "type": "boolean",
           "required": false
+        },
+        {
+          "name": "max_id",
+          "flag": "max-id",
+          "type": "string",
+          "required": false,
+          "description": "Alias for `cursor`, accepted for compatibility. Sending both with different values is rejected."
         }
       ]
     },
@@ -3038,6 +3898,13 @@
           "flag": "include-raw",
           "type": "boolean",
           "required": false
+        },
+        {
+          "name": "url",
+          "flag": "url",
+          "type": "string",
+          "required": false,
+          "description": "Alias for `handle`, accepted for compatibility. Sending both with different values is rejected."
         }
       ]
     },
@@ -3072,6 +3939,13 @@
           "flag": "include-raw",
           "type": "boolean",
           "required": false
+        },
+        {
+          "name": "url",
+          "flag": "url",
+          "type": "string",
+          "required": false,
+          "description": "Alias for `handle`, accepted for compatibility. Sending both with different values is rejected."
         }
       ]
     },
@@ -3499,6 +4373,40 @@
       ]
     },
     {
+      "name": "milkshake.page",
+      "platform": "milkshake",
+      "action": "page",
+      "path": "/v1/milkshake",
+      "summary": "Milkshake page",
+      "description": "Public Milkshake page as a creator profile: display name, bio, avatar, and every outbound link in order.",
+      "credits": 1,
+      "cacheable": true,
+      "batchable": true,
+      "experimental": false,
+      "constraints": [],
+      "params": [
+        {
+          "name": "url",
+          "flag": "url",
+          "type": "string",
+          "required": true,
+          "description": "Page URL (https://msha.ke/<username>) or just the username"
+        },
+        {
+          "name": "cache_max_age",
+          "flag": "cache-max-age",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "include_raw",
+          "flag": "include-raw",
+          "type": "boolean",
+          "required": false
+        }
+      ]
+    },
+    {
       "name": "pillar.page",
       "platform": "pillar",
       "action": "page",
@@ -3844,6 +4752,48 @@
       ]
     },
     {
+      "name": "reddit.postTranscript",
+      "platform": "reddit",
+      "action": "post-transcript",
+      "path": "/v1/reddit/post/transcript",
+      "summary": "Video transcript",
+      "description": "Transcript for a Reddit-hosted video, from a direct v.redd.it URL, a post URL, or a post id. Reddit auto-captions much of its hosted video and publishes the result as a WebVTT file beside the video; this returns it as one text block plus timed cues, with the raw WebVTT in `raw.rawVtt`. English is the only caption language observed. Videos with no caption file return an empty result and are not charged. A caption track Reddit advertises only in segmented form — named by the playlist with no flat `.vtt` beside the video — is reported as `upstream_schema_drift` today and is likewise never charged. Covers Reddit-hosted video only — a post linking to YouTube or another site has no Reddit caption file and returns an empty result. The two input forms take different routes: a `v.redd.it` URL is read straight from the CDN and is verified live, while a post URL or id is first resolved through the public JSON surface, which is blocked from every network position we have measured. Pass the `v.redd.it` URL where you have it.",
+      "credits": 1,
+      "cacheable": true,
+      "batchable": true,
+      "experimental": true,
+      "constraints": [],
+      "params": [
+        {
+          "name": "url",
+          "flag": "url",
+          "type": "string",
+          "required": true,
+          "description": "Post URL (reddit.com/r/.../comments/...), a post id, or a v.redd.it URL"
+        },
+        {
+          "name": "language",
+          "flag": "language",
+          "type": "string",
+          "required": false,
+          "default": "en",
+          "description": "Preferred caption language. Reddit has only been observed publishing \"en\"."
+        },
+        {
+          "name": "cache_max_age",
+          "flag": "cache-max-age",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "include_raw",
+          "flag": "include-raw",
+          "type": "boolean",
+          "required": false
+        }
+      ]
+    },
+    {
       "name": "reddit.search",
       "platform": "reddit",
       "action": "search",
@@ -3924,6 +4874,13 @@
           "flag": "include-raw",
           "type": "boolean",
           "required": false
+        },
+        {
+          "name": "after",
+          "flag": "after",
+          "type": "string",
+          "required": false,
+          "description": "Alias for `cursor`, accepted for compatibility. Sending both with different values is rejected."
         }
       ]
     },
@@ -4001,6 +4958,13 @@
           "flag": "include-raw",
           "type": "boolean",
           "required": false
+        },
+        {
+          "name": "after",
+          "flag": "after",
+          "type": "string",
+          "required": false,
+          "description": "Alias for `cursor`, accepted for compatibility. Sending both with different values is rejected."
         }
       ]
     },
@@ -4035,6 +4999,13 @@
           "flag": "include-raw",
           "type": "boolean",
           "required": false
+        },
+        {
+          "name": "url",
+          "flag": "url",
+          "type": "string",
+          "required": false,
+          "description": "Alias for `subreddit`, accepted for compatibility. Sending both with different values is rejected."
         }
       ]
     },
@@ -4148,6 +5119,194 @@
       ]
     },
     {
+      "name": "redfin.agent",
+      "platform": "redfin",
+      "action": "agent",
+      "path": "/v1/redfin/agent",
+      "summary": "Real estate agent profile",
+      "description": "Public profile for a Redfin agent or partner agent: name, brokerage, contact and bio.",
+      "credits": 1,
+      "cacheable": true,
+      "batchable": true,
+      "experimental": false,
+      "constraints": [],
+      "params": [
+        {
+          "name": "url",
+          "flag": "url",
+          "type": "string",
+          "required": true,
+          "description": "Redfin agent or partner-agent profile URL, e.g. https://www.redfin.com/real-estate-agents/the-home-team"
+        },
+        {
+          "name": "tld",
+          "flag": "tld",
+          "type": "string",
+          "required": false,
+          "description": "Redfin marketplace, default com. One of: com, ca"
+        },
+        {
+          "name": "country_code",
+          "flag": "country-code",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "cache_max_age",
+          "flag": "cache-max-age",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "include_raw",
+          "flag": "include-raw",
+          "type": "boolean",
+          "required": false
+        }
+      ]
+    },
+    {
+      "name": "redfin.forRent",
+      "platform": "redfin",
+      "action": "for-rent",
+      "path": "/v1/redfin/for-rent",
+      "summary": "For-rent property details",
+      "description": "Public details for one Redfin rental: price (or starting price for a multi-unit building), specs, availability and amenities.",
+      "credits": 1,
+      "cacheable": true,
+      "batchable": true,
+      "experimental": false,
+      "constraints": [],
+      "params": [
+        {
+          "name": "url",
+          "flag": "url",
+          "type": "string",
+          "required": true,
+          "description": "Redfin rental URL, e.g. https://www.redfin.com/CA/San-Francisco/952-Sutter-St-94109/apartment/1594243"
+        },
+        {
+          "name": "tld",
+          "flag": "tld",
+          "type": "string",
+          "required": false,
+          "description": "Redfin marketplace, default com. One of: com, ca"
+        },
+        {
+          "name": "country_code",
+          "flag": "country-code",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "cache_max_age",
+          "flag": "cache-max-age",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "include_raw",
+          "flag": "include-raw",
+          "type": "boolean",
+          "required": false
+        }
+      ]
+    },
+    {
+      "name": "redfin.forSale",
+      "platform": "redfin",
+      "action": "for-sale",
+      "path": "/v1/redfin/for-sale",
+      "summary": "For-sale property details",
+      "description": "Public details for one Redfin for-sale listing: price, specs, agent, price history and nearby schools.",
+      "credits": 1,
+      "cacheable": true,
+      "batchable": true,
+      "experimental": false,
+      "constraints": [],
+      "params": [
+        {
+          "name": "url",
+          "flag": "url",
+          "type": "string",
+          "required": true,
+          "description": "Redfin for-sale listing URL, e.g. https://www.redfin.com/CA/San-Francisco/2040-Laguna-St-94115/unit-201/home/1642558"
+        },
+        {
+          "name": "tld",
+          "flag": "tld",
+          "type": "string",
+          "required": false,
+          "description": "Redfin marketplace, default com. One of: com, ca"
+        },
+        {
+          "name": "country_code",
+          "flag": "country-code",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "cache_max_age",
+          "flag": "cache-max-age",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "include_raw",
+          "flag": "include-raw",
+          "type": "boolean",
+          "required": false
+        }
+      ]
+    },
+    {
+      "name": "redfin.search",
+      "platform": "redfin",
+      "action": "search",
+      "path": "/v1/redfin/search",
+      "summary": "Search Redfin listing results",
+      "description": "Public results from a Redfin search or listing-results page URL (a city, zip code or filtered search).",
+      "credits": 1,
+      "cacheable": true,
+      "batchable": true,
+      "experimental": false,
+      "constraints": [],
+      "params": [
+        {
+          "name": "url",
+          "flag": "url",
+          "type": "string",
+          "required": true,
+          "description": "Redfin search page URL, e.g. https://www.redfin.com/zipcode/94109"
+        },
+        {
+          "name": "tld",
+          "flag": "tld",
+          "type": "string",
+          "required": false,
+          "description": "Redfin marketplace, default com. One of: com, ca"
+        },
+        {
+          "name": "country_code",
+          "flag": "country-code",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "cache_max_age",
+          "flag": "cache-max-age",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "include_raw",
+          "flag": "include-raw",
+          "type": "boolean",
+          "required": false
+        }
+      ]
+    },
+    {
       "name": "rumble.channelVideos",
       "platform": "rumble",
       "action": "channel-videos",
@@ -4185,6 +5344,13 @@
           "flag": "include-raw",
           "type": "boolean",
           "required": false
+        },
+        {
+          "name": "url",
+          "flag": "url",
+          "type": "string",
+          "required": false,
+          "description": "Alias for `handle`, accepted for compatibility. Sending both with different values is rejected."
         }
       ]
     },
@@ -4453,6 +5619,40 @@
       ]
     },
     {
+      "name": "solo.page",
+      "platform": "solo",
+      "action": "page",
+      "path": "/v1/solo",
+      "summary": "Solo page",
+      "description": "Public Solo page as a creator profile: display name, bio, avatar, and every outbound link in order.",
+      "credits": 1,
+      "cacheable": true,
+      "batchable": true,
+      "experimental": false,
+      "constraints": [],
+      "params": [
+        {
+          "name": "url",
+          "flag": "url",
+          "type": "string",
+          "required": true,
+          "description": "Page URL (https://solo.to/<username>) or just the username"
+        },
+        {
+          "name": "cache_max_age",
+          "flag": "cache-max-age",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "include_raw",
+          "flag": "include-raw",
+          "type": "boolean",
+          "required": false
+        }
+      ]
+    },
+    {
       "name": "soundcloud.artist",
       "platform": "soundcloud",
       "action": "artist",
@@ -4483,6 +5683,13 @@
           "flag": "include-raw",
           "type": "boolean",
           "required": false
+        },
+        {
+          "name": "url",
+          "flag": "url",
+          "type": "string",
+          "required": false,
+          "description": "Alias for `handle`, accepted for compatibility. Sending both with different values is rejected."
         }
       ]
     },
@@ -4531,6 +5738,13 @@
           "flag": "include-raw",
           "type": "boolean",
           "required": false
+        },
+        {
+          "name": "url",
+          "flag": "url",
+          "type": "string",
+          "required": false,
+          "description": "Alias for `handle`, accepted for compatibility. Sending both with different values is rejected."
         }
       ]
     },
@@ -4599,6 +5813,13 @@
           "flag": "include-raw",
           "type": "boolean",
           "required": false
+        },
+        {
+          "name": "url",
+          "flag": "url",
+          "type": "string",
+          "required": false,
+          "description": "Alias for `id`, accepted for compatibility. Sending both with different values is rejected."
         }
       ]
     },
@@ -4621,6 +5842,63 @@
           "type": "string",
           "required": true,
           "description": "Spotify artist id, spotify:artist: URI, or open.spotify.com artist URL"
+        },
+        {
+          "name": "cache_max_age",
+          "flag": "cache-max-age",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "include_raw",
+          "flag": "include-raw",
+          "type": "boolean",
+          "required": false
+        },
+        {
+          "name": "url",
+          "flag": "url",
+          "type": "string",
+          "required": false,
+          "description": "Alias for `id`, accepted for compatibility. Sending both with different values is rejected."
+        }
+      ]
+    },
+    {
+      "name": "spotify.playlist",
+      "platform": "spotify",
+      "action": "playlist",
+      "path": "/v1/spotify/playlist",
+      "summary": "Playlist contents",
+      "description": "Public Spotify playlist: name, owner, cover art and the tracks the public embed exposes, up to a cap Spotify enforces server-side (measured 100 items on a 150+ track playlist — see docs/verified-endpoints.md). This does not page through Spotify's Web API, so a playlist longer than that cap is served partially. `cursor` pages the tracks this endpoint already has, 50 per page; it never issues a second upstream request.",
+      "credits": 1,
+      "cacheable": true,
+      "batchable": true,
+      "experimental": true,
+      "constraints": [
+        "Pass exactly one of `id` or `url`."
+      ],
+      "params": [
+        {
+          "name": "id",
+          "flag": "id",
+          "type": "string",
+          "required": false,
+          "description": "Spotify playlist id, spotify:playlist: URI, or open.spotify.com playlist URL"
+        },
+        {
+          "name": "url",
+          "flag": "url",
+          "type": "string",
+          "required": false,
+          "description": "open.spotify.com playlist URL"
+        },
+        {
+          "name": "cursor",
+          "flag": "cursor",
+          "type": "string",
+          "required": false,
+          "description": "Offset into the track list — pass back `pagination.cursor`"
         },
         {
           "name": "cache_max_age",
@@ -4675,6 +5953,13 @@
           "flag": "include-raw",
           "type": "boolean",
           "required": false
+        },
+        {
+          "name": "url",
+          "flag": "url",
+          "type": "string",
+          "required": false,
+          "description": "Alias for `id`, accepted for compatibility. Sending both with different values is rejected."
         }
       ]
     },
@@ -4731,6 +6016,13 @@
           "flag": "include-raw",
           "type": "boolean",
           "required": false
+        },
+        {
+          "name": "url",
+          "flag": "url",
+          "type": "string",
+          "required": false,
+          "description": "Alias for `id`, accepted for compatibility. Sending both with different values is rejected."
         }
       ]
     },
@@ -4816,6 +6108,156 @@
           "type": "string",
           "required": true,
           "description": "Spotify track id, spotify:track: URI, or open.spotify.com track URL"
+        },
+        {
+          "name": "cache_max_age",
+          "flag": "cache-max-age",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "include_raw",
+          "flag": "include-raw",
+          "type": "boolean",
+          "required": false
+        },
+        {
+          "name": "url",
+          "flag": "url",
+          "type": "string",
+          "required": false,
+          "description": "Alias for `id`, accepted for compatibility. Sending both with different values is rejected."
+        }
+      ]
+    },
+    {
+      "name": "taplink.page",
+      "platform": "taplink",
+      "action": "page",
+      "path": "/v1/taplink",
+      "summary": "Taplink page",
+      "description": "Public Taplink page as a creator profile: display name, bio, avatar, and every outbound link in order.",
+      "credits": 1,
+      "cacheable": true,
+      "batchable": true,
+      "experimental": false,
+      "constraints": [],
+      "params": [
+        {
+          "name": "url",
+          "flag": "url",
+          "type": "string",
+          "required": true,
+          "description": "Page URL (https://taplink.cc/<username>) or just the username"
+        },
+        {
+          "name": "cache_max_age",
+          "flag": "cache-max-age",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "include_raw",
+          "flag": "include-raw",
+          "type": "boolean",
+          "required": false
+        }
+      ]
+    },
+    {
+      "name": "telegram.channel",
+      "platform": "telegram",
+      "action": "channel",
+      "path": "/v1/telegram/channel",
+      "summary": "Channel",
+      "description": "Public Telegram channel or group metadata including its name, description, avatar, verification status, subscriber or member count, and public media counters. Counts are Telegram's own rounded display values (\"9.66M\"), not exact figures — the original text is in `raw.counters`. Uses Telegram's public web preview and does not use a logged-in Telegram account, so private channels, invite-only groups and user accounts are not covered. An old username still resolves to the channel that took it over, so `handle` here is the header username and may differ from the one inside a post id — join on a post `id`, never on the handle.",
+      "credits": 1,
+      "cacheable": true,
+      "batchable": true,
+      "experimental": true,
+      "constraints": [],
+      "params": [
+        {
+          "name": "handle",
+          "flag": "handle",
+          "type": "string",
+          "required": true,
+          "description": "Public channel or group username: @telegram, telegram, or https://t.me/telegram"
+        },
+        {
+          "name": "cache_max_age",
+          "flag": "cache-max-age",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "include_raw",
+          "flag": "include-raw",
+          "type": "boolean",
+          "required": false
+        }
+      ]
+    },
+    {
+      "name": "telegram.channelPosts",
+      "platform": "telegram",
+      "action": "channel-posts",
+      "path": "/v1/telegram/channel-posts",
+      "summary": "Channel posts",
+      "description": "One public web-preview page of Telegram posts with text, publish date, views, reactions when exposed, forwards, media (photos and the playable video file), and link previews. Twenty posts per page, newest first. Pass the returned cursor to fetch the previous page. Empty and terminal pages are not charged. `viewCount` is Telegram's own rounded display value (\"1.37M\" → 1370000), not an exact count; the original text is in `raw.messages[].viewsText`. Reactions, the forward source and the link preview are under `raw`; the unified schema has no field for them. A post `id` carries the CANONICAL username of the channel, which differs from the one you asked for when an old username still resolves to it — join on `id`, not on the handle you passed.",
+      "credits": 1,
+      "cacheable": true,
+      "batchable": true,
+      "experimental": true,
+      "constraints": [],
+      "params": [
+        {
+          "name": "handle",
+          "flag": "handle",
+          "type": "string",
+          "required": true,
+          "description": "Public channel or group username: @telegram, telegram, or https://t.me/telegram"
+        },
+        {
+          "name": "cursor",
+          "flag": "cursor",
+          "type": "string",
+          "required": false,
+          "description": "`pagination.cursor` from a previous response"
+        },
+        {
+          "name": "cache_max_age",
+          "flag": "cache-max-age",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "include_raw",
+          "flag": "include-raw",
+          "type": "boolean",
+          "required": false
+        }
+      ]
+    },
+    {
+      "name": "telegram.post",
+      "platform": "telegram",
+      "action": "post",
+      "path": "/v1/telegram/post",
+      "summary": "Post",
+      "description": "A single public Telegram post with its text, publish date, views, reactions when exposed, forward source, media (photos and the playable video file), and link preview. `viewCount` is Telegram's own rounded display value (\"1.37M\" → 1370000), not an exact count; the original text is in `raw.viewsText`. Reactions, the forward source and the link preview are under `raw`. Reads the public post embed and does not use a logged-in Telegram account.",
+      "credits": 1,
+      "cacheable": true,
+      "batchable": true,
+      "experimental": true,
+      "constraints": [],
+      "params": [
+        {
+          "name": "url",
+          "flag": "url",
+          "type": "string",
+          "required": true,
+          "description": "Post link: https://t.me/<handle>/<message id>, for example https://t.me/telegram/441"
         },
         {
           "name": "cache_max_age",
@@ -4986,6 +6428,95 @@
           "type": "string",
           "required": true,
           "description": "Handle (@zuck) or a threads.com profile URL"
+        },
+        {
+          "name": "cache_max_age",
+          "flag": "cache-max-age",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "include_raw",
+          "flag": "include-raw",
+          "type": "boolean",
+          "required": false
+        }
+      ]
+    },
+    {
+      "name": "tiktok.adLibraryAd",
+      "platform": "tiktok",
+      "action": "ad-library-ad",
+      "path": "/v1/tiktok/ad-library/ad",
+      "summary": "One TikTok ad",
+      "description": "One TikTok ad by id or URL. Two public surfaces carry ads and an id alone does not say which: Creative Center Top Ads (ads.tiktok.com) is checked first, then the Commercial Content Library (library.tiktok.com). Pass a URL from either and only that source is queried. Both return the same `Ad` shape; fields a source does not publish are null rather than inferred - Top Ads carries no flight dates or advertiser entity, and the library carries no performance metrics. `countries` here is the ad's own targeting, unlike a search result's, where it is the market that was searched. An id neither source knows is a 404; an id that only one source could be asked about is not, because a source that did not answer has not said no. Reach bands stay in `raw`, not in the impressions fields, because reach is not impressions.",
+      "credits": 1,
+      "cacheable": true,
+      "batchable": true,
+      "experimental": true,
+      "constraints": [],
+      "params": [
+        {
+          "name": "ad_id",
+          "flag": "ad-id",
+          "type": "string",
+          "required": true,
+          "description": "Numeric ad id, a library.tiktok.com `/ads/detail?ad_id=` URL, or an ads.tiktok.com Top Ads URL"
+        },
+        {
+          "name": "cache_max_age",
+          "flag": "cache-max-age",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "include_raw",
+          "flag": "include-raw",
+          "type": "boolean",
+          "required": false
+        }
+      ]
+    },
+    {
+      "name": "tiktok.adLibrarySearch",
+      "platform": "tiktok",
+      "action": "ad-library-search",
+      "path": "/v1/tiktok/ad-library/search",
+      "summary": "Search the TikTok Ads Library",
+      "description": "Ads in TikTok's public Commercial Content Library, by keyword (`query`) or by advertiser (`advertiser_name`). An advertiser name is resolved through TikTok's own typeahead first, then searched as an entity, so it matches the registered legal name (\"NIKE Retail B.V.\") rather than a brand. Results are NOT global: TikTok publishes this archive per market and refuses a search without one, so `region` is required, validated against the market list the library itself publishes rather than a fixed list here, and every result ran in that market — which is what each ad's `countries` reports. TikTok returns its own relevance ranking; we ask for the most recently shown first, but that is only a tiebreak within it, so results are not ordered by date. Cursor-paginated 12 at a time, each ad carrying its public library.tiktok.com detail URL. Pages are not guaranteed disjoint: the archive re-ranks live, so an ad can repeat across pages. Political and election ads are outside the archive. Reach is published as a band and is not impressions, so it stays in `raw.estimated_audience` rather than the impressions fields.",
+      "credits": 1,
+      "cacheable": true,
+      "batchable": false,
+      "experimental": true,
+      "constraints": [],
+      "params": [
+        {
+          "name": "query",
+          "flag": "query",
+          "type": "string",
+          "required": false,
+          "description": "Keyword, matched against ad text and advertiser name"
+        },
+        {
+          "name": "advertiser_name",
+          "flag": "advertiser-name",
+          "type": "string",
+          "required": false,
+          "description": "Advertiser name, resolved through TikTok's typeahead to one advertiser entity"
+        },
+        {
+          "name": "region",
+          "flag": "region",
+          "type": "string",
+          "required": true,
+          "description": "Market to search. TikTok publishes this archive per market; one of AT, BE, BG, CH, CY, CZ, DE, DK, EE, ES, FI, FR, GB, GR, HR, HU, IE, IS, IT, LI, LT, LU, LV, MT, NL, NO, PL, PT, RO, SE, SI, SK, TR."
+        },
+        {
+          "name": "cursor",
+          "flag": "cursor",
+          "type": "string",
+          "required": false,
+          "description": "`pagination.cursor` from a previous response"
         },
         {
           "name": "cache_max_age",
@@ -5419,19 +6950,28 @@
       "action": "live",
       "path": "/v1/tiktok/live",
       "summary": "Live stream info",
-      "description": "Details of a creator's stream while they are live: room id, title, cover, current viewers and start time. A creator who is not live returns `empty_result`, which is a real answer and costs nothing — that makes this usable as a cheap \"are they live?\" poll.",
+      "description": "Details of a creator's stream while they are live: room id, title, cover, current viewers and start time. A creator who is not live returns `empty_result`, which is a real answer and costs nothing — that makes this usable as a cheap \"are they live?\" poll. Pass `room_id` (from a previous response's `roomId`) to look the room up directly on TikTok's own webcast surface — no third-party provider is involved. On the `room_id` path `handle` may come back empty if the webcast payload omits the room owner.",
       "credits": 1,
       "cacheable": true,
       "batchable": true,
       "experimental": true,
-      "constraints": [],
+      "constraints": [
+        "Pass either `handle` or `room_id`."
+      ],
       "params": [
         {
           "name": "handle",
           "flag": "handle",
           "type": "string",
-          "required": true,
+          "required": false,
           "description": "Handle (@nike), or a full tiktok.com profile URL"
+        },
+        {
+          "name": "room_id",
+          "flag": "room-id",
+          "type": "string",
+          "required": false,
+          "description": "TikTok LIVE room id, e.g. from a previous tiktok.live response's `roomId`"
         },
         {
           "name": "cache_max_age",
@@ -6358,6 +7898,13 @@
           "flag": "include-raw",
           "type": "boolean",
           "required": false
+        },
+        {
+          "name": "max_cursor",
+          "flag": "max-cursor",
+          "type": "string",
+          "required": false,
+          "description": "Alias for `cursor`, accepted for compatibility. Sending both with different values is rejected."
         }
       ]
     },
@@ -6962,6 +8509,239 @@
           "type": "string",
           "required": false,
           "description": "`pagination.cursor` from a previous response. Official API only."
+        },
+        {
+          "name": "cache_max_age",
+          "flag": "cache-max-age",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "include_raw",
+          "flag": "include-raw",
+          "type": "boolean",
+          "required": false
+        }
+      ]
+    },
+    {
+      "name": "walmart.category",
+      "platform": "walmart",
+      "action": "category",
+      "path": "/v1/walmart/category",
+      "summary": "Browse a Walmart category",
+      "description": "Public Walmart category listing: the same shape as `walmart.search`, keyed by category id instead of a query.",
+      "credits": 3,
+      "cacheable": true,
+      "batchable": true,
+      "experimental": false,
+      "constraints": [],
+      "params": [
+        {
+          "name": "category",
+          "flag": "category",
+          "type": "string",
+          "required": true,
+          "description": "Walmart category id, e.g. \"3944_1089430_37807\""
+        },
+        {
+          "name": "tld",
+          "flag": "tld",
+          "type": "string",
+          "required": false,
+          "description": "Walmart marketplace, default com. One of: com, ca"
+        },
+        {
+          "name": "country_code",
+          "flag": "country-code",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "page",
+          "flag": "page",
+          "type": "number",
+          "required": false
+        },
+        {
+          "name": "cache_max_age",
+          "flag": "cache-max-age",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "include_raw",
+          "flag": "include-raw",
+          "type": "boolean",
+          "required": false
+        }
+      ]
+    },
+    {
+      "name": "walmart.product",
+      "platform": "walmart",
+      "action": "product",
+      "path": "/v1/walmart/product",
+      "summary": "Walmart product details",
+      "description": "Public details for a Walmart listing: title, price, availability, seller, ratings, images and specifications, read from the page's own __NEXT_DATA__ payload.",
+      "credits": 3,
+      "cacheable": true,
+      "batchable": true,
+      "experimental": false,
+      "constraints": [],
+      "params": [
+        {
+          "name": "product_id",
+          "flag": "product-id",
+          "type": "string",
+          "required": true,
+          "description": "Numeric Walmart item id, the last path segment of an /ip/ URL, e.g. 18210919718"
+        },
+        {
+          "name": "tld",
+          "flag": "tld",
+          "type": "string",
+          "required": false,
+          "description": "Walmart marketplace, default com. One of: com, ca"
+        },
+        {
+          "name": "country_code",
+          "flag": "country-code",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "cache_max_age",
+          "flag": "cache-max-age",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "include_raw",
+          "flag": "include-raw",
+          "type": "boolean",
+          "required": false
+        }
+      ]
+    },
+    {
+      "name": "walmart.reviews",
+      "platform": "walmart",
+      "action": "reviews",
+      "path": "/v1/walmart/reviews",
+      "summary": "Walmart product reviews",
+      "description": "Paginated customer reviews for a Walmart product, from its dedicated reviews page.",
+      "credits": 3,
+      "cacheable": true,
+      "batchable": true,
+      "experimental": false,
+      "constraints": [],
+      "params": [
+        {
+          "name": "product_id",
+          "flag": "product-id",
+          "type": "string",
+          "required": true,
+          "description": "Numeric Walmart item id, e.g. 18210919718"
+        },
+        {
+          "name": "tld",
+          "flag": "tld",
+          "type": "string",
+          "required": false,
+          "description": "Walmart marketplace, default com. One of: com, ca"
+        },
+        {
+          "name": "country_code",
+          "flag": "country-code",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "page",
+          "flag": "page",
+          "type": "number",
+          "required": false
+        },
+        {
+          "name": "sort",
+          "flag": "sort",
+          "type": "string",
+          "required": false,
+          "enum": [
+            "relevancy",
+            "helpful",
+            "submission-desc",
+            "submission-asc",
+            "rating-desc",
+            "rating-asc"
+          ]
+        },
+        {
+          "name": "ratings",
+          "flag": "ratings",
+          "type": "string",
+          "required": false,
+          "description": "Comma list of star ratings to include, e.g. \"5,4\""
+        },
+        {
+          "name": "verified_purchase",
+          "flag": "verified-purchase",
+          "type": "boolean",
+          "required": false
+        },
+        {
+          "name": "cache_max_age",
+          "flag": "cache-max-age",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "include_raw",
+          "flag": "include-raw",
+          "type": "boolean",
+          "required": false
+        }
+      ]
+    },
+    {
+      "name": "walmart.search",
+      "platform": "walmart",
+      "action": "search",
+      "path": "/v1/walmart/search",
+      "summary": "Search Walmart",
+      "description": "Public Walmart search results for a query: position, price, rating and availability per item.",
+      "credits": 3,
+      "cacheable": true,
+      "batchable": true,
+      "experimental": false,
+      "constraints": [],
+      "params": [
+        {
+          "name": "query",
+          "flag": "query",
+          "type": "string",
+          "required": true,
+          "description": "Search terms, e.g. \"laptop\""
+        },
+        {
+          "name": "tld",
+          "flag": "tld",
+          "type": "string",
+          "required": false,
+          "description": "Walmart marketplace, default com. One of: com, ca"
+        },
+        {
+          "name": "country_code",
+          "flag": "country-code",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "page",
+          "flag": "page",
+          "type": "number",
+          "required": false
         },
         {
           "name": "cache_max_age",
@@ -7669,6 +9449,144 @@
           "type": "string",
           "required": true,
           "description": "Video URL or 11-character video id"
+        },
+        {
+          "name": "cache_max_age",
+          "flag": "cache-max-age",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "include_raw",
+          "flag": "include-raw",
+          "type": "boolean",
+          "required": false
+        }
+      ]
+    },
+    {
+      "name": "zillow.agent",
+      "platform": "zillow",
+      "action": "agent",
+      "path": "/v1/zillow/agent",
+      "summary": "Zillow agent profile",
+      "description": "Public Zillow agent/team profile: brokerage, license, rating and review count, where published.",
+      "credits": 1,
+      "cacheable": true,
+      "batchable": true,
+      "experimental": true,
+      "constraints": [],
+      "params": [
+        {
+          "name": "url",
+          "flag": "url",
+          "type": "string",
+          "required": true,
+          "description": "Zillow agent profile URL, e.g. https://www.zillow.com/profile/<username>"
+        },
+        {
+          "name": "cache_max_age",
+          "flag": "cache-max-age",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "include_raw",
+          "flag": "include-raw",
+          "type": "boolean",
+          "required": false
+        }
+      ]
+    },
+    {
+      "name": "zillow.property",
+      "platform": "zillow",
+      "action": "property",
+      "path": "/v1/zillow/property",
+      "summary": "Zillow listing details",
+      "description": "Public details for a Zillow listing: price, status, beds/baths, area, address and an inline photo set.",
+      "credits": 1,
+      "cacheable": true,
+      "batchable": true,
+      "experimental": false,
+      "constraints": [
+        "Pass either `zpid` or `url`."
+      ],
+      "params": [
+        {
+          "name": "zpid",
+          "flag": "zpid",
+          "type": "string",
+          "required": false,
+          "description": "Zillow property id (zpid), e.g. \"120900080\""
+        },
+        {
+          "name": "url",
+          "flag": "url",
+          "type": "string",
+          "required": false,
+          "description": "Zillow listing URL, e.g. https://www.zillow.com/homedetails/<slug>/<zpid>_zpid/"
+        },
+        {
+          "name": "cache_max_age",
+          "flag": "cache-max-age",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "include_raw",
+          "flag": "include-raw",
+          "type": "boolean",
+          "required": false
+        }
+      ]
+    },
+    {
+      "name": "zillow.search",
+      "platform": "zillow",
+      "action": "search",
+      "path": "/v1/zillow/search",
+      "summary": "Search Zillow listings by location",
+      "description": "Public Zillow search results for a location, as full listing records.",
+      "credits": 1,
+      "cacheable": true,
+      "batchable": true,
+      "experimental": false,
+      "constraints": [
+        "Pass either `location` or `url`."
+      ],
+      "params": [
+        {
+          "name": "location",
+          "flag": "location",
+          "type": "string",
+          "required": false,
+          "description": "City/state or ZIP, e.g. \"Austin, TX\""
+        },
+        {
+          "name": "url",
+          "flag": "url",
+          "type": "string",
+          "required": false,
+          "description": "Zillow search URL, e.g. https://www.zillow.com/austin-tx/"
+        },
+        {
+          "name": "listing_type",
+          "flag": "listing-type",
+          "type": "string",
+          "required": false,
+          "enum": [
+            "sale",
+            "rent"
+          ],
+          "default": "sale"
+        },
+        {
+          "name": "page",
+          "flag": "page",
+          "type": "number",
+          "required": false,
+          "default": 1
         },
         {
           "name": "cache_max_age",

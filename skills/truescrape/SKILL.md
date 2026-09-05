@@ -220,12 +220,15 @@ LinkedIn's under `/v1/linkedin/ads/search`.
 ## Endpoint catalogue
 
 <!-- catalogue:start -->
-173 endpoints across 28 platforms, generated from the live API on 2026-09-02.
+206 endpoints across 37 platforms, generated from the live API on 2026-09-05.
 
-### amazon (1)
+### amazon (4)
 
 | Endpoint | CLI | Credits | What it returns |
 |---|---|---|---|
+| `GET /v1/amazon/offers` | `truescrape amazon offers --asin` | 3 | All seller offers for a product |
+| `GET /v1/amazon/product` | `truescrape amazon product --asin` | 3 | Product details |
+| `GET /v1/amazon/search` | `truescrape amazon search --query` | 3 | Search results |
 | `GET /v1/amazon/shop` | `truescrape amazon shop --url` | 1 | Amazon Shop page |
 
 ### apple-music (4)
@@ -245,14 +248,23 @@ LinkedIn's under `/v1/linkedin/ads/search`.
 | `GET /v1/bluesky/profile` | `truescrape bluesky profile --handle` | 1 | Profile |
 | `GET /v1/bluesky/user/posts` | `truescrape bluesky user-posts --handle` | 1 | User posts |
 
-### facebook (20)
+### ebay (2)
+
+| Endpoint | CLI | Credits | What it returns |
+|---|---|---|---|
+| `GET /v1/ebay/product` | `truescrape ebay product` | 1 | eBay listing details (experimental) |
+| `GET /v1/ebay/search` | `truescrape ebay search --query` | 1 | Search eBay listings (experimental) |
+
+### facebook (22)
 
 | Endpoint | CLI | Credits | What it returns |
 |---|---|---|---|
 | `GET /v1/facebook/ad-library/ad` | `truescrape facebook ad-library-ad --id` | 1 | Ad details |
+| `GET /v1/facebook/ad-library/ad-transcript` | `truescrape facebook ad-library-ad-transcript` | 1 | Ad video transcript (experimental) |
 | `GET /v1/facebook/ad-library/advertisers` | `truescrape facebook ad-library-advertisers --query` | 1 | Find advertisers running ads |
 | `GET /v1/facebook/ad-library/page-ads` | `truescrape facebook ad-library-page-ads --page-id` | 2 | All ads for one advertiser |
 | `GET /v1/facebook/ad-library/search` | `truescrape facebook ad-library-search --query` | 2 | Search the Meta Ad Library |
+| `GET /v1/facebook/city-events` | `truescrape facebook city-events --url` | 1 | Get the events of a city (experimental) |
 | `GET /v1/facebook/comment-replies` | `truescrape facebook comment-replies --url --comment-id` | 1 | Replies to a comment |
 | `GET /v1/facebook/event` | `truescrape facebook event --url` | 1 | Event details |
 | `GET /v1/facebook/events/search` | `truescrape facebook events-search --query` | 1 | Search public events |
@@ -285,14 +297,24 @@ LinkedIn's under `/v1/linkedin/ads/search`.
 | `GET /v1/github/user/pull-requests` | `truescrape github user-pull-requests --handle` | 1 | Pull requests by a user |
 | `GET /v1/github/user/repositories` | `truescrape github user-repositories` | 1 | User repositories |
 
-### google (4)
+### google (8)
 
 | Endpoint | CLI | Credits | What it returns |
 |---|---|---|---|
 | `GET /v1/google/ad-library/ad` | `truescrape google ad-library-ad --url` | 1 | Ad details |
 | `GET /v1/google/ad-library/advertiser-ads` | `truescrape google ad-library-advertiser-ads` | 2 | Ads run by an advertiser or domain |
 | `GET /v1/google/ad-library/advertisers` | `truescrape google ad-library-advertisers --query` | 1 | Find advertisers in the Ads Transparency Centre |
+| `GET /v1/google/jobs` | `truescrape google jobs --query` | 5 | Google Jobs results |
+| `GET /v1/google/maps-search` | `truescrape google maps-search --query --latitude --longitude` | 5 | Google Maps place search |
+| `GET /v1/google/news` | `truescrape google news --query` | 5 | Google News results |
 | `GET /v1/google/search` | `truescrape google search --query` | 1 | Web search results |
+| `GET /v1/google/shopping` | `truescrape google shopping --query` | 5 | Google Shopping results |
+
+### identity (1)
+
+| Endpoint | CLI | Credits | What it returns |
+|---|---|---|---|
+| `GET /v1/find-social-profiles` | `truescrape identity find-social-profiles --platform --handle` | 10 | Find a creator's other social profiles (experimental) |
 
 ### inference (1)
 
@@ -305,7 +327,6 @@ LinkedIn's under `/v1/linkedin/ads/search`.
 | Endpoint | CLI | Credits | What it returns |
 |---|---|---|---|
 | `GET /v1/instagram/audio-reels` | `truescrape instagram audio-reels --audio-id` | 1 | Reels using a sound (experimental) |
-| `GET /v1/instagram/basic-profile` | `truescrape instagram basic-profile` | 1 | Profile by numeric id (experimental) |
 | `GET /v1/instagram/comment-replies` | `truescrape instagram comment-replies --url --comment-id` | 1 | Replies under one comment (experimental) |
 | `GET /v1/instagram/hashtag-posts` | `truescrape instagram hashtag-posts --hashtag` | 1 | Posts under a hashtag (experimental) |
 | `GET /v1/instagram/highlight` | `truescrape instagram highlight --id` | 1 | Stories inside a highlight (experimental) |
@@ -313,6 +334,7 @@ LinkedIn's under `/v1/linkedin/ads/search`.
 | `GET /v1/instagram/post` | `truescrape instagram post --url` | 1 | Post or reel details (experimental) |
 | `GET /v1/instagram/post-comments` | `truescrape instagram post-comments --url` | 1 | Comments on a post or reel (experimental) |
 | `GET /v1/instagram/profile` | `truescrape instagram profile --handle` | 1 | Profile details (experimental) |
+| `GET /v1/instagram/profile-post-count` | `truescrape instagram profile-post-count --handle` | 1 | Post count for a profile (experimental) |
 | `GET /v1/instagram/profile-search` | `truescrape instagram profile-search --query` | 1 | Search accounts (experimental) |
 | `GET /v1/instagram/reels-search` | `truescrape instagram reels-search --query` | 1 | Search reels by keyword (experimental) |
 | `GET /v1/instagram/search` | `truescrape instagram search --query` | 1 | Search accounts, hashtags and places (experimental) |
@@ -375,6 +397,12 @@ LinkedIn's under `/v1/linkedin/ads/search`.
 |---|---|---|---|
 | `GET /v1/linktree` | `truescrape linktree page --url` | 1 | Linktree page |
 
+### milkshake (1)
+
+| Endpoint | CLI | Credits | What it returns |
+|---|---|---|---|
+| `GET /v1/milkshake` | `truescrape milkshake page --url` | 1 | Milkshake page |
+
 ### pillar (1)
 
 | Endpoint | CLI | Credits | What it returns |
@@ -390,18 +418,28 @@ LinkedIn's under `/v1/linkedin/ads/search`.
 | `GET /v1/pinterest/search` | `truescrape pinterest search --query` | 1 | Search pins |
 | `GET /v1/pinterest/user/boards` | `truescrape pinterest user-boards --handle` | 1 | Boards owned by a user |
 
-### reddit (8)
+### reddit (9)
 
 | Endpoint | CLI | Credits | What it returns |
 |---|---|---|---|
 | `GET /v1/reddit/post` | `truescrape reddit post --url` | 1 | Post details |
 | `GET /v1/reddit/post/comment/replies` | `truescrape reddit post-comment-replies --url` | 1 | Comment replies |
 | `GET /v1/reddit/post/comments` | `truescrape reddit post-comments --url` | 1 | Post comments |
+| `GET /v1/reddit/post/transcript` | `truescrape reddit post-transcript --url` | 1 | Video transcript (experimental) |
 | `GET /v1/reddit/search` | `truescrape reddit search --query` | 1 | Search posts |
 | `GET /v1/reddit/subreddit` | `truescrape reddit subreddit --subreddit` | 1 | Subreddit posts |
 | `GET /v1/reddit/subreddit/details` | `truescrape reddit subreddit-details --subreddit` | 1 | Subreddit details |
 | `GET /v1/reddit/user` | `truescrape reddit user --username` | 1 | User profile |
 | `GET /v1/reddit/user/posts` | `truescrape reddit user-posts --username` | 1 | User posts |
+
+### redfin (4)
+
+| Endpoint | CLI | Credits | What it returns |
+|---|---|---|---|
+| `GET /v1/redfin/agent` | `truescrape redfin agent --url` | 1 | Real estate agent profile |
+| `GET /v1/redfin/for-rent` | `truescrape redfin for-rent --url` | 1 | For-rent property details |
+| `GET /v1/redfin/for-sale` | `truescrape redfin for-sale --url` | 1 | For-sale property details |
+| `GET /v1/redfin/search` | `truescrape redfin search --url` | 1 | Search Redfin listing results |
 
 ### rumble (5)
 
@@ -421,6 +459,12 @@ LinkedIn's under `/v1/linkedin/ads/search`.
 | `GET /v1/snapchat/spotlight` | `truescrape snapchat spotlight --url` | 1 | Spotlight by link |
 | `GET /v1/snapchat/spotlight/comments` | `truescrape snapchat spotlight-comments --url` | 1 | Spotlight comments by link |
 
+### solo (1)
+
+| Endpoint | CLI | Credits | What it returns |
+|---|---|---|---|
+| `GET /v1/solo` | `truescrape solo page --url` | 1 | Solo page |
+
 ### soundcloud (3)
 
 | Endpoint | CLI | Credits | What it returns |
@@ -429,16 +473,31 @@ LinkedIn's under `/v1/linkedin/ads/search`.
 | `GET /v1/soundcloud/artist/tracks` | `truescrape soundcloud artist-tracks --handle` | 1 | Artist tracks |
 | `GET /v1/soundcloud/track` | `truescrape soundcloud track --url` | 1 | Track details |
 
-### spotify (6)
+### spotify (7)
 
 | Endpoint | CLI | Credits | What it returns |
 |---|---|---|---|
 | `GET /v1/spotify/album` | `truescrape spotify album --id` | 1 | Album details |
 | `GET /v1/spotify/artist` | `truescrape spotify artist --id` | 1 | Artist details |
+| `GET /v1/spotify/playlist` | `truescrape spotify playlist` | 1 | Playlist contents (experimental) |
 | `GET /v1/spotify/podcast` | `truescrape spotify podcast --id` | 1 | Podcast details |
 | `GET /v1/spotify/podcast/episodes` | `truescrape spotify podcast-episodes --id` | 1 | Podcast episodes |
 | `GET /v1/spotify/search` | `truescrape spotify search --query` | 1 | Search |
 | `GET /v1/spotify/track` | `truescrape spotify track --id` | 1 | Track details |
+
+### taplink (1)
+
+| Endpoint | CLI | Credits | What it returns |
+|---|---|---|---|
+| `GET /v1/taplink` | `truescrape taplink page --url` | 1 | Taplink page |
+
+### telegram (3)
+
+| Endpoint | CLI | Credits | What it returns |
+|---|---|---|---|
+| `GET /v1/telegram/channel` | `truescrape telegram channel --handle` | 1 | Channel (experimental) |
+| `GET /v1/telegram/channel-posts` | `truescrape telegram channel-posts --handle` | 1 | Channel posts (experimental) |
+| `GET /v1/telegram/post` | `truescrape telegram post --url` | 1 | Post (experimental) |
 
 ### threads (5)
 
@@ -450,10 +509,12 @@ LinkedIn's under `/v1/linkedin/ads/search`.
 | `GET /v1/threads/search/users` | `truescrape threads search-users --query` | 1 | Search users |
 | `GET /v1/threads/user/posts` | `truescrape threads user-posts --handle` | 1 | User posts |
 
-### tiktok (30)
+### tiktok (32)
 
 | Endpoint | CLI | Credits | What it returns |
 |---|---|---|---|
+| `GET /v1/tiktok/ad-library/ad` | `truescrape tiktok ad-library-ad --ad-id` | 1 | One TikTok ad (experimental) |
+| `GET /v1/tiktok/ad-library/search` | `truescrape tiktok ad-library-search --region` | 1 | Search the TikTok Ads Library (experimental) |
 | `GET /v1/tiktok/collection/videos` | `truescrape tiktok collection-videos` | 1 | Collection videos (experimental) |
 | `GET /v1/tiktok/comment-replies` | `truescrape tiktok comment-replies --comment-id --url` | 1 | Replies to a comment (experimental) |
 | `GET /v1/tiktok/comments` | `truescrape tiktok comments --url` | 1 | Comments on a video (experimental) |
@@ -462,7 +523,7 @@ LinkedIn's under `/v1/linkedin/ads/search`.
 | `GET /v1/tiktok/following` | `truescrape tiktok following --handle` | 1 | Accounts a creator follows (experimental) |
 | `GET /v1/tiktok/hashtag` | `truescrape tiktok hashtag --hashtag` | 1 | Hashtag details (experimental) |
 | `GET /v1/tiktok/hashtag-videos` | `truescrape tiktok hashtag-videos --hashtag` | 1 | Videos using a hashtag (experimental) |
-| `GET /v1/tiktok/live` | `truescrape tiktok live --handle` | 1 | Live stream info (experimental) |
+| `GET /v1/tiktok/live` | `truescrape tiktok live` | 1 | Live stream info (experimental) |
 | `GET /v1/tiktok/playlist-videos` | `truescrape tiktok playlist-videos --playlist-id` | 1 | Videos in a playlist (experimental) |
 | `GET /v1/tiktok/playlists` | `truescrape tiktok playlists --handle` | 1 | A creator's playlists (experimental) |
 | `GET /v1/tiktok/product` | `truescrape tiktok product --url` | 1 | Product details (experimental) |
@@ -513,6 +574,15 @@ LinkedIn's under `/v1/linkedin/ads/search`.
 | `GET /v1/twitter/tweet/transcript` | `truescrape twitter tweet-transcript --url` | 1 | Post transcript (experimental) |
 | `GET /v1/twitter/user-tweets` | `truescrape twitter user-tweets --handle` | 1 | Recent posts from an account |
 
+### walmart (4)
+
+| Endpoint | CLI | Credits | What it returns |
+|---|---|---|---|
+| `GET /v1/walmart/category` | `truescrape walmart category --category` | 3 | Browse a Walmart category |
+| `GET /v1/walmart/product` | `truescrape walmart product --product-id` | 3 | Walmart product details |
+| `GET /v1/walmart/reviews` | `truescrape walmart reviews --product-id` | 3 | Walmart product reviews |
+| `GET /v1/walmart/search` | `truescrape walmart search --query` | 3 | Search Walmart |
+
 ### youtube (17)
 
 | Endpoint | CLI | Credits | What it returns |
@@ -534,4 +604,12 @@ LinkedIn's under `/v1/linkedin/ads/search`.
 | `GET /v1/youtube/video/comment-replies` | `truescrape youtube video-comment-replies` | 1 | Comment replies |
 | `GET /v1/youtube/video/comments` | `truescrape youtube video-comments --url` | 1 | Video comments |
 | `GET /v1/youtube/video/sponsors` | `truescrape youtube video-sponsors --url` | 1 | Video sponsors (inferred) (experimental) |
+
+### zillow (3)
+
+| Endpoint | CLI | Credits | What it returns |
+|---|---|---|---|
+| `GET /v1/zillow/agent` | `truescrape zillow agent --url` | 1 | Zillow agent profile (experimental) |
+| `GET /v1/zillow/property` | `truescrape zillow property` | 1 | Zillow listing details |
+| `GET /v1/zillow/search` | `truescrape zillow search` | 1 | Search Zillow listings by location |
 <!-- catalogue:end -->
