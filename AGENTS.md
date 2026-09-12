@@ -90,8 +90,10 @@ truescrape batch youtube channel --targets targets.json --wait
 
 For recurring checks ("track", "monitor", "tell me when"), use a subscription
 through the API (`POST /v1/subscriptions` with `endpoint`, `params`,
-`webhook_url` and `interval_seconds`). It bills only when the data changes. A
-loop that re-fetches on a timer pays for every unchanged fetch.
+`webhook_url` and an optional `interval_seconds`). Each check is billed like a
+normal request and refunded if it fails or comes back empty; the webhook fires
+only when the data changed. Leave out `interval_seconds` to use the endpoint's
+suggested interval.
 
 ## Output
 

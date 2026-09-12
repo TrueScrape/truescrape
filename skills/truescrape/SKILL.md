@@ -122,15 +122,33 @@ curl -X POST "https://api.truescrape.com/v1/subscriptions" \
   -d '{
     "endpoint": "youtube.channel",
     "params": {"handle":"@mkbhd"},
-    "webhook_url": "https://you.example/hook",
-    "interval_seconds": 3600
+    "webhook_url": "https://you.example/hook"
   }'
 ```
 
-A subscription re-checks on the interval and calls the webhook when the data
-changes. **Unchanged checks are free; you are billed only when something
-actually changed.** When a user asks to "track", "watch" or "monitor"
-something, this is the tool, not a timer loop over the sync endpoints.
+A subscription re-checks on a schedule and calls the webhook, with the data,
+only when the data changed. When a user asks to "track", "watch" or "monitor"
+something, this is the tool, not a timer loop over the sync endpoints: it does
+the diffing and the scheduling for you.
+
+- **Every check is billed** at the endpoint's normal price, and refunded if it
+  fails or comes back empty. The interval is the cost lever: a daily watch
+  costs a twenty-fourth of an hourly one.
+- **Leave out `interval_seconds`** to use the endpoint's suggested interval,
+  which follows how often that kind of data moves (hourly for prices and live
+  data, every six hours for posts and comments, daily for profiles and ads,
+  weekly for music and link-in-bio pages). Pass it only when the user asks for
+  a different cadence. The minimum is one hour; the maximum is seven days.
+- **Out of credits:** a check the balance can't cover is skipped. After two in
+  a row the watch pauses and a `subscription.paused` webhook is sent. It resumes
+  on its own once credits cover a check; nothing needs recreating.
+- **An account's watches share an hourly limit on checks**, weighted by
+  interval, so many daily watches fit where few hourly ones do. Over it, the
+  create is refused with `invalid_request` and `details.reason` of
+  `subscription_limit`; lengthen the interval or delete a watch you no longer
+  need.
+- Request-only options (`cache_max_age`, `render`, `download_media`,
+  `transcribe_fallback`) are refused on a subscription.
 
 ## Errors, from your side
 
@@ -189,8 +207,8 @@ switches the list.
 **"Track these 50 creators and tell me when they post"**
 
 50 subscriptions to `youtube.channelVideos` (or the platform's equivalent),
-one per creator, all pointing at your webhook. Not a timer loop. Unchanged
-checks are free, so the interval can be short.
+one per creator, all pointing at your webhook. Not a timer loop. Each check is
+billed, so keep the suggested interval unless the user needs to hear sooner.
 
 **"Pull transcripts for every video on this channel"**
 
