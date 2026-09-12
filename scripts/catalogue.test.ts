@@ -64,6 +64,17 @@ describe('generated blocks', () => {
       expect(block).toContain(`truescrape ${e.platform} ${e.action}`);
     }
     expect(block).toContain('### youtube (');
-    expect(block).toContain('(experimental)');
+    expect(block).not.toContain('(experimental)');
+  });
+});
+
+/**
+ * The generated block is not the only text that ships. A hand-written line in the
+ * skill still told agents to watch for an "(experimental)" mark after the catalogue
+ * stopped printing one, and the block test above could not see it.
+ */
+describe('published docs', () => {
+  it.each(['skills/truescrape/SKILL.md', 'README.md', 'AGENTS.md'])('%s carries no (experimental) label', (file) => {
+    expect(readFileSync(file, 'utf8')).not.toContain('(experimental)');
   });
 });

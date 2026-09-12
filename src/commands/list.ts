@@ -12,7 +12,6 @@ export interface EndpointRow {
   action: string;
   credits: number;
   summary: string;
-  experimental: boolean;
 }
 
 export function platformRows(): PlatformRow[] {
@@ -22,7 +21,7 @@ export function platformRows(): PlatformRow[] {
 export function endpointRows(platform: string): EndpointRow[] {
   const endpoints = endpointsFor(bundledCatalogue(), platform);
   if (!endpoints.length) throw new UsageError(`Unknown platform "${platform}". Run \`truescrape list\` to see what exists.`);
-  return endpoints.map((e) => ({ action: e.action, credits: e.credits, summary: e.summary, experimental: e.experimental }));
+  return endpoints.map((e) => ({ action: e.action, credits: e.credits, summary: e.summary }));
 }
 
 /** `truescrape list [platform]`: the bundled catalogue, no key and no network. */

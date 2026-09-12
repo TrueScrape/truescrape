@@ -33,7 +33,6 @@ function describe(endpoint: CatalogueEndpoint): string {
   if (endpoint.description) lines.push(endpoint.description);
   lines.push(`Costs ${plural(endpoint.credits, 'credit')}.`);
   lines.push(...endpoint.constraints);
-  if (endpoint.experimental) lines.push('(experimental)');
   return lines.join('\n');
 }
 
@@ -71,7 +70,7 @@ function addParamOptions(cmd: Command, param: CatalogueParam): void {
 export function registerEndpoint(parent: Command, endpoint: CatalogueEndpoint, overrides?: ContextOverrides): Command {
   const cmd = parent
     .command(endpoint.action)
-    .summary(endpoint.experimental ? `${endpoint.summary} (experimental)` : endpoint.summary)
+    .summary(endpoint.summary)
     .description(describe(endpoint));
   for (const param of endpoint.params) addParamOptions(cmd, param);
 

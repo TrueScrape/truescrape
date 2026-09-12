@@ -40,14 +40,14 @@ describe('list', () => {
   it('prints one row per endpoint of a platform', async () => {
     const { code, stdout } = await exec(['list', 'youtube']);
     expect(code).toBe(0);
-    const rows = JSON.parse(stdout) as { action: string; credits: number; summary: string; experimental: boolean }[];
+    const rows = JSON.parse(stdout) as { action: string; credits: number; summary: string }[];
     const expected = endpointsFor(bundledCatalogue(), 'youtube');
     expect(rows).toHaveLength(expected.length);
+    // Exact shape: an `experimental` key would fail this rather than slip through.
     expect(rows[0]).toEqual({
       action: expected[0]!.action,
       credits: expected[0]!.credits,
       summary: expected[0]!.summary,
-      experimental: expected[0]!.experimental,
     });
   });
 
