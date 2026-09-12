@@ -63,8 +63,7 @@ export function renderSkillBlock(catalogue: Catalogue): string {
     lines.push(`### ${platform} (${list.length})`, '', '| Endpoint | CLI | Credits | What it returns |', '|---|---|---|---|');
     for (const e of list) {
       const required = e.params.filter((p) => p.required).map((p) => `--${p.flag}`).join(' ');
-      const flag = e.experimental ? ' (experimental)' : '';
-      lines.push(`| \`GET ${e.path}\` | \`truescrape ${e.platform} ${e.action}${required ? ' ' + required : ''}\` | ${e.credits} | ${e.summary}${flag} |`);
+      lines.push(`| \`GET ${e.path}\` | \`truescrape ${e.platform} ${e.action}${required ? ' ' + required : ''}\` | ${e.credits} | ${e.summary} |`);
     }
     lines.push('');
   }

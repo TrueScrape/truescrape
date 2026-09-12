@@ -108,19 +108,27 @@ describe('registration', () => {
     expect(has('reddit', 'post-comment-replies')).toBe(true);
   });
 
-  it('describes cost, constraints and the experimental flag', () => {
+  it('describes cost and constraints', () => {
     const program = buildOnly();
     const find = (platform: string, action: string) =>
       program.commands.find((c) => c.name() === platform)?.commands.find((c) => c.name() === action) as Command;
     const constrained = bundledCatalogue().endpoints.find((e) => e.constraints.length > 0);
-    const experimental = bundledCatalogue().endpoints.find((e) => e.experimental);
-    expect(constrained && experimental).toBeTruthy();
+    expect(constrained).toBeTruthy();
     const c = find(constrained!.platform, constrained!.action).description();
     expect(c).toContain(constrained!.summary);
     expect(c).toMatch(/Costs \d+ credits?\./);
     for (const line of constrained!.constraints) expect(c).toContain(line);
-    expect(find(experimental!.platform, experimental!.action).description()).toContain('(experimental)');
-    expect(find('youtube', 'channel-videos').description()).not.toContain('(experimental)');
+  });
+
+  // The label, not the word: an endpoint's own description may say in prose what
+  // it is, the same line the API draws. What may not ship is a flag across the list.
+  it('labels no endpoint (experimental), in its summary or its description', () => {
+    const program = buildOnly();
+    const labelled = program.commands
+      .flatMap((platform) => platform.commands)
+      .filter((c) => `${c.summary()} ${c.description()}`.includes('(experimental)'))
+      .map((c) => c.name());
+    expect(labelled).toEqual([]);
   });
 
   it('turns every catalogue param into a flag, with --no- for booleans and choices for enums', () => {

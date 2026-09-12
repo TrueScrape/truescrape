@@ -1,6 +1,6 @@
 {
   "name": "truescrape",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "CLI for the TrueScrape API: public social media data from every platform in the catalogue, from the terminal or as an MCP server for agents.",
   "type": "module",
   "bin": {

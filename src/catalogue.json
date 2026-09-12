@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-09T15:32:40.246Z",
+  "generatedAt": "2026-09-12T19:38:27.651Z",
   "source": "https://api.truescrape.com/openapi.json",
   "endpoints": [
     {
@@ -12,7 +12,6 @@
       "credits": 3,
       "cacheable": true,
       "batchable": true,
-      "experimental": false,
       "constraints": [],
       "params": [
         {
@@ -74,7 +73,6 @@
       "credits": 3,
       "cacheable": true,
       "batchable": true,
-      "experimental": false,
       "constraints": [],
       "params": [
         {
@@ -122,7 +120,6 @@
       "credits": 3,
       "cacheable": true,
       "batchable": true,
-      "experimental": false,
       "constraints": [],
       "params": [
         {
@@ -177,7 +174,6 @@
       "credits": 1,
       "cacheable": true,
       "batchable": true,
-      "experimental": false,
       "constraints": [],
       "params": [
         {
@@ -218,7 +214,6 @@
       "credits": 1,
       "cacheable": true,
       "batchable": true,
-      "experimental": false,
       "constraints": [],
       "params": [
         {
@@ -259,7 +254,6 @@
       "credits": 1,
       "cacheable": true,
       "batchable": true,
-      "experimental": false,
       "constraints": [],
       "params": [
         {
@@ -300,7 +294,6 @@
       "credits": 1,
       "cacheable": true,
       "batchable": true,
-      "experimental": false,
       "constraints": [],
       "params": [
         {
@@ -361,7 +354,6 @@
       "credits": 1,
       "cacheable": true,
       "batchable": true,
-      "experimental": false,
       "constraints": [],
       "params": [
         {
@@ -402,7 +394,6 @@
       "credits": 1,
       "cacheable": true,
       "batchable": true,
-      "experimental": false,
       "constraints": [],
       "params": [
         {
@@ -436,7 +427,6 @@
       "credits": 1,
       "cacheable": true,
       "batchable": true,
-      "experimental": false,
       "constraints": [],
       "params": [
         {
@@ -470,7 +460,6 @@
       "credits": 1,
       "cacheable": true,
       "batchable": true,
-      "experimental": false,
       "constraints": [],
       "params": [
         {
@@ -525,7 +514,6 @@
       "credits": 1,
       "cacheable": true,
       "batchable": true,
-      "experimental": true,
       "constraints": [
         "Pass either `product_id` or `url`."
       ],
@@ -581,7 +569,6 @@
       "credits": 1,
       "cacheable": true,
       "batchable": true,
-      "experimental": true,
       "constraints": [],
       "params": [
         {
@@ -681,7 +668,6 @@
       "credits": 1,
       "cacheable": true,
       "batchable": true,
-      "experimental": false,
       "constraints": [],
       "params": [
         {
@@ -737,7 +723,6 @@
       "credits": 1,
       "cacheable": true,
       "batchable": true,
-      "experimental": true,
       "constraints": [
         "Pass exactly one of `id` or `url`."
       ],
@@ -787,7 +772,6 @@
       "credits": 1,
       "cacheable": true,
       "batchable": true,
-      "experimental": false,
       "constraints": [],
       "params": [
         {
@@ -847,7 +831,6 @@
       "credits": 2,
       "cacheable": true,
       "batchable": true,
-      "experimental": false,
       "constraints": [],
       "params": [
         {
@@ -972,7 +955,6 @@
       "credits": 2,
       "cacheable": true,
       "batchable": true,
-      "experimental": false,
       "constraints": [],
       "params": [
         {
@@ -1109,7 +1091,6 @@
       "credits": 1,
       "cacheable": true,
       "batchable": true,
-      "experimental": true,
       "constraints": [],
       "params": [
         {
@@ -1155,7 +1136,6 @@
       "credits": 1,
       "cacheable": true,
       "batchable": true,
-      "experimental": false,
       "constraints": [],
       "params": [
         {
@@ -1196,7 +1176,6 @@
       "credits": 1,
       "cacheable": true,
       "batchable": true,
-      "experimental": false,
       "constraints": [],
       "params": [
         {
@@ -1230,7 +1209,6 @@
       "credits": 1,
       "cacheable": true,
       "batchable": true,
-      "experimental": false,
       "constraints": [],
       "params": [
         {
@@ -1264,7 +1242,6 @@
       "credits": 1,
       "cacheable": true,
       "batchable": true,
-      "experimental": false,
       "constraints": [],
       "params": [
         {
@@ -1298,7 +1275,6 @@
       "credits": 1,
       "cacheable": true,
       "batchable": true,
-      "experimental": false,
       "constraints": [],
       "params": [
         {
@@ -1332,7 +1308,6 @@
       "credits": 1,
       "cacheable": true,
       "batchable": true,
-      "experimental": false,
       "constraints": [],
       "params": [
         {
@@ -1366,7 +1341,6 @@
       "credits": 1,
       "cacheable": true,
       "batchable": true,
-      "experimental": false,
       "constraints": [],
       "params": [
         {
@@ -1400,7 +1374,6 @@
       "credits": 1,
       "cacheable": true,
       "batchable": true,
-      "experimental": false,
       "constraints": [],
       "params": [
         {
@@ -1494,7 +1467,6 @@
       "credits": 1,
       "cacheable": true,
       "batchable": true,
-      "experimental": false,
       "constraints": [],
       "params": [
         {
@@ -1528,7 +1500,6 @@
       "credits": 1,
       "cacheable": true,
       "batchable": true,
-      "experimental": false,
       "constraints": [],
       "params": [
         {
@@ -1562,7 +1533,6 @@
       "credits": 1,
       "cacheable": true,
       "batchable": true,
-      "experimental": false,
       "constraints": [],
       "params": [
         {
@@ -1596,7 +1566,6 @@
       "credits": 1,
       "cacheable": true,
       "batchable": true,
-      "experimental": false,
       "constraints": [],
       "params": [
         {
@@ -1630,7 +1599,6 @@
       "credits": 1,
       "cacheable": true,
       "batchable": true,
-      "experimental": false,
       "constraints": [],
       "params": [
         {
@@ -1671,7 +1639,6 @@
       "credits": 1,
       "cacheable": true,
       "batchable": true,
-      "experimental": false,
       "constraints": [],
       "params": [
         {
@@ -1705,7 +1672,6 @@
       "credits": 1,
       "cacheable": true,
       "batchable": true,
-      "experimental": false,
       "constraints": [],
       "params": [
         {
@@ -1739,7 +1705,6 @@
       "credits": 1,
       "cacheable": true,
       "batchable": true,
-      "experimental": false,
       "constraints": [],
       "params": [
         {
@@ -1773,7 +1738,6 @@
       "credits": 1,
       "cacheable": true,
       "batchable": true,
-      "experimental": false,
       "constraints": [],
       "params": [
         {
@@ -1807,7 +1771,6 @@
       "credits": 1,
       "cacheable": true,
       "batchable": false,
-      "experimental": false,
       "constraints": [],
       "params": [
         {
@@ -1853,7 +1816,6 @@
       "credits": 1,
       "cacheable": true,
       "batchable": false,
-      "experimental": false,
       "constraints": [],
       "params": [
         {
@@ -1906,7 +1868,6 @@
       "credits": 1,
       "cacheable": true,
       "batchable": true,
-      "experimental": false,
       "constraints": [
         "Pass either `handle` or `url`."
       ],
@@ -1949,7 +1910,6 @@
       "credits": 1,
       "cacheable": true,
       "batchable": true,
-      "experimental": false,
       "constraints": [
         "Pass either `handle` or `url`."
       ],
@@ -1999,7 +1959,6 @@
       "credits": 1,
       "cacheable": true,
       "batchable": true,
-      "experimental": false,
       "constraints": [
         "Pass either `handle` or `url`."
       ],
@@ -2049,7 +2008,6 @@
       "credits": 1,
       "cacheable": true,
       "batchable": true,
-      "experimental": false,
       "constraints": [
         "Pass either `handle` or `url`."
       ],
@@ -2099,7 +2057,6 @@
       "credits": 1,
       "cacheable": true,
       "batchable": true,
-      "experimental": false,
       "constraints": [
         "Pass either `handle` or `url`."
       ],
@@ -2149,7 +2106,6 @@
       "credits": 1,
       "cacheable": true,
       "batchable": true,
-      "experimental": false,
       "constraints": [],
       "params": [
         {
@@ -2204,7 +2160,6 @@
       "credits": 1,
       "cacheable": true,
       "batchable": true,
-      "experimental": false,
       "constraints": [
         "Pass either `handle` or `url`."
       ],
@@ -2290,7 +2245,6 @@
       "credits": 1,
       "cacheable": true,
       "batchable": true,
-      "experimental": false,
       "constraints": [],
       "params": [
         {
@@ -2331,7 +2285,6 @@
       "credits": 2,
       "cacheable": true,
       "batchable": true,
-      "experimental": false,
       "constraints": [
         "Pass either `domain` or `advertiser_id`."
       ],
@@ -2389,7 +2342,6 @@
       "credits": 1,
       "cacheable": true,
       "batchable": true,
-      "experimental": false,
       "constraints": [],
       "params": [
         {
@@ -2431,7 +2383,6 @@
       "credits": 5,
       "cacheable": true,
       "batchable": true,
-      "experimental": false,
       "constraints": [],
       "params": [
         {
@@ -2509,7 +2460,6 @@
       "credits": 5,
       "cacheable": true,
       "batchable": true,
-      "experimental": false,
       "constraints": [],
       "params": [
         {
@@ -2601,7 +2551,6 @@
       "credits": 5,
       "cacheable": true,
       "batchable": true,
-      "experimental": false,
       "constraints": [],
       "params": [
         {
@@ -2693,7 +2642,6 @@
       "credits": 1,
       "cacheable": true,
       "batchable": true,
-      "experimental": false,
       "constraints": [],
       "params": [
         {
@@ -2754,7 +2702,6 @@
       "credits": 5,
       "cacheable": true,
       "batchable": true,
-      "experimental": false,
       "constraints": [],
       "params": [
         {
@@ -2846,7 +2793,6 @@
       "credits": 10,
       "cacheable": true,
       "batchable": true,
-      "experimental": true,
       "constraints": [],
       "params": [
         {
@@ -2895,7 +2841,6 @@
       "credits": 1,
       "cacheable": true,
       "batchable": true,
-      "experimental": true,
       "constraints": [],
       "params": [
         {
@@ -2929,7 +2874,6 @@
       "credits": 1,
       "cacheable": true,
       "batchable": true,
-      "experimental": true,
       "constraints": [],
       "params": [
         {
@@ -2977,7 +2921,6 @@
       "credits": 1,
       "cacheable": true,
       "batchable": false,
-      "experimental": true,
       "constraints": [],
       "params": [
         {
@@ -3032,7 +2975,6 @@
       "credits": 1,
       "cacheable": true,
       "batchable": true,
-      "experimental": true,
       "constraints": [],
       "params": [
         {
@@ -3085,7 +3027,6 @@
       "credits": 1,
       "cacheable": true,
       "batchable": true,
-      "experimental": true,
       "constraints": [],
       "params": [
         {
@@ -3119,7 +3060,6 @@
       "credits": 1,
       "cacheable": true,
       "batchable": true,
-      "experimental": true,
       "constraints": [],
       "params": [
         {
@@ -3160,7 +3100,6 @@
       "credits": 1,
       "cacheable": true,
       "batchable": true,
-      "experimental": true,
       "constraints": [],
       "params": [
         {
@@ -3194,7 +3133,6 @@
       "credits": 1,
       "cacheable": true,
       "batchable": true,
-      "experimental": true,
       "constraints": [],
       "params": [
         {
@@ -3249,7 +3187,6 @@
       "credits": 1,
       "cacheable": true,
       "batchable": true,
-      "experimental": true,
       "constraints": [],
       "params": [
         {
@@ -3283,7 +3220,6 @@
       "credits": 1,
       "cacheable": true,
       "batchable": true,
-      "experimental": true,
       "constraints": [],
       "params": [
         {
@@ -3317,7 +3253,6 @@
       "credits": 1,
       "cacheable": true,
       "batchable": true,
-      "experimental": true,
       "constraints": [],
       "params": [
         {
@@ -3351,7 +3286,6 @@
       "credits": 1,
       "cacheable": true,
       "batchable": true,
-      "experimental": true,
       "constraints": [],
       "params": [
         {
@@ -3392,7 +3326,6 @@
       "credits": 1,
       "cacheable": true,
       "batchable": true,
-      "experimental": true,
       "constraints": [],
       "params": [
         {
@@ -3440,7 +3373,6 @@
       "credits": 1,
       "cacheable": true,
       "batchable": true,
-      "experimental": true,
       "constraints": [],
       "params": [
         {
@@ -3474,7 +3406,6 @@
       "credits": 1,
       "cacheable": true,
       "batchable": false,
-      "experimental": true,
       "constraints": [],
       "params": [
         {
@@ -3515,7 +3446,6 @@
       "credits": 1,
       "cacheable": true,
       "batchable": true,
-      "experimental": true,
       "constraints": [],
       "params": [
         {
@@ -3549,7 +3479,6 @@
       "credits": 1,
       "cacheable": true,
       "batchable": true,
-      "experimental": true,
       "constraints": [
         "Pass either `handle` or `user_id`."
       ],
@@ -3592,7 +3521,6 @@
       "credits": 1,
       "cacheable": true,
       "batchable": true,
-      "experimental": true,
       "constraints": [],
       "params": [
         {
@@ -3654,7 +3582,6 @@
       "credits": 1,
       "cacheable": true,
       "batchable": true,
-      "experimental": true,
       "constraints": [
         "Pass either `handle` or `user_id`."
       ],
@@ -3718,7 +3645,6 @@
       "credits": 1,
       "cacheable": true,
       "batchable": true,
-      "experimental": true,
       "constraints": [
         "Pass either `handle` or `user_id`."
       ],
@@ -3775,7 +3701,6 @@
       "credits": 1,
       "cacheable": true,
       "batchable": true,
-      "experimental": false,
       "constraints": [],
       "params": [
         {
@@ -3809,7 +3734,6 @@
       "credits": 1,
       "cacheable": true,
       "batchable": true,
-      "experimental": false,
       "constraints": [],
       "params": [
         {
@@ -3843,7 +3767,6 @@
       "credits": 1,
       "cacheable": true,
       "batchable": true,
-      "experimental": false,
       "constraints": [],
       "params": [
         {
@@ -3877,7 +3800,6 @@
       "credits": 1,
       "cacheable": true,
       "batchable": true,
-      "experimental": false,
       "constraints": [],
       "params": [
         {
@@ -3918,7 +3840,6 @@
       "credits": 1,
       "cacheable": true,
       "batchable": true,
-      "experimental": false,
       "constraints": [],
       "params": [
         {
@@ -3959,7 +3880,6 @@
       "credits": 1,
       "cacheable": true,
       "batchable": true,
-      "experimental": false,
       "constraints": [],
       "params": [
         {
@@ -3993,7 +3913,6 @@
       "credits": 1,
       "cacheable": true,
       "batchable": true,
-      "experimental": false,
       "constraints": [],
       "params": [
         {
@@ -4027,7 +3946,6 @@
       "credits": 1,
       "cacheable": true,
       "batchable": true,
-      "experimental": false,
       "constraints": [
         "Pass `company`, `keyword`, or both. The Ad Library will not return an unfiltered archive."
       ],
@@ -4091,7 +4009,6 @@
       "credits": 1,
       "cacheable": true,
       "batchable": true,
-      "experimental": false,
       "constraints": [],
       "params": [
         {
@@ -4125,7 +4042,6 @@
       "credits": 1,
       "cacheable": true,
       "batchable": true,
-      "experimental": false,
       "constraints": [],
       "params": [
         {
@@ -4159,7 +4075,6 @@
       "credits": 1,
       "cacheable": true,
       "batchable": true,
-      "experimental": false,
       "constraints": [],
       "params": [
         {
@@ -4193,7 +4108,6 @@
       "credits": 1,
       "cacheable": true,
       "batchable": true,
-      "experimental": true,
       "constraints": [],
       "params": [
         {
@@ -4227,7 +4141,6 @@
       "credits": 1,
       "cacheable": true,
       "batchable": true,
-      "experimental": false,
       "constraints": [],
       "params": [
         {
@@ -4261,7 +4174,6 @@
       "credits": 1,
       "cacheable": true,
       "batchable": false,
-      "experimental": true,
       "constraints": [],
       "params": [
         {
@@ -4314,7 +4226,6 @@
       "credits": 1,
       "cacheable": true,
       "batchable": true,
-      "experimental": false,
       "constraints": [],
       "params": [
         {
@@ -4348,7 +4259,6 @@
       "credits": 1,
       "cacheable": true,
       "batchable": true,
-      "experimental": false,
       "constraints": [],
       "params": [
         {
@@ -4382,7 +4292,6 @@
       "credits": 1,
       "cacheable": true,
       "batchable": true,
-      "experimental": false,
       "constraints": [],
       "params": [
         {
@@ -4416,7 +4325,6 @@
       "credits": 1,
       "cacheable": true,
       "batchable": true,
-      "experimental": false,
       "constraints": [],
       "params": [
         {
@@ -4450,7 +4358,6 @@
       "credits": 1,
       "cacheable": true,
       "batchable": true,
-      "experimental": false,
       "constraints": [],
       "params": [
         {
@@ -4491,7 +4398,6 @@
       "credits": 1,
       "cacheable": true,
       "batchable": true,
-      "experimental": false,
       "constraints": [],
       "params": [
         {
@@ -4525,7 +4431,6 @@
       "credits": 1,
       "cacheable": true,
       "batchable": true,
-      "experimental": false,
       "constraints": [],
       "params": [
         {
@@ -4566,7 +4471,6 @@
       "credits": 1,
       "cacheable": true,
       "batchable": true,
-      "experimental": false,
       "constraints": [],
       "params": [
         {
@@ -4607,7 +4511,6 @@
       "credits": 1,
       "cacheable": true,
       "batchable": true,
-      "experimental": false,
       "constraints": [],
       "params": [
         {
@@ -4641,7 +4544,6 @@
       "credits": 1,
       "cacheable": true,
       "batchable": true,
-      "experimental": false,
       "constraints": [],
       "params": [
         {
@@ -4697,7 +4599,6 @@
       "credits": 1,
       "cacheable": true,
       "batchable": true,
-      "experimental": false,
       "constraints": [],
       "params": [
         {
@@ -4761,7 +4662,6 @@
       "credits": 1,
       "cacheable": true,
       "batchable": true,
-      "experimental": true,
       "constraints": [],
       "params": [
         {
@@ -4803,7 +4703,6 @@
       "credits": 1,
       "cacheable": true,
       "batchable": true,
-      "experimental": false,
       "constraints": [],
       "params": [
         {
@@ -4894,7 +4793,6 @@
       "credits": 1,
       "cacheable": true,
       "batchable": true,
-      "experimental": false,
       "constraints": [],
       "params": [
         {
@@ -4978,7 +4876,6 @@
       "credits": 1,
       "cacheable": true,
       "batchable": true,
-      "experimental": false,
       "constraints": [],
       "params": [
         {
@@ -5019,7 +4916,6 @@
       "credits": 1,
       "cacheable": true,
       "batchable": true,
-      "experimental": false,
       "constraints": [],
       "params": [
         {
@@ -5053,7 +4949,6 @@
       "credits": 1,
       "cacheable": true,
       "batchable": true,
-      "experimental": false,
       "constraints": [],
       "params": [
         {
@@ -5128,7 +5023,6 @@
       "credits": 1,
       "cacheable": true,
       "batchable": true,
-      "experimental": false,
       "constraints": [],
       "params": [
         {
@@ -5175,7 +5069,6 @@
       "credits": 1,
       "cacheable": true,
       "batchable": true,
-      "experimental": false,
       "constraints": [],
       "params": [
         {
@@ -5222,7 +5115,6 @@
       "credits": 1,
       "cacheable": true,
       "batchable": true,
-      "experimental": false,
       "constraints": [],
       "params": [
         {
@@ -5269,7 +5161,6 @@
       "credits": 1,
       "cacheable": true,
       "batchable": true,
-      "experimental": false,
       "constraints": [],
       "params": [
         {
@@ -5316,7 +5207,6 @@
       "credits": 1,
       "cacheable": true,
       "batchable": true,
-      "experimental": false,
       "constraints": [],
       "params": [
         {
@@ -5364,7 +5254,6 @@
       "credits": 1,
       "cacheable": true,
       "batchable": true,
-      "experimental": false,
       "constraints": [],
       "params": [
         {
@@ -5417,7 +5306,6 @@
       "credits": 1,
       "cacheable": true,
       "batchable": true,
-      "experimental": false,
       "constraints": [],
       "params": [
         {
@@ -5451,7 +5339,6 @@
       "credits": 1,
       "cacheable": true,
       "batchable": true,
-      "experimental": false,
       "constraints": [],
       "params": [
         {
@@ -5485,7 +5372,6 @@
       "credits": 1,
       "cacheable": true,
       "batchable": true,
-      "experimental": false,
       "constraints": [],
       "params": [
         {
@@ -5526,7 +5412,6 @@
       "credits": 1,
       "cacheable": true,
       "batchable": true,
-      "experimental": false,
       "constraints": [],
       "params": [
         {
@@ -5560,7 +5445,6 @@
       "credits": 1,
       "cacheable": true,
       "batchable": true,
-      "experimental": false,
       "constraints": [],
       "params": [
         {
@@ -5594,7 +5478,6 @@
       "credits": 1,
       "cacheable": true,
       "batchable": true,
-      "experimental": false,
       "constraints": [],
       "params": [
         {
@@ -5628,7 +5511,6 @@
       "credits": 1,
       "cacheable": true,
       "batchable": true,
-      "experimental": false,
       "constraints": [],
       "params": [
         {
@@ -5662,7 +5544,6 @@
       "credits": 1,
       "cacheable": true,
       "batchable": true,
-      "experimental": false,
       "constraints": [],
       "params": [
         {
@@ -5703,7 +5584,6 @@
       "credits": 1,
       "cacheable": true,
       "batchable": true,
-      "experimental": false,
       "constraints": [],
       "params": [
         {
@@ -5758,7 +5638,6 @@
       "credits": 1,
       "cacheable": true,
       "batchable": true,
-      "experimental": false,
       "constraints": [],
       "params": [
         {
@@ -5792,7 +5671,6 @@
       "credits": 1,
       "cacheable": true,
       "batchable": true,
-      "experimental": false,
       "constraints": [],
       "params": [
         {
@@ -5833,7 +5711,6 @@
       "credits": 1,
       "cacheable": true,
       "batchable": true,
-      "experimental": false,
       "constraints": [],
       "params": [
         {
@@ -5874,7 +5751,6 @@
       "credits": 1,
       "cacheable": true,
       "batchable": true,
-      "experimental": true,
       "constraints": [
         "Pass exactly one of `id` or `url`."
       ],
@@ -5920,11 +5796,10 @@
       "action": "podcast",
       "path": "/v1/spotify/podcast",
       "summary": "Podcast details",
-      "description": "A Spotify podcast: title, publisher, description, artwork and episode count. Uses Spotify's official Web API, because the public embed for a show resolves to that show's latest EPISODE, not to the show itself, so there is no keyless route to this data.",
+      "description": "A Spotify podcast: title, publisher, description, artwork and episode count. Uses Spotify's official Web API, because the public embed for a show resolves to that show's latest EPISODE, not to the show itself, so there is no keyless route to this data. Two fields carry something different here than they do elsewhere: `category` holds the show's publisher, and `postCount` is its episode count. The unified schema has no publisher field, and naming it here is better than leaving you to infer it.",
       "credits": 1,
       "cacheable": true,
       "batchable": true,
-      "experimental": false,
       "constraints": [],
       "params": [
         {
@@ -5973,7 +5848,6 @@
       "credits": 1,
       "cacheable": true,
       "batchable": true,
-      "experimental": false,
       "constraints": [],
       "params": [
         {
@@ -6036,7 +5910,6 @@
       "credits": 1,
       "cacheable": true,
       "batchable": true,
-      "experimental": false,
       "constraints": [],
       "params": [
         {
@@ -6099,7 +5972,6 @@
       "credits": 1,
       "cacheable": true,
       "batchable": true,
-      "experimental": false,
       "constraints": [],
       "params": [
         {
@@ -6140,7 +6012,6 @@
       "credits": 1,
       "cacheable": true,
       "batchable": true,
-      "experimental": false,
       "constraints": [],
       "params": [
         {
@@ -6174,7 +6045,6 @@
       "credits": 1,
       "cacheable": true,
       "batchable": true,
-      "experimental": true,
       "constraints": [],
       "params": [
         {
@@ -6208,7 +6078,6 @@
       "credits": 1,
       "cacheable": true,
       "batchable": true,
-      "experimental": true,
       "constraints": [],
       "params": [
         {
@@ -6249,7 +6118,6 @@
       "credits": 1,
       "cacheable": true,
       "batchable": true,
-      "experimental": true,
       "constraints": [],
       "params": [
         {
@@ -6283,7 +6151,6 @@
       "credits": 1,
       "cacheable": true,
       "batchable": true,
-      "experimental": false,
       "constraints": [],
       "params": [
         {
@@ -6317,7 +6184,6 @@
       "credits": 1,
       "cacheable": true,
       "batchable": true,
-      "experimental": false,
       "constraints": [],
       "params": [
         {
@@ -6351,7 +6217,6 @@
       "credits": 1,
       "cacheable": true,
       "batchable": true,
-      "experimental": false,
       "constraints": [],
       "params": [
         {
@@ -6385,7 +6250,6 @@
       "credits": 1,
       "cacheable": true,
       "batchable": true,
-      "experimental": false,
       "constraints": [],
       "params": [
         {
@@ -6419,7 +6283,6 @@
       "credits": 1,
       "cacheable": true,
       "batchable": true,
-      "experimental": false,
       "constraints": [],
       "params": [
         {
@@ -6453,7 +6316,6 @@
       "credits": 1,
       "cacheable": true,
       "batchable": true,
-      "experimental": true,
       "constraints": [],
       "params": [
         {
@@ -6487,7 +6349,6 @@
       "credits": 1,
       "cacheable": true,
       "batchable": false,
-      "experimental": true,
       "constraints": [],
       "params": [
         {
@@ -6542,7 +6403,6 @@
       "credits": 1,
       "cacheable": true,
       "batchable": true,
-      "experimental": true,
       "constraints": [
         "Pass either `url` or `collection_id`."
       ],
@@ -6599,7 +6459,6 @@
       "credits": 1,
       "cacheable": true,
       "batchable": true,
-      "experimental": true,
       "constraints": [],
       "params": [
         {
@@ -6654,7 +6513,6 @@
       "credits": 1,
       "cacheable": true,
       "batchable": true,
-      "experimental": true,
       "constraints": [],
       "params": [
         {
@@ -6702,7 +6560,6 @@
       "credits": 1,
       "cacheable": true,
       "batchable": true,
-      "experimental": true,
       "constraints": [],
       "params": [
         {
@@ -6776,7 +6633,6 @@
       "credits": 1,
       "cacheable": true,
       "batchable": true,
-      "experimental": true,
       "constraints": [],
       "params": [
         {
@@ -6824,7 +6680,6 @@
       "credits": 1,
       "cacheable": true,
       "batchable": true,
-      "experimental": true,
       "constraints": [],
       "params": [
         {
@@ -6872,7 +6727,6 @@
       "credits": 1,
       "cacheable": true,
       "batchable": true,
-      "experimental": true,
       "constraints": [],
       "params": [
         {
@@ -6906,7 +6760,6 @@
       "credits": 1,
       "cacheable": true,
       "batchable": true,
-      "experimental": true,
       "constraints": [],
       "params": [
         {
@@ -6954,7 +6807,6 @@
       "credits": 1,
       "cacheable": true,
       "batchable": true,
-      "experimental": true,
       "constraints": [
         "Pass either `handle` or `room_id`."
       ],
@@ -6997,7 +6849,6 @@
       "credits": 1,
       "cacheable": true,
       "batchable": true,
-      "experimental": true,
       "constraints": [],
       "params": [
         {
@@ -7045,7 +6896,6 @@
       "credits": 1,
       "cacheable": true,
       "batchable": true,
-      "experimental": true,
       "constraints": [],
       "params": [
         {
@@ -7093,7 +6943,6 @@
       "credits": 1,
       "cacheable": true,
       "batchable": true,
-      "experimental": true,
       "constraints": [],
       "params": [
         {
@@ -7134,7 +6983,6 @@
       "credits": 1,
       "cacheable": true,
       "batchable": true,
-      "experimental": true,
       "constraints": [],
       "params": [
         {
@@ -7168,7 +7016,6 @@
       "credits": 1,
       "cacheable": true,
       "batchable": true,
-      "experimental": true,
       "constraints": [
         "Pass either `handle` or `url`."
       ],
@@ -7211,7 +7058,6 @@
       "credits": 1,
       "cacheable": true,
       "batchable": true,
-      "experimental": true,
       "constraints": [],
       "params": [
         {
@@ -7287,7 +7133,6 @@
       "credits": 1,
       "cacheable": true,
       "batchable": true,
-      "experimental": true,
       "constraints": [],
       "params": [
         {
@@ -7321,7 +7166,6 @@
       "credits": 1,
       "cacheable": true,
       "batchable": true,
-      "experimental": true,
       "constraints": [],
       "params": [
         {
@@ -7369,7 +7213,6 @@
       "credits": 1,
       "cacheable": true,
       "batchable": true,
-      "experimental": true,
       "constraints": [],
       "params": [
         {
@@ -7417,7 +7260,6 @@
       "credits": 1,
       "cacheable": true,
       "batchable": true,
-      "experimental": true,
       "constraints": [],
       "params": [
         {
@@ -7472,7 +7314,6 @@
       "credits": 1,
       "cacheable": true,
       "batchable": true,
-      "experimental": true,
       "constraints": [],
       "params": [
         {
@@ -7527,7 +7368,6 @@
       "credits": 1,
       "cacheable": true,
       "batchable": true,
-      "experimental": true,
       "constraints": [],
       "params": [
         {
@@ -7582,7 +7422,6 @@
       "credits": 1,
       "cacheable": true,
       "batchable": true,
-      "experimental": true,
       "constraints": [],
       "params": [
         {
@@ -7616,7 +7455,6 @@
       "credits": 1,
       "cacheable": true,
       "batchable": true,
-      "experimental": true,
       "constraints": [],
       "params": [
         {
@@ -7664,7 +7502,6 @@
       "credits": 1,
       "cacheable": true,
       "batchable": true,
-      "experimental": true,
       "constraints": [],
       "params": [
         {
@@ -7725,7 +7562,6 @@
       "credits": 1,
       "cacheable": true,
       "batchable": true,
-      "experimental": true,
       "constraints": [],
       "params": [
         {
@@ -7766,7 +7602,6 @@
       "credits": 1,
       "cacheable": true,
       "batchable": true,
-      "experimental": true,
       "constraints": [],
       "params": [
         {
@@ -7808,7 +7643,6 @@
       "credits": 1,
       "cacheable": true,
       "batchable": true,
-      "experimental": true,
       "constraints": [],
       "params": [
         {
@@ -7863,7 +7697,6 @@
       "credits": 1,
       "cacheable": true,
       "batchable": true,
-      "experimental": true,
       "constraints": [],
       "params": [
         {
@@ -7918,7 +7751,6 @@
       "credits": 1,
       "cacheable": true,
       "batchable": true,
-      "experimental": true,
       "constraints": [],
       "params": [
         {
@@ -7952,7 +7784,6 @@
       "credits": 1,
       "cacheable": true,
       "batchable": true,
-      "experimental": true,
       "constraints": [],
       "params": [
         {
@@ -8013,7 +7844,6 @@
       "credits": 1,
       "cacheable": true,
       "batchable": true,
-      "experimental": false,
       "constraints": [],
       "params": [
         {
@@ -8047,7 +7877,6 @@
       "credits": 1,
       "cacheable": true,
       "batchable": true,
-      "experimental": false,
       "constraints": [],
       "params": [
         {
@@ -8081,7 +7910,6 @@
       "credits": 1,
       "cacheable": true,
       "batchable": true,
-      "experimental": false,
       "constraints": [],
       "params": [
         {
@@ -8142,7 +7970,6 @@
       "credits": 1,
       "cacheable": true,
       "batchable": true,
-      "experimental": false,
       "constraints": [],
       "params": [
         {
@@ -8176,7 +8003,6 @@
       "credits": 1,
       "cacheable": true,
       "batchable": true,
-      "experimental": false,
       "constraints": [],
       "params": [
         {
@@ -8210,7 +8036,6 @@
       "credits": 1,
       "cacheable": true,
       "batchable": true,
-      "experimental": false,
       "constraints": [],
       "params": [
         {
@@ -8244,7 +8069,6 @@
       "credits": 1,
       "cacheable": true,
       "batchable": true,
-      "experimental": false,
       "constraints": [],
       "params": [
         {
@@ -8309,7 +8133,6 @@
       "credits": 1,
       "cacheable": true,
       "batchable": true,
-      "experimental": false,
       "constraints": [],
       "params": [
         {
@@ -8343,7 +8166,6 @@
       "credits": 1,
       "cacheable": true,
       "batchable": true,
-      "experimental": false,
       "constraints": [],
       "params": [
         {
@@ -8377,7 +8199,6 @@
       "credits": 1,
       "cacheable": true,
       "batchable": true,
-      "experimental": false,
       "constraints": [],
       "params": [
         {
@@ -8411,7 +8232,6 @@
       "credits": 1,
       "cacheable": true,
       "batchable": true,
-      "experimental": false,
       "constraints": [],
       "params": [
         {
@@ -8445,7 +8265,6 @@
       "credits": 1,
       "cacheable": true,
       "batchable": true,
-      "experimental": true,
       "constraints": [],
       "params": [
         {
@@ -8486,7 +8305,6 @@
       "credits": 1,
       "cacheable": true,
       "batchable": true,
-      "experimental": false,
       "constraints": [],
       "params": [
         {
@@ -8534,7 +8352,6 @@
       "credits": 3,
       "cacheable": true,
       "batchable": true,
-      "experimental": false,
       "constraints": [],
       "params": [
         {
@@ -8587,7 +8404,6 @@
       "credits": 3,
       "cacheable": true,
       "batchable": true,
-      "experimental": false,
       "constraints": [],
       "params": [
         {
@@ -8634,7 +8450,6 @@
       "credits": 3,
       "cacheable": true,
       "batchable": true,
-      "experimental": false,
       "constraints": [],
       "params": [
         {
@@ -8714,7 +8529,6 @@
       "credits": 3,
       "cacheable": true,
       "batchable": true,
-      "experimental": false,
       "constraints": [],
       "params": [
         {
@@ -8767,7 +8581,6 @@
       "credits": 1,
       "cacheable": true,
       "batchable": true,
-      "experimental": false,
       "constraints": [],
       "params": [
         {
@@ -8801,7 +8614,6 @@
       "credits": 1,
       "cacheable": true,
       "batchable": true,
-      "experimental": false,
       "constraints": [],
       "params": [
         {
@@ -8842,7 +8654,6 @@
       "credits": 1,
       "cacheable": true,
       "batchable": true,
-      "experimental": false,
       "constraints": [],
       "params": [
         {
@@ -8883,7 +8694,6 @@
       "credits": 1,
       "cacheable": true,
       "batchable": true,
-      "experimental": false,
       "constraints": [],
       "params": [
         {
@@ -8924,7 +8734,6 @@
       "credits": 1,
       "cacheable": true,
       "batchable": true,
-      "experimental": false,
       "constraints": [],
       "params": [
         {
@@ -8965,7 +8774,6 @@
       "credits": 1,
       "cacheable": true,
       "batchable": true,
-      "experimental": false,
       "constraints": [],
       "params": [
         {
@@ -9011,7 +8819,6 @@
       "credits": 1,
       "cacheable": true,
       "batchable": true,
-      "experimental": false,
       "constraints": [],
       "params": [
         {
@@ -9045,7 +8852,6 @@
       "credits": 1,
       "cacheable": true,
       "batchable": true,
-      "experimental": false,
       "constraints": [],
       "params": [
         {
@@ -9086,7 +8892,6 @@
       "credits": 1,
       "cacheable": true,
       "batchable": true,
-      "experimental": false,
       "constraints": [],
       "params": [
         {
@@ -9119,7 +8924,6 @@
       "credits": 1,
       "cacheable": true,
       "batchable": true,
-      "experimental": false,
       "constraints": [],
       "params": [
         {
@@ -9171,7 +8975,6 @@
       "credits": 1,
       "cacheable": true,
       "batchable": true,
-      "experimental": false,
       "constraints": [],
       "params": [
         {
@@ -9221,7 +9024,6 @@
       "credits": 1,
       "cacheable": true,
       "batchable": true,
-      "experimental": false,
       "constraints": [],
       "params": [
         {
@@ -9263,7 +9065,6 @@
       "credits": 1,
       "cacheable": true,
       "batchable": true,
-      "experimental": false,
       "constraints": [],
       "params": [
         {
@@ -9304,7 +9105,6 @@
       "credits": 1,
       "cacheable": true,
       "batchable": true,
-      "experimental": false,
       "constraints": [],
       "params": [
         {
@@ -9338,7 +9138,6 @@
       "credits": 1,
       "cacheable": true,
       "batchable": true,
-      "experimental": false,
       "constraints": [
         "Pass either `cursor` (from `replyCursors` on /v1/youtube/video/comments), or both `url` and `comment_id`."
       ],
@@ -9388,7 +9187,6 @@
       "credits": 1,
       "cacheable": true,
       "batchable": true,
-      "experimental": false,
       "constraints": [],
       "params": [
         {
@@ -9440,7 +9238,6 @@
       "credits": 1,
       "cacheable": true,
       "batchable": true,
-      "experimental": true,
       "constraints": [],
       "params": [
         {
@@ -9474,7 +9271,6 @@
       "credits": 1,
       "cacheable": true,
       "batchable": true,
-      "experimental": true,
       "constraints": [],
       "params": [
         {
@@ -9508,7 +9304,6 @@
       "credits": 1,
       "cacheable": true,
       "batchable": true,
-      "experimental": false,
       "constraints": [
         "Pass either `zpid` or `url`."
       ],
@@ -9551,7 +9346,6 @@
       "credits": 1,
       "cacheable": true,
       "batchable": true,
-      "experimental": false,
       "constraints": [
         "Pass either `location` or `url`."
       ],

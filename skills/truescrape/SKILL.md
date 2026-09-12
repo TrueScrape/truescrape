@@ -56,9 +56,6 @@ Identifier params are forgiving. `handle` accepts `@name`, a platform id or a
 full URL; `url` accepts a full URL or the bare id where the platform has one,
 such as an 11-character YouTube video id.
 
-Endpoints marked *(experimental)* in the catalogue may change shape. Read
-`data` defensively there.
-
 ## Every response has the same shape
 
 ```jsonc
@@ -220,7 +217,7 @@ LinkedIn's under `/v1/linkedin/ads/search`.
 ## Endpoint catalogue
 
 <!-- catalogue:start -->
-206 endpoints across 37 platforms, generated from the live API on 2026-09-09.
+206 endpoints across 37 platforms, generated from the live API on 2026-09-12.
 
 ### amazon (4)
 
@@ -252,19 +249,19 @@ LinkedIn's under `/v1/linkedin/ads/search`.
 
 | Endpoint | CLI | Credits | What it returns |
 |---|---|---|---|
-| `GET /v1/ebay/product` | `truescrape ebay product` | 1 | eBay listing details (experimental) |
-| `GET /v1/ebay/search` | `truescrape ebay search --query` | 1 | Search eBay listings (experimental) |
+| `GET /v1/ebay/product` | `truescrape ebay product` | 1 | eBay listing details |
+| `GET /v1/ebay/search` | `truescrape ebay search --query` | 1 | Search eBay listings |
 
 ### facebook (22)
 
 | Endpoint | CLI | Credits | What it returns |
 |---|---|---|---|
 | `GET /v1/facebook/ad-library/ad` | `truescrape facebook ad-library-ad --id` | 1 | Ad details |
-| `GET /v1/facebook/ad-library/ad-transcript` | `truescrape facebook ad-library-ad-transcript` | 1 | Ad video transcript (experimental) |
+| `GET /v1/facebook/ad-library/ad-transcript` | `truescrape facebook ad-library-ad-transcript` | 1 | Ad video transcript |
 | `GET /v1/facebook/ad-library/advertisers` | `truescrape facebook ad-library-advertisers --query` | 1 | Find advertisers running ads |
 | `GET /v1/facebook/ad-library/page-ads` | `truescrape facebook ad-library-page-ads --page-id` | 2 | All ads for one advertiser |
 | `GET /v1/facebook/ad-library/search` | `truescrape facebook ad-library-search --query` | 2 | Search the Meta Ad Library |
-| `GET /v1/facebook/city-events` | `truescrape facebook city-events --url` | 1 | Get the events of a city (experimental) |
+| `GET /v1/facebook/city-events` | `truescrape facebook city-events --url` | 1 | Get the events of a city |
 | `GET /v1/facebook/comment-replies` | `truescrape facebook comment-replies --url --comment-id` | 1 | Replies to a comment |
 | `GET /v1/facebook/event` | `truescrape facebook event --url` | 1 | Event details |
 | `GET /v1/facebook/events/search` | `truescrape facebook events-search --query` | 1 | Search public events |
@@ -314,37 +311,37 @@ LinkedIn's under `/v1/linkedin/ads/search`.
 
 | Endpoint | CLI | Credits | What it returns |
 |---|---|---|---|
-| `GET /v1/find-social-profiles` | `truescrape identity find-social-profiles --platform --handle` | 10 | Find a creator's other social profiles (experimental) |
+| `GET /v1/find-social-profiles` | `truescrape identity find-social-profiles --platform --handle` | 10 | Find a creator's other social profiles |
 
 ### inference (1)
 
 | Endpoint | CLI | Credits | What it returns |
 |---|---|---|---|
-| `GET /v1/detect-age-gender` | `truescrape inference age-gender --url` | 1 | Estimate age and gender from an image (experimental) |
+| `GET /v1/detect-age-gender` | `truescrape inference age-gender --url` | 1 | Estimate age and gender from an image |
 
 ### instagram (19)
 
 | Endpoint | CLI | Credits | What it returns |
 |---|---|---|---|
-| `GET /v1/instagram/audio-reels` | `truescrape instagram audio-reels --audio-id` | 1 | Reels using a sound (experimental) |
-| `GET /v1/instagram/comment-replies` | `truescrape instagram comment-replies --url --comment-id` | 1 | Replies under one comment (experimental) |
-| `GET /v1/instagram/hashtag-posts` | `truescrape instagram hashtag-posts --hashtag` | 1 | Posts under a hashtag (experimental) |
-| `GET /v1/instagram/highlight` | `truescrape instagram highlight --id` | 1 | Stories inside a highlight (experimental) |
-| `GET /v1/instagram/popular-search` | `truescrape instagram popular-search --query` | 1 | Top posts for a keyword (experimental) |
-| `GET /v1/instagram/post` | `truescrape instagram post --url` | 1 | Post or reel details (experimental) |
-| `GET /v1/instagram/post-comments` | `truescrape instagram post-comments --url` | 1 | Comments on a post or reel (experimental) |
-| `GET /v1/instagram/profile` | `truescrape instagram profile --handle` | 1 | Profile details (experimental) |
-| `GET /v1/instagram/profile-post-count` | `truescrape instagram profile-post-count --handle` | 1 | Post count for a profile (experimental) |
-| `GET /v1/instagram/profile-search` | `truescrape instagram profile-search --query` | 1 | Search accounts (experimental) |
-| `GET /v1/instagram/reels-search` | `truescrape instagram reels-search --query` | 1 | Search reels by keyword (experimental) |
-| `GET /v1/instagram/search` | `truescrape instagram search --query` | 1 | Search accounts, hashtags and places (experimental) |
-| `GET /v1/instagram/transcript` | `truescrape instagram transcript --url` | 1 | Reel or video transcript (experimental) |
-| `GET /v1/instagram/trending-reels` | `truescrape instagram trending-reels` | 1 | Reels trending on Explore (experimental) |
-| `GET /v1/instagram/user-embed` | `truescrape instagram user-embed --handle` | 1 | Profile via the public embed card (experimental) |
-| `GET /v1/instagram/user-highlights` | `truescrape instagram user-highlights` | 1 | Story highlight covers (experimental) |
-| `GET /v1/instagram/user-posts` | `truescrape instagram user-posts --handle` | 1 | Posts and reels from a profile (experimental) |
-| `GET /v1/instagram/user-reels` | `truescrape instagram user-reels` | 1 | Reels from a profile (experimental) |
-| `GET /v1/instagram/user-tagged-posts` | `truescrape instagram user-tagged-posts` | 1 | Posts a profile is tagged in (experimental) |
+| `GET /v1/instagram/audio-reels` | `truescrape instagram audio-reels --audio-id` | 1 | Reels using a sound |
+| `GET /v1/instagram/comment-replies` | `truescrape instagram comment-replies --url --comment-id` | 1 | Replies under one comment |
+| `GET /v1/instagram/hashtag-posts` | `truescrape instagram hashtag-posts --hashtag` | 1 | Posts under a hashtag |
+| `GET /v1/instagram/highlight` | `truescrape instagram highlight --id` | 1 | Stories inside a highlight |
+| `GET /v1/instagram/popular-search` | `truescrape instagram popular-search --query` | 1 | Top posts for a keyword |
+| `GET /v1/instagram/post` | `truescrape instagram post --url` | 1 | Post or reel details |
+| `GET /v1/instagram/post-comments` | `truescrape instagram post-comments --url` | 1 | Comments on a post or reel |
+| `GET /v1/instagram/profile` | `truescrape instagram profile --handle` | 1 | Profile details |
+| `GET /v1/instagram/profile-post-count` | `truescrape instagram profile-post-count --handle` | 1 | Post count for a profile |
+| `GET /v1/instagram/profile-search` | `truescrape instagram profile-search --query` | 1 | Search accounts |
+| `GET /v1/instagram/reels-search` | `truescrape instagram reels-search --query` | 1 | Search reels by keyword |
+| `GET /v1/instagram/search` | `truescrape instagram search --query` | 1 | Search accounts, hashtags and places |
+| `GET /v1/instagram/transcript` | `truescrape instagram transcript --url` | 1 | Reel or video transcript |
+| `GET /v1/instagram/trending-reels` | `truescrape instagram trending-reels` | 1 | Reels trending on Explore |
+| `GET /v1/instagram/user-embed` | `truescrape instagram user-embed --handle` | 1 | Profile via the public embed card |
+| `GET /v1/instagram/user-highlights` | `truescrape instagram user-highlights` | 1 | Story highlight covers |
+| `GET /v1/instagram/user-posts` | `truescrape instagram user-posts --handle` | 1 | Posts and reels from a profile |
+| `GET /v1/instagram/user-reels` | `truescrape instagram user-reels` | 1 | Reels from a profile |
+| `GET /v1/instagram/user-tagged-posts` | `truescrape instagram user-tagged-posts` | 1 | Posts a profile is tagged in |
 
 ### kick (1)
 
@@ -381,9 +378,9 @@ LinkedIn's under `/v1/linkedin/ads/search`.
 | `GET /v1/linkedin/company` | `truescrape linkedin company --url` | 1 | Company page |
 | `GET /v1/linkedin/company/posts` | `truescrape linkedin company-posts --url` | 1 | Company posts |
 | `GET /v1/linkedin/post` | `truescrape linkedin post --url` | 1 | Post details |
-| `GET /v1/linkedin/post/transcript` | `truescrape linkedin post-transcript --url` | 1 | Post transcript (experimental) |
+| `GET /v1/linkedin/post/transcript` | `truescrape linkedin post-transcript --url` | 1 | Post transcript |
 | `GET /v1/linkedin/profile` | `truescrape linkedin profile --url` | 1 | Person's profile |
-| `GET /v1/linkedin/search/posts` | `truescrape linkedin search-posts --query` | 1 | Search posts (experimental) |
+| `GET /v1/linkedin/search/posts` | `truescrape linkedin search-posts --query` | 1 | Search posts |
 
 ### linkme (1)
 
@@ -425,7 +422,7 @@ LinkedIn's under `/v1/linkedin/ads/search`.
 | `GET /v1/reddit/post` | `truescrape reddit post --url` | 1 | Post details |
 | `GET /v1/reddit/post/comment/replies` | `truescrape reddit post-comment-replies --url` | 1 | Comment replies |
 | `GET /v1/reddit/post/comments` | `truescrape reddit post-comments --url` | 1 | Post comments |
-| `GET /v1/reddit/post/transcript` | `truescrape reddit post-transcript --url` | 1 | Video transcript (experimental) |
+| `GET /v1/reddit/post/transcript` | `truescrape reddit post-transcript --url` | 1 | Video transcript |
 | `GET /v1/reddit/search` | `truescrape reddit search --query` | 1 | Search posts |
 | `GET /v1/reddit/subreddit` | `truescrape reddit subreddit --subreddit` | 1 | Subreddit posts |
 | `GET /v1/reddit/subreddit/details` | `truescrape reddit subreddit-details --subreddit` | 1 | Subreddit details |
@@ -479,7 +476,7 @@ LinkedIn's under `/v1/linkedin/ads/search`.
 |---|---|---|---|
 | `GET /v1/spotify/album` | `truescrape spotify album --id` | 1 | Album details |
 | `GET /v1/spotify/artist` | `truescrape spotify artist --id` | 1 | Artist details |
-| `GET /v1/spotify/playlist` | `truescrape spotify playlist` | 1 | Playlist contents (experimental) |
+| `GET /v1/spotify/playlist` | `truescrape spotify playlist` | 1 | Playlist contents |
 | `GET /v1/spotify/podcast` | `truescrape spotify podcast --id` | 1 | Podcast details |
 | `GET /v1/spotify/podcast/episodes` | `truescrape spotify podcast-episodes --id` | 1 | Podcast episodes |
 | `GET /v1/spotify/search` | `truescrape spotify search --query` | 1 | Search |
@@ -495,9 +492,9 @@ LinkedIn's under `/v1/linkedin/ads/search`.
 
 | Endpoint | CLI | Credits | What it returns |
 |---|---|---|---|
-| `GET /v1/telegram/channel` | `truescrape telegram channel --handle` | 1 | Channel (experimental) |
-| `GET /v1/telegram/channel-posts` | `truescrape telegram channel-posts --handle` | 1 | Channel posts (experimental) |
-| `GET /v1/telegram/post` | `truescrape telegram post --url` | 1 | Post (experimental) |
+| `GET /v1/telegram/channel` | `truescrape telegram channel --handle` | 1 | Channel |
+| `GET /v1/telegram/channel-posts` | `truescrape telegram channel-posts --handle` | 1 | Channel posts |
+| `GET /v1/telegram/post` | `truescrape telegram post --url` | 1 | Post |
 
 ### threads (5)
 
@@ -513,38 +510,38 @@ LinkedIn's under `/v1/linkedin/ads/search`.
 
 | Endpoint | CLI | Credits | What it returns |
 |---|---|---|---|
-| `GET /v1/tiktok/ad-library/ad` | `truescrape tiktok ad-library-ad --ad-id` | 1 | One TikTok ad (experimental) |
-| `GET /v1/tiktok/ad-library/search` | `truescrape tiktok ad-library-search --region` | 1 | Search the TikTok Ads Library (experimental) |
-| `GET /v1/tiktok/collection/videos` | `truescrape tiktok collection-videos` | 1 | Collection videos (experimental) |
-| `GET /v1/tiktok/comment-replies` | `truescrape tiktok comment-replies --comment-id --url` | 1 | Replies to a comment (experimental) |
-| `GET /v1/tiktok/comments` | `truescrape tiktok comments --url` | 1 | Comments on a video (experimental) |
-| `GET /v1/tiktok/creators/popular` | `truescrape tiktok creators-popular` | 1 | Popular creators (experimental) |
-| `GET /v1/tiktok/followers` | `truescrape tiktok followers --handle` | 1 | Accounts following a creator (experimental) |
-| `GET /v1/tiktok/following` | `truescrape tiktok following --handle` | 1 | Accounts a creator follows (experimental) |
-| `GET /v1/tiktok/hashtag` | `truescrape tiktok hashtag --hashtag` | 1 | Hashtag details (experimental) |
-| `GET /v1/tiktok/hashtag-videos` | `truescrape tiktok hashtag-videos --hashtag` | 1 | Videos using a hashtag (experimental) |
-| `GET /v1/tiktok/live` | `truescrape tiktok live` | 1 | Live stream info (experimental) |
-| `GET /v1/tiktok/playlist-videos` | `truescrape tiktok playlist-videos --playlist-id` | 1 | Videos in a playlist (experimental) |
-| `GET /v1/tiktok/playlists` | `truescrape tiktok playlists --handle` | 1 | A creator's playlists (experimental) |
-| `GET /v1/tiktok/product` | `truescrape tiktok product --url` | 1 | Product details (experimental) |
-| `GET /v1/tiktok/profile` | `truescrape tiktok profile --handle` | 1 | Profile details (experimental) |
-| `GET /v1/tiktok/profile/region` | `truescrape tiktok profile-region` | 1 | Creator region (experimental) |
-| `GET /v1/tiktok/search/keyword` | `truescrape tiktok search-keyword --query` | 1 | Search videos by keyword (experimental) |
-| `GET /v1/tiktok/search/suggestions` | `truescrape tiktok search-suggestions --query` | 1 | Search suggestions (experimental) |
-| `GET /v1/tiktok/search/top` | `truescrape tiktok search-top --query` | 1 | Top (blended) search (experimental) |
-| `GET /v1/tiktok/search/users` | `truescrape tiktok search-users --query` | 1 | Search creators (experimental) |
-| `GET /v1/tiktok/shop/product/reviews` | `truescrape tiktok shop-product-reviews --url` | 1 | Product reviews (experimental) |
-| `GET /v1/tiktok/shop/products` | `truescrape tiktok shop-products --url` | 1 | Seller's product catalogue (experimental) |
-| `GET /v1/tiktok/shop/search` | `truescrape tiktok shop-search --query` | 1 | Search TikTok Shop (experimental) |
-| `GET /v1/tiktok/song` | `truescrape tiktok song --song` | 1 | Sound / song details (experimental) |
-| `GET /v1/tiktok/song-videos` | `truescrape tiktok song-videos --song` | 1 | Videos using a sound (experimental) |
-| `GET /v1/tiktok/songs/popular` | `truescrape tiktok songs-popular` | 1 | Popular songs (experimental) |
-| `GET /v1/tiktok/transcript` | `truescrape tiktok transcript --url` | 1 | Video transcript (experimental) |
-| `GET /v1/tiktok/trending` | `truescrape tiktok trending` | 1 | Trending feed (experimental) |
-| `GET /v1/tiktok/user/showcase` | `truescrape tiktok user-showcase --handle` | 1 | Creator's product showcase (experimental) |
-| `GET /v1/tiktok/user-videos` | `truescrape tiktok user-videos --handle` | 1 | Videos posted by a creator (experimental) |
-| `GET /v1/tiktok/video` | `truescrape tiktok video --url` | 1 | Video or photo-post details (experimental) |
-| `GET /v1/tiktok/videos/popular` | `truescrape tiktok videos-popular` | 1 | Popular videos (experimental) |
+| `GET /v1/tiktok/ad-library/ad` | `truescrape tiktok ad-library-ad --ad-id` | 1 | One TikTok ad |
+| `GET /v1/tiktok/ad-library/search` | `truescrape tiktok ad-library-search --region` | 1 | Search the TikTok Ads Library |
+| `GET /v1/tiktok/collection/videos` | `truescrape tiktok collection-videos` | 1 | Collection videos |
+| `GET /v1/tiktok/comment-replies` | `truescrape tiktok comment-replies --comment-id --url` | 1 | Replies to a comment |
+| `GET /v1/tiktok/comments` | `truescrape tiktok comments --url` | 1 | Comments on a video |
+| `GET /v1/tiktok/creators/popular` | `truescrape tiktok creators-popular` | 1 | Popular creators |
+| `GET /v1/tiktok/followers` | `truescrape tiktok followers --handle` | 1 | Accounts following a creator |
+| `GET /v1/tiktok/following` | `truescrape tiktok following --handle` | 1 | Accounts a creator follows |
+| `GET /v1/tiktok/hashtag` | `truescrape tiktok hashtag --hashtag` | 1 | Hashtag details |
+| `GET /v1/tiktok/hashtag-videos` | `truescrape tiktok hashtag-videos --hashtag` | 1 | Videos using a hashtag |
+| `GET /v1/tiktok/live` | `truescrape tiktok live` | 1 | Live stream info |
+| `GET /v1/tiktok/playlist-videos` | `truescrape tiktok playlist-videos --playlist-id` | 1 | Videos in a playlist |
+| `GET /v1/tiktok/playlists` | `truescrape tiktok playlists --handle` | 1 | A creator's playlists |
+| `GET /v1/tiktok/product` | `truescrape tiktok product --url` | 1 | Product details |
+| `GET /v1/tiktok/profile` | `truescrape tiktok profile --handle` | 1 | Profile details |
+| `GET /v1/tiktok/profile/region` | `truescrape tiktok profile-region` | 1 | Creator region |
+| `GET /v1/tiktok/search/keyword` | `truescrape tiktok search-keyword --query` | 1 | Search videos by keyword |
+| `GET /v1/tiktok/search/suggestions` | `truescrape tiktok search-suggestions --query` | 1 | Search suggestions |
+| `GET /v1/tiktok/search/top` | `truescrape tiktok search-top --query` | 1 | Top (blended) search |
+| `GET /v1/tiktok/search/users` | `truescrape tiktok search-users --query` | 1 | Search creators |
+| `GET /v1/tiktok/shop/product/reviews` | `truescrape tiktok shop-product-reviews --url` | 1 | Product reviews |
+| `GET /v1/tiktok/shop/products` | `truescrape tiktok shop-products --url` | 1 | Seller's product catalogue |
+| `GET /v1/tiktok/shop/search` | `truescrape tiktok shop-search --query` | 1 | Search TikTok Shop |
+| `GET /v1/tiktok/song` | `truescrape tiktok song --song` | 1 | Sound / song details |
+| `GET /v1/tiktok/song-videos` | `truescrape tiktok song-videos --song` | 1 | Videos using a sound |
+| `GET /v1/tiktok/songs/popular` | `truescrape tiktok songs-popular` | 1 | Popular songs |
+| `GET /v1/tiktok/transcript` | `truescrape tiktok transcript --url` | 1 | Video transcript |
+| `GET /v1/tiktok/trending` | `truescrape tiktok trending` | 1 | Trending feed |
+| `GET /v1/tiktok/user/showcase` | `truescrape tiktok user-showcase --handle` | 1 | Creator's product showcase |
+| `GET /v1/tiktok/user-videos` | `truescrape tiktok user-videos --handle` | 1 | Videos posted by a creator |
+| `GET /v1/tiktok/video` | `truescrape tiktok video --url` | 1 | Video or photo-post details |
+| `GET /v1/tiktok/videos/popular` | `truescrape tiktok videos-popular` | 1 | Popular videos |
 
 ### truthsocial (3)
 
@@ -571,7 +568,7 @@ LinkedIn's under `/v1/linkedin/ads/search`.
 | `GET /v1/twitter/community/tweets` | `truescrape twitter community-tweets --url` | 1 | Community posts |
 | `GET /v1/twitter/profile` | `truescrape twitter profile --handle` | 1 | Profile details |
 | `GET /v1/twitter/tweet` | `truescrape twitter tweet --url` | 1 | Post details |
-| `GET /v1/twitter/tweet/transcript` | `truescrape twitter tweet-transcript --url` | 1 | Post transcript (experimental) |
+| `GET /v1/twitter/tweet/transcript` | `truescrape twitter tweet-transcript --url` | 1 | Post transcript |
 | `GET /v1/twitter/user-tweets` | `truescrape twitter user-tweets --handle` | 1 | Recent posts from an account |
 
 ### walmart (4)
@@ -603,13 +600,13 @@ LinkedIn's under `/v1/linkedin/ads/search`.
 | `GET /v1/youtube/video` | `truescrape youtube video --url` | 1 | Video or Short details |
 | `GET /v1/youtube/video/comment-replies` | `truescrape youtube video-comment-replies` | 1 | Comment replies |
 | `GET /v1/youtube/video/comments` | `truescrape youtube video-comments --url` | 1 | Video comments |
-| `GET /v1/youtube/video/sponsors` | `truescrape youtube video-sponsors --url` | 1 | Video sponsors (inferred) (experimental) |
+| `GET /v1/youtube/video/sponsors` | `truescrape youtube video-sponsors --url` | 1 | Video sponsors (inferred) |
 
 ### zillow (3)
 
 | Endpoint | CLI | Credits | What it returns |
 |---|---|---|---|
-| `GET /v1/zillow/agent` | `truescrape zillow agent --url` | 1 | Zillow agent profile (experimental) |
+| `GET /v1/zillow/agent` | `truescrape zillow agent --url` | 1 | Zillow agent profile |
 | `GET /v1/zillow/property` | `truescrape zillow property` | 1 | Zillow listing details |
 | `GET /v1/zillow/search` | `truescrape zillow search` | 1 | Search Zillow listings by location |
 <!-- catalogue:end -->

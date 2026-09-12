@@ -25,7 +25,6 @@ export interface CatalogueEndpoint {
   credits: number;
   cacheable: boolean;
   batchable: boolean;
-  experimental: boolean;
   constraints: string[];
   params: CatalogueParam[];
 }
@@ -161,7 +160,6 @@ export function buildCatalogue(spec: OpenApiDoc, source: string, now: Date): Cat
         credits: Number(operation['x-credit-cost'] ?? 1),
         cacheable: operation['x-cacheable'] === true,
         batchable: operation['x-batchable'] === true,
-        experimental: operation['x-experimental'] === true,
         constraints: Array.isArray(constraints) ? constraints.map(String) : [],
         params: (operation.parameters ?? []).filter((p) => (p.in ?? 'query') === 'query').map(buildParam),
       });
