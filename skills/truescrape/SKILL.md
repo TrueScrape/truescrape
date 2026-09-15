@@ -235,7 +235,7 @@ LinkedIn's under `/v1/linkedin/ads/search`.
 ## Endpoint catalogue
 
 <!-- catalogue:start -->
-206 endpoints across 37 platforms, generated from the live API on 2026-09-12.
+206 endpoints across 37 platforms, generated from the live API on 2026-09-15.
 
 ### amazon (4)
 
