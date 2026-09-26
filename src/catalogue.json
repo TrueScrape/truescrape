@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-12T19:38:27.651Z",
+  "generatedAt": "2026-09-26T09:22:09.032Z",
   "source": "https://api.truescrape.com/openapi.json",
   "endpoints": [
     {
@@ -210,7 +210,7 @@
       "action": "album",
       "path": "/v1/apple-music/album",
       "summary": "Album details",
-      "description": "Public Apple Music album: artist, release date, genre, copyright, artwork and total runtime. The full track listing is in `raw`, behind `include_raw=true`.",
+      "description": "Public Apple Music album: artist, release date, genre, artwork and total runtime. The track listing and copyright line are in `raw`, behind `include_raw=true`.",
       "credits": 1,
       "cacheable": true,
       "batchable": true,
@@ -250,7 +250,7 @@
       "action": "artist",
       "path": "/v1/apple-music/artist",
       "summary": "Artist details",
-      "description": "Public Apple Music artist page: editorial bio, artist image and genre. Apple publishes no follower or play counts, so those fields are null rather than guessed.",
+      "description": "Public Apple Music artist page: editorial bio, artist image, banner and genre. Apple publishes no follower or play counts, so those fields are null rather than guessed.",
       "credits": 1,
       "cacheable": true,
       "batchable": true,
@@ -311,9 +311,11 @@
           "enum": [
             "track",
             "album",
-            "artist"
+            "artist",
+            "song"
           ],
-          "default": "track"
+          "default": "track",
+          "description": "`song` is the same as `track`"
         },
         {
           "name": "limit",
@@ -447,6 +449,13 @@
           "flag": "include-raw",
           "type": "boolean",
           "required": false
+        },
+        {
+          "name": "user_id",
+          "flag": "user-id",
+          "type": "string",
+          "required": false,
+          "description": "Alias for `handle`, accepted for compatibility. Sending both with different values is rejected."
         }
       ]
     },
@@ -501,6 +510,13 @@
           "flag": "include-raw",
           "type": "boolean",
           "required": false
+        },
+        {
+          "name": "user_id",
+          "flag": "user-id",
+          "type": "string",
+          "required": false,
+          "description": "Alias for `handle`, accepted for compatibility. Sending both with different values is rejected."
         }
       ]
     },
@@ -719,7 +735,7 @@
       "action": "ad-library-ad-transcript",
       "path": "/v1/facebook/ad-library/ad-transcript",
       "summary": "Ad video transcript",
-      "description": "Retrieves a transcript for a single Facebook Ad Library video ad by ID or URL. If Facebook exposes captions for the ad's video, those are used (`source: \"captions\"`). An ad with no video, or a video with no caption track, returns an empty result and is not charged, the same answer every other transcript endpoint gives for the same fact. Credits are only deducted when a transcript is actually returned. Pass `transcribe_fallback=true` to have us transcribe the ad's audio when Facebook publishes no caption track: it adds 10 credits to this call, applies only to videos under 120 seconds, and the surcharge is refunded whenever we did not transcribe. It has to be enabled on this deployment; where it is not, a request carrying it answers `not_configured` (501) and is never charged. `source` says which path produced the text: `captions` for Facebook's own track, `asr` for ours.",
+      "description": "Retrieves a transcript for a single Facebook Ad Library video ad by ID or URL, read from the caption track Facebook publishes for the ad's video (`source: \"captions\"`). Transcription of ad videos without captions is coming soon; until then those answer `not_configured` (501) and are not charged. Credits are only deducted when a transcript is actually returned.",
       "credits": 1,
       "cacheable": true,
       "batchable": true,
@@ -768,7 +784,7 @@
       "action": "ad-library-advertisers",
       "path": "/v1/facebook/ad-library/advertisers",
       "summary": "Find advertisers running ads",
-      "description": "Distinct advertisers whose ads match a search term, with the `page_id` needed by /v1/facebook/ad-library/page-ads. Derived from the official Ad Library search: Meta has no advertiser-search endpoint of its own.",
+      "description": "Distinct advertisers whose ads match a search term, with the `page_id` needed by /v1/facebook/ad-library/page-ads. Derived from the ads an Ad Library search returns, ranked by how many of them each advertiser ran.",
       "credits": 1,
       "cacheable": true,
       "batchable": true,
@@ -827,7 +843,7 @@
       "action": "ad-library-page-ads",
       "path": "/v1/facebook/ad-library/page-ads",
       "summary": "All ads for one advertiser",
-      "description": "Every ad a specific Facebook page is running or has run, from Meta's official Ad Library API. This is the competitor-monitoring endpoint: page it with `cursor` to pull a full creative history.",
+      "description": "Ads a specific Facebook page is running or has run, from Meta's Ad Library. This is the competitor-monitoring endpoint. `pagination.cursor` is filled only where the deployment reads the Graph Ad Library API; otherwise `pagination.hasMore` says whether more exist.",
       "credits": 2,
       "cacheable": true,
       "batchable": true,
@@ -942,6 +958,13 @@
           "flag": "include-raw",
           "type": "boolean",
           "required": false
+        },
+        {
+          "name": "pageId",
+          "flag": "pageId",
+          "type": "string",
+          "required": false,
+          "description": "Alias for `page_id`, accepted for compatibility. Sending both with different values is rejected."
         }
       ]
     },
@@ -951,7 +974,7 @@
       "action": "ad-library-search",
       "path": "/v1/facebook/ad-library/search",
       "summary": "Search the Meta Ad Library",
-      "description": "Every Facebook, Instagram, Messenger and Threads ad matching a search term, from Meta's official Ad Library API. Political and issue ads additionally carry spend and impression ranges.",
+      "description": "Facebook, Instagram, Messenger and Threads ads matching a search term, from Meta's Ad Library, in the Library's own order. Spend and impression ranges are filled for political and issue ads only where the deployment reads the Graph Ad Library API; `pagination.hasMore` says when more results exist.",
       "credits": 2,
       "cacheable": true,
       "batchable": true,
@@ -1087,7 +1110,7 @@
       "action": "city-events",
       "path": "/v1/facebook/city-events",
       "summary": "Get the events of a city",
-      "description": "Public events Facebook is suggesting for a city, from its Events Explore feed (e.g. https://www.facebook.com/events/explore/saint-petersburg-florida/111326725552547). `time` narrows the window to today, this week, or next week; without it Facebook returns whatever it has queued as upcoming, in whatever order it ranks them. Only the first, server-rendered page: host, description and interested-count are not exposed on this listing (only on /v1/facebook/event), and further pages sit behind an authenticated scroll load. `raw.hasMoreBehindCursor` reports whether Facebook says there is more, which this endpoint cannot fetch.",
+      "description": "Public events Facebook is suggesting for a city, from its Events Explore feed (e.g. https://www.facebook.com/events/explore/saint-petersburg-florida/111326725552547). `time` narrows the window to today, this week, or next week; without it Facebook returns whatever it has queued as upcoming, in whatever order it ranks them. Only the first, server-rendered page: host and description are not exposed on this listing (only on /v1/facebook/event). `pagination.hasMore` says whether Facebook has more; this endpoint returns no cursor to fetch them.",
       "credits": 1,
       "cacheable": true,
       "batchable": true,
@@ -1132,7 +1155,7 @@
       "action": "comment-replies",
       "path": "/v1/facebook/comment-replies",
       "summary": "Replies to a comment",
-      "description": "Replies under one comment on a public Facebook post. Pass the post URL and the comment id (the `id` of any item from /v1/facebook/post-comments).",
+      "description": "Replies under one comment on a public Facebook post, ten per page. Pass the post URL and the comment id (the `id` of any item from /v1/facebook/post-comments), then `pagination.cursor` for the next page.",
       "credits": 1,
       "cacheable": true,
       "batchable": true,
@@ -1151,6 +1174,13 @@
           "type": "string",
           "required": true,
           "description": "Numeric comment id"
+        },
+        {
+          "name": "cursor",
+          "flag": "cursor",
+          "type": "string",
+          "required": false,
+          "description": "`pagination.cursor` from a previous response"
         },
         {
           "name": "cache_max_age",
@@ -1205,7 +1235,7 @@
       "action": "events-search",
       "path": "/v1/facebook/events/search",
       "summary": "Search public events",
-      "description": "Public Facebook events matching a search term. Results are ranked and location-biased by the exit IP, so the same query returns a different set from a different proxy. Treat this as discovery, not as an enumerable list.",
+      "description": "Public Facebook events matching a search term. Results are ranked and biased toward where Facebook places the request, so the same query can return a different set on another call. Treat this as discovery, not as an enumerable list.",
       "credits": 1,
       "cacheable": true,
       "batchable": true,
@@ -1370,7 +1400,7 @@
       "action": "marketplace-search",
       "path": "/v1/facebook/marketplace/search",
       "summary": "Search Marketplace listings",
-      "description": "Public Facebook Marketplace listings matching a search term, with price, condition flags, location and photos. `location` takes a city slug or a location id from /v1/facebook/marketplace/locations; without one, Facebook picks the city its geolocation puts the request in, which means the proxy decides.",
+      "description": "Public Facebook Marketplace listings matching a search term, with price, condition flags, location and photos. `location` takes a city slug or a location id from /v1/facebook/marketplace/locations; without one, Facebook picks the city it places the request in, which you do not control. Pass `location` for results you can repeat.",
       "credits": 1,
       "cacheable": true,
       "batchable": true,
@@ -1463,7 +1493,7 @@
       "action": "page-posts",
       "path": "/v1/facebook/page-posts",
       "summary": "Public Page posts",
-      "description": "Recent public posts from a Facebook Page, with text, reaction, comment and share counts, and the publish timestamp. Logged out, Facebook server-renders only the newest one to three stories and loads the rest on scroll behind an authenticated call, so this returns the head of the feed, not its history. `raw.hasMoreBehindCursor` reports whether Facebook says there is more.",
+      "description": "Recent public posts from a Facebook Page, newest first, three per page, with text, reaction, comment and share counts, and the publish timestamp. Pass `pagination.cursor` back for the next three.",
       "credits": 1,
       "cacheable": true,
       "batchable": true,
@@ -1475,6 +1505,13 @@
           "type": "string",
           "required": true,
           "description": "Page URL, @handle, slug, or numeric page id"
+        },
+        {
+          "name": "cursor",
+          "flag": "cursor",
+          "type": "string",
+          "required": false,
+          "description": "`pagination.cursor` from a previous response"
         },
         {
           "name": "cache_max_age",
@@ -1496,7 +1533,7 @@
       "action": "page-reels",
       "path": "/v1/facebook/page-reels",
       "summary": "Public Page videos and reels",
-      "description": "Public videos and reels from a Facebook Page. Reads the Page's reels tab first and falls back to its video grid, which renders around twenty entries with titles, view counts and durations, so a Page with no reels returns its videos rather than an error. Items are keyed by video id and can be passed straight to /v1/facebook/post or /v1/facebook/post-transcript.",
+      "description": "Public videos and reels from a Facebook Page. Reads the Page's reels tab first, ten per page with `pagination.cursor` for the next ten, and falls back to its video grid, which renders around twenty entries with titles, view counts and durations and has no cursor, so a Page with no reels returns its videos rather than an error. Items are keyed by video id and can be passed straight to /v1/facebook/post or /v1/facebook/post-transcript.",
       "credits": 1,
       "cacheable": true,
       "batchable": true,
@@ -1508,6 +1545,13 @@
           "type": "string",
           "required": true,
           "description": "Page URL, @handle, slug, or numeric page id"
+        },
+        {
+          "name": "cursor",
+          "flag": "cursor",
+          "type": "string",
+          "required": false,
+          "description": "`pagination.cursor` from a previous response"
         },
         {
           "name": "cache_max_age",
@@ -1562,7 +1606,7 @@
       "action": "post-comments",
       "path": "/v1/facebook/post-comments",
       "summary": "Comments on a post",
-      "description": "Top-level comments on a public Facebook post, with author, reaction count and reply count. Logged out, Facebook renders the \"Most relevant\" head of the thread (roughly the first ten comments) rather than the whole thread. The post's full comment total is on /v1/facebook/post. Use /v1/facebook/comment-replies for the replies under one comment. `likeCount` is only as precise as Facebook publishes it: comment reactions ship in abbreviated form (\"2.4K\") with no exact figure anywhere in the payload, so counts above about a thousand are rounded at source.",
+      "description": "Top-level comments on a public Facebook post, with author, reaction count and reply count, in Facebook's \"Most relevant\" order. The first page is the head of the thread Facebook renders into the post, usually two comments; pass `pagination.cursor` back for the next ten. The post's full comment total is on /v1/facebook/post. Use /v1/facebook/comment-replies for the replies under one comment. `likeCount` is only as precise as Facebook publishes it: comment reactions ship in abbreviated form (\"2.4K\") with no exact figure anywhere in the payload, so counts above about a thousand are rounded at source.",
       "credits": 1,
       "cacheable": true,
       "batchable": true,
@@ -1574,6 +1618,13 @@
           "type": "string",
           "required": true,
           "description": "Full post, video, or reel URL"
+        },
+        {
+          "name": "cursor",
+          "flag": "cursor",
+          "type": "string",
+          "required": false,
+          "description": "`pagination.cursor` from a previous response"
         },
         {
           "name": "cache_max_age",
@@ -1595,7 +1646,7 @@
       "action": "post-transcript",
       "path": "/v1/facebook/post-transcript",
       "summary": "Video transcript",
-      "description": "Transcript for a public Facebook video or reel, as one text block plus timed cues. Reads the caption track Facebook publishes for the video, auto-generated when the uploader added none. Videos with captions disabled return an empty result and are not charged. Pass `transcribe_fallback=true` to have us transcribe the audio instead when Facebook publishes no caption track: it adds 10 credits to this call, applies only to videos under 120 seconds, and the surcharge is refunded whenever we did not transcribe: captions turned up, the video was over that limit, or no downloadable video was published. It has to be enabled on this deployment; where it is not, a request carrying it answers `not_configured` (501) and is never charged. `source` says which path produced the text: `captions` for Facebook's own track, `asr` for ours.",
+      "description": "Transcript for a public Facebook video or reel, as one text block plus timed cues. Reads the caption track Facebook publishes for the video, auto-generated when the uploader added none (`source: \"captions\"`). Transcription of videos without captions is coming soon; until then such a video answers `not_configured` (501) and is not charged.",
       "credits": 1,
       "cacheable": true,
       "batchable": true,
@@ -1635,7 +1686,7 @@
       "action": "profile",
       "path": "/v1/facebook/profile",
       "summary": "Public Page profile",
-      "description": "Name, category, follower and like counts, description, banner and outbound links for a public Facebook Page. `followerCount` is as precise as Facebook renders it: exact on a small Page (\"498 followers\"), rounded on a large one (\"28M followers\", so ±500,000). `raw.followerCountIsApproximate` says which you got, and `raw.likeCount` carries the exact like figure Facebook always prints.",
+      "description": "Name, category, follower and like counts, description, banner and outbound links for a public Facebook Page. `followerCount` is as precise as Facebook renders it: exact on a small Page (\"498 followers\"), rounded on a large one (\"28M followers\", so ±500,000). `raw.followerCountIsApproximate` says which you got, and `raw.likeCount` carries the exact like figure Facebook always prints. Pass `extra_fetch=true` to also fill `createdAt`, the date the Page was created, which lives only on the Page transparency tab: it costs 1 extra credit and one large additional fetch, refunded if that fetch cannot be read.",
       "credits": 1,
       "cacheable": true,
       "batchable": true,
@@ -1659,6 +1710,13 @@
           "flag": "include-raw",
           "type": "boolean",
           "required": false
+        },
+        {
+          "name": "extra_fetch",
+          "flag": "extra-fetch",
+          "type": "boolean",
+          "required": false,
+          "description": "When true, fetches each item's own page to fill fields the list page leaves null. Costs 1 extra credit per page fetched, up to the page size."
         }
       ]
     },
@@ -1668,7 +1726,7 @@
       "action": "profile-events",
       "path": "/v1/facebook/profile-events",
       "summary": "Events on a Page",
-      "description": "Events hosted by a public Facebook Page, upcoming ones first, with past events where Facebook still lists them. Each carries start time, place, host and the cover photo.",
+      "description": "Events hosted by a public Facebook Page, upcoming ones first, with past events where Facebook still lists them, eight per page; pass `pagination.cursor` back for the next eight. Each carries start time, place, host and the cover photo.",
       "credits": 1,
       "cacheable": true,
       "batchable": true,
@@ -1680,6 +1738,13 @@
           "type": "string",
           "required": true,
           "description": "Page URL, @handle, slug, or numeric page id"
+        },
+        {
+          "name": "cursor",
+          "flag": "cursor",
+          "type": "string",
+          "required": false,
+          "description": "`pagination.cursor` from a previous response"
         },
         {
           "name": "cache_max_age",
@@ -1701,7 +1766,7 @@
       "action": "profile-photos",
       "path": "/v1/facebook/profile-photos",
       "summary": "Photos on a Page",
-      "description": "Photos from a public Facebook Page's photo grid. Facebook exposes each photo's accessibility caption rather than the text of the post it came from, so that is what lands in `title`.",
+      "description": "Photos from a public Facebook Page's photo grid, eight per page, newest first; pass `pagination.cursor` back for the next eight. Facebook exposes each photo's accessibility caption rather than the text of the post it came from, so that is what lands in `title`.",
       "credits": 1,
       "cacheable": true,
       "batchable": true,
@@ -1713,6 +1778,13 @@
           "type": "string",
           "required": true,
           "description": "Page URL, @handle, slug, or numeric page id"
+        },
+        {
+          "name": "cursor",
+          "flag": "cursor",
+          "type": "string",
+          "required": false,
+          "description": "`pagination.cursor` from a previous response"
         },
         {
           "name": "cache_max_age",
@@ -1734,7 +1806,7 @@
       "action": "repository",
       "path": "/v1/github/repository",
       "summary": "Repository details",
-      "description": "Public details for a repository: stars, forks, open issues, topics, language and licence. Stars map to `likeCount`, forks to `shareCount`.",
+      "description": "Public details for a repository: stars, forks, open issues, topics, language and licence. Stars map to `likeCount`, forks to `shareCount`; open issues and pull requests are `openIssuesCount`.",
       "credits": 1,
       "cacheable": true,
       "batchable": true,
@@ -1812,7 +1884,7 @@
       "action": "trending-repositories",
       "path": "/v1/github/trending/repositories",
       "summary": "Trending repositories",
-      "description": "The public github.com/trending board. `likeCount` is total stars and `shareCount` total forks; the stars gained in the period are in `raw`.",
+      "description": "The public github.com/trending board. `likeCount` is total stars, `shareCount` total forks and `starsInPeriod` the stars gained in the chosen period.",
       "credits": 1,
       "cacheable": true,
       "batchable": false,
@@ -1864,7 +1936,7 @@
       "action": "user",
       "path": "/v1/github/user",
       "summary": "User or organisation profile",
-      "description": "Public profile for a GitHub user or organisation: followers, public repo count, bio, company, location and links.",
+      "description": "Public profile for a GitHub user or organisation: followers, public repo count, bio, location and links.",
       "credits": 1,
       "cacheable": true,
       "batchable": true,
@@ -2241,7 +2313,7 @@
       "action": "ad-library-ad",
       "path": "/v1/google/ad-library/ad",
       "summary": "Ad details",
-      "description": "One creative from the Ads Transparency Centre, with every rendering variant and the per-country dates it ran.",
+      "description": "One creative from the Ads Transparency Centre, with every rendering variant and the per-country dates it ran. For a text ad, `headline`, `body` and `linkUrl` come from its rendered preview, and `linkUrl` is the address the ad displays.",
       "credits": 1,
       "cacheable": true,
       "batchable": true,
@@ -2338,7 +2410,7 @@
       "action": "ad-library-advertisers",
       "path": "/v1/google/ad-library/advertisers",
       "summary": "Find advertisers in the Ads Transparency Centre",
-      "description": "Advertisers matching a name, with the advertiser id that /v1/google/ad-library/advertiser-ads needs, plus the verified domains Google suggests for the same term.",
+      "description": "Advertisers matching a name, with the advertiser id that /v1/google/ad-library/advertiser-ads needs, plus the verified domains Google suggests for the same term in `domains`. Without `region` every region is searched. `postCount` and `adCountUpper` are the lower and upper bounds of the ad-count range the archive publishes, counted within `region` when one is given.",
       "credits": 1,
       "cacheable": true,
       "batchable": true,
@@ -2356,8 +2428,7 @@
           "flag": "region",
           "type": "string",
           "required": false,
-          "default": "US",
-          "description": "Two-letter country code (US, GB, DE, IN, ...) or a Google geo criteria id"
+          "description": "Two-letter country code (US, GB, DE, IN, ...) or a Google geo criteria id. Omit to search every region."
         },
         {
           "name": "cache_max_age",
@@ -2870,7 +2941,7 @@
       "action": "audio-reels",
       "path": "/v1/instagram/audio-reels",
       "summary": "Reels using a sound",
-      "description": "Reels built on one audio track, the \"N reels using this audio\" list. Takes the numeric audio id or a /reels/audio/ URL. Falls back to the server-rendered audio page, which returns the first grid only.",
+      "description": "Reels built on one audio track, the \"N reels using this audio\" list. Takes the numeric audio id or a /reels/audio/ URL. Falls back to the public audio page, which lists its first grid of reels only once rendered, as links and cover images.",
       "credits": 1,
       "cacheable": true,
       "batchable": true,
@@ -2971,7 +3042,7 @@
       "action": "hashtag-posts",
       "path": "/v1/instagram/hashtag-posts",
       "summary": "Posts under a hashtag",
-      "description": "Posts carrying a hashtag. `tab=top` is Instagram's ranking (one fixed page, no cursor); `tab=recent` is chronological and paginates. Falls back to the server-rendered tag page when the JSON surface declines, which returns the top grid only.",
+      "description": "Posts carrying a hashtag. `tab=top` is Instagram's ranking (one fixed page, no cursor); `tab=recent` is chronological and paginates. Falls back to the server-rendered tag page when the JSON surface declines, which returns the top grid only. Set `extra_fetch=true` to fill each post's publish date, like and comment counts and caption from its own page: 1 credit per item fetched, up to the page size.",
       "credits": 1,
       "cacheable": true,
       "batchable": true,
@@ -3014,6 +3085,13 @@
           "flag": "include-raw",
           "type": "boolean",
           "required": false
+        },
+        {
+          "name": "extra_fetch",
+          "flag": "extra-fetch",
+          "type": "boolean",
+          "required": false,
+          "description": "When true, fetches each item's own page to fill fields the list page leaves null. Costs 1 extra credit per page fetched, up to the page size."
         }
       ]
     },
@@ -3056,7 +3134,7 @@
       "action": "popular-search",
       "path": "/v1/instagram/popular-search",
       "summary": "Top posts for a keyword",
-      "description": "Instagram's keyword results across every media type: reels, images and carousels together. The same surface as /v1/instagram/reels-search without the clips filter.",
+      "description": "Top posts for a keyword from Instagram's public Popular page for it, the page at instagram.com/popular/<keyword>/: reels, images and carousels together, in Instagram's order. One page; `hasMore` says whether Instagram holds more than it shows.",
       "credits": 1,
       "cacheable": true,
       "batchable": true,
@@ -3129,7 +3207,7 @@
       "action": "post-comments",
       "path": "/v1/instagram/post-comments",
       "summary": "Comments on a post or reel",
-      "description": "Top-level comments, newest first. Set `include_replies=true` to also return any replies Instagram shipped inline with their parent. For the full reply thread under one comment, use /v1/instagram/comment-replies.",
+      "description": "Top-level comments, newest first, about fifteen per page, each with its text, author, like count and date. Follow `pagination.cursor` for older comments. Set `include_replies=true` to also return any replies Instagram shipped inline with their parent. For the full reply thread under one comment, use /v1/instagram/comment-replies.",
       "credits": 1,
       "cacheable": true,
       "batchable": true,
@@ -3154,7 +3232,7 @@
           "flag": "count",
           "type": "number",
           "required": false,
-          "description": "Comments per page, 1-50. Default 24."
+          "description": "Comments to ask for per page, 1-50. Default 24. Instagram serves at most about fifteen."
         },
         {
           "name": "include_replies",
@@ -3216,7 +3294,7 @@
       "action": "profile-post-count",
       "path": "/v1/instagram/profile-post-count",
       "summary": "Post count for a profile",
-      "description": "The total post count shown on a public Instagram profile, projected from the same fetch /v1/instagram/profile makes. Call this when a fuller profile is not needed. Checks both dialects Instagram ships a count in (`edge_owner_to_timeline_media.count` and `media_count`) and reports which one answered in `source`. Instagram does not expose this metadata for every profile: when neither is present, `postCount` is null and the request is not charged.",
+      "description": "The total post count on a public Instagram profile, exact wherever Instagram publishes the exact figure. Call this when a fuller profile is not needed. `source` names which of the two dialects Instagram ships a count in carried it (`edge_owner_to_timeline_media.count` or `media_count`). Instagram does not expose this metadata for every profile: when neither is present, `postCount` is null and the request is not charged.",
       "credits": 1,
       "cacheable": true,
       "batchable": true,
@@ -3402,7 +3480,7 @@
       "action": "trending-reels",
       "path": "/v1/instagram/trending-reels",
       "summary": "Reels trending on Explore",
-      "description": "Reels off Instagram's public Explore grid. Worth knowing what this is and is not: Explore is region-shaped, so what comes back depends on where the request exits, and it is Instagram's editorial surface rather than a global chart. There is no public trending feed on Instagram; this is the closest one that exists.",
+      "description": "Reels off Instagram's public Explore grid. Worth knowing what this is and is not: Explore is region-shaped, so what comes back depends on where the request exits, and it is Instagram's editorial surface rather than a global chart. There is no public trending feed on Instagram; this is the closest one that exists. Set `extra_fetch=true` to fill each reel's publish date, caption and duration from its own page: 1 credit per item fetched, up to the page size.",
       "credits": 1,
       "cacheable": true,
       "batchable": false,
@@ -3433,6 +3511,13 @@
           "flag": "include-raw",
           "type": "boolean",
           "required": false
+        },
+        {
+          "name": "extra_fetch",
+          "flag": "extra-fetch",
+          "type": "boolean",
+          "required": false,
+          "description": "When true, fetches each item's own page to fill fields the list page leaves null. Costs 1 extra credit per page fetched, up to the page size."
         }
       ]
     },
@@ -3517,7 +3602,7 @@
       "action": "user-posts",
       "path": "/v1/instagram/user-posts",
       "summary": "Posts and reels from a profile",
-      "description": "A profile grid, newest first. Returns ONE PAGE of roughly twelve posts. Instagram gates the paginating surface behind a login, so there is no cursor to follow and none is returned: `hasMore` may be true with `cursor: null`, meaning the account has more posts that a logged-out caller cannot reach. Engagement counts are null here because the grid does not carry them; fetch /v1/instagram/post for a specific post to get likes and comments. `authorHandle` is read per post: a collab or tagged post appears in a profile grid owned by the OTHER account, and this reports the real owner rather than the handle you asked for.",
+      "description": "A profile grid, newest first, twelve posts per page, each with its caption, type and owner. Follow `pagination.cursor` for older posts. On the first page, reels also carry like, comment and play counts; other posts, and every post on later pages, have them null, because the grid does not carry them. No page carries a publish date. Fetch /v1/instagram/post for a specific post to get its counts and date, or set `extra_fetch=true` to fill each post's publish date, like and comment counts and caption from its own page in one call: 1 credit per item fetched, up to the page size. `authorHandle` is read per post: a collab or tagged post appears in a profile grid owned by the OTHER account, and this reports the real owner rather than the handle you asked for.",
       "credits": 1,
       "cacheable": true,
       "batchable": true,
@@ -3538,18 +3623,11 @@
           "description": "`pagination.cursor` from a previous response"
         },
         {
-          "name": "user_id",
-          "flag": "user-id",
-          "type": "string",
-          "required": false,
-          "description": "Numeric user id. Saves a round trip when paginating; take it from `data.items[].authorId`."
-        },
-        {
           "name": "count",
           "flag": "count",
           "type": "number",
           "required": false,
-          "description": "Posts per page when paginating, 1-50. Default 12."
+          "description": "Posts per page, 1-12. Default 12."
         },
         {
           "name": "cache_max_age",
@@ -3562,6 +3640,13 @@
           "flag": "include-raw",
           "type": "boolean",
           "required": false
+        },
+        {
+          "name": "extra_fetch",
+          "flag": "extra-fetch",
+          "type": "boolean",
+          "required": false,
+          "description": "When true, fetches each item's own page to fill fields the list page leaves null. Costs 1 extra credit per page fetched, up to the page size."
         },
         {
           "name": "next_max_id",
@@ -3578,7 +3663,7 @@
       "action": "user-reels",
       "path": "/v1/instagram/user-reels",
       "summary": "Reels from a profile",
-      "description": "A profile's reels, newest first. Primary path is the reels tab's own feed; if Instagram declines it, this falls back to filtering the profile grid down to clips, so the endpoint degrades in density rather than going dark. The fallback returns ONE PAGE and no cursor (the paginating surface is login-gated), and its engagement counts are null, since the grid does not carry them. An account whose grid holds no clips is an empty result, not an error, and is not charged. `raw.source` says which path answered.",
+      "description": "A profile's reels, newest first, twelve per page, each with like, comment and play counts. Follow `pagination.cursor` for older reels. The first page also carries captions; later pages do not, so `text` is null there, and a collab reel owned by another account has `authorHandle` null. No page carries a publish date; fetch /v1/instagram/post for one reel's date, or set `extra_fetch=true` to fill each reel's publish date, caption and duration from its own page in one call: 1 credit per item fetched, up to the page size. If the reels tab is unavailable, the first page falls back to the clips in the profile grid, with captions but no counts and no cursor. An account with no public reels is an empty result, and is not charged. `raw.source` says which path answered.",
       "credits": 1,
       "cacheable": true,
       "batchable": true,
@@ -3612,7 +3697,7 @@
           "flag": "count",
           "type": "number",
           "required": false,
-          "description": "Reels per page, 1-50. Default 12."
+          "description": "Reels per page, 1-12. Default 12."
         },
         {
           "name": "cache_max_age",
@@ -3625,6 +3710,13 @@
           "flag": "include-raw",
           "type": "boolean",
           "required": false
+        },
+        {
+          "name": "extra_fetch",
+          "flag": "extra-fetch",
+          "type": "boolean",
+          "required": false,
+          "description": "When true, fetches each item's own page to fill fields the list page leaves null. Costs 1 extra credit per page fetched, up to the page size."
         },
         {
           "name": "max_id",
@@ -3708,7 +3800,7 @@
           "flag": "url",
           "type": "string",
           "required": true,
-          "description": "Clip URL (https://kick.com/<channel>?clip=clip_XXXX or /clips/clip_XXXX) or a clip id"
+          "description": "Clip URL (https://kick.com/<channel>/clips/clip_XXXX or https://kick.com/<channel>?clip=clip_XXXX) or a clip id"
         },
         {
           "name": "cache_max_age",
@@ -3774,7 +3866,7 @@
           "flag": "url",
           "type": "string",
           "required": true,
-          "description": "Video URL (https://www.kwai.com/@<handle>/video/<photo_id>)"
+          "description": "Post URL (https://www.kwai.com/@<handle>/video/<photo_id> or /photo/<photo_id>)"
         },
         {
           "name": "cache_max_age",
@@ -3796,7 +3888,7 @@
       "action": "profile",
       "path": "/v1/kwai/profile",
       "summary": "Profile",
-      "description": "Public Kwai profile: follower and following counts, public video count, bio, avatar, and creator category.",
+      "description": "Public Kwai profile: follower and following counts, public video count, likes received, bio, avatar, and creator category.",
       "credits": 1,
       "cacheable": true,
       "batchable": true,
@@ -3836,7 +3928,7 @@
       "action": "user-posts",
       "path": "/v1/kwai/user/posts",
       "summary": "User posts",
-      "description": "Recent public videos from a Kwai profile, with view, like, comment and forward counts.",
+      "description": "Public videos from a Kwai profile, newest first after any pinned ones, with view, like, comment and forward counts. Pass `pagination.cursor` back as `cursor` for the next page.",
       "credits": 1,
       "cacheable": true,
       "batchable": true,
@@ -3848,6 +3940,13 @@
           "type": "string",
           "required": true,
           "description": "Handle (@carlinhos) or a kwai.com profile URL"
+        },
+        {
+          "name": "cursor",
+          "flag": "cursor",
+          "type": "string",
+          "required": false,
+          "description": "`pagination.cursor` from a previous response"
         },
         {
           "name": "cache_max_age",
@@ -4005,7 +4104,7 @@
       "action": "company",
       "path": "/v1/linkedin/company",
       "summary": "Company page",
-      "description": "A LinkedIn company page: description, follower count, headquarters, employee count and logo. Also works for school and showcase pages.",
+      "description": "A LinkedIn company page: description, industry, follower count, headquarters, size, type, founding year, specialties, employee count and logo. Also works for school and showcase pages.",
       "credits": 1,
       "cacheable": true,
       "batchable": true,
@@ -4038,7 +4137,7 @@
       "action": "company-posts",
       "path": "/v1/linkedin/company/posts",
       "summary": "Company posts",
-      "description": "Recent posts from a company page, with reaction and comment counts. Read from the company page itself: LinkedIn's dedicated /posts/ tab is behind the sign-in wall, but the same updates render on the public page. That caps the result at roughly the last ten posts. There is no logged-out pagination, so `hasMore` is always false. `publishedAt` is an absolute timestamp for the posts LinkedIn describes in structured data and a relative age (\"3w\") for the rest; `raw.withAbsoluteDates` says how many got the former. Use `linkedin.post` on any id for an exact time.",
+      "description": "Recent posts from a company page, with reaction and comment counts. Read from the company page itself: LinkedIn's dedicated /posts/ tab is behind the sign-in wall, but the same updates render on the public page. That caps the result at roughly the last ten posts. There is no logged-out pagination, so `hasMore` is always false. Posts by members that the company features carry that member as the author.",
       "credits": 1,
       "cacheable": true,
       "batchable": true,
@@ -4104,7 +4203,7 @@
       "action": "post-transcript",
       "path": "/v1/linkedin/post/transcript",
       "summary": "Post transcript",
-      "description": "Captions for a LinkedIn video post, as one text block plus timed cues. Only returns data where the poster attached a caption track AND LinkedIn exposes it to logged-out viewers. Native video posts ship mp4 sources and a poster frame with no caption track, so expect this to come back empty for most posts. Empty results are never charged.",
+      "description": "Captions for a LinkedIn video post, as one text block plus timed cues, read from the caption track LinkedIn publishes with the video, its automatic captions included. A post without video, or a video without a caption track, returns an empty result, which is never charged.",
       "credits": 1,
       "cacheable": true,
       "batchable": true,
@@ -4115,7 +4214,7 @@
           "flag": "url",
           "type": "string",
           "required": true,
-          "description": "Post URL or the numeric activity id"
+          "description": "Post URL, a urn:li:activity / ugcPost / share urn, or the numeric activity id"
         },
         {
           "name": "cache_max_age",
@@ -4233,7 +4332,7 @@
           "flag": "url",
           "type": "string",
           "required": true,
-          "description": "Page URL (https://linkme.bio/<username>) or just the username"
+          "description": "Page URL (https://link.me/<username>) or just the username"
         },
         {
           "name": "cache_max_age",
@@ -4394,7 +4493,7 @@
       "action": "pin",
       "path": "/v1/pinterest/pin",
       "summary": "Pin details",
-      "description": "Public details for a pin: title, description, destination link, saves, reactions and full-resolution media. Saves map to `shareCount`.",
+      "description": "Public details for a pin: title, description, reactions, comments, shares and full-resolution media. The destination link and save count are in `raw`.",
       "credits": 1,
       "cacheable": true,
       "batchable": true,
@@ -4595,7 +4694,7 @@
       "action": "post-comments",
       "path": "/v1/reddit/post/comments",
       "summary": "Post comments",
-      "description": "A post's comment tree, flattened into reading order with `parentId` preserved so callers can rebuild it. Reddit collapses deep threads behind continuation stubs; fetch those with `reddit.commentReplies`.",
+      "description": "A post's comment tree, flattened into reading order with `parentId` preserved so callers can rebuild it. Returns the comments Reddit shows on the post's first page, with `raw.totalComments` giving the post's full count and `pagination.hasMore` true when more exist; `pagination.cursor` is null. Reddit collapses deep threads behind continuation stubs; fetch those with `reddit.commentReplies`.",
       "credits": 1,
       "cacheable": true,
       "batchable": true,
@@ -4658,7 +4757,7 @@
       "action": "post-transcript",
       "path": "/v1/reddit/post/transcript",
       "summary": "Video transcript",
-      "description": "Transcript for a Reddit-hosted video, from a direct v.redd.it URL, a post URL, or a post id. Reddit auto-captions much of its hosted video and publishes the result as a WebVTT file beside the video; this returns it as one text block plus timed cues, with the raw WebVTT in `raw.rawVtt`. English is the only caption language observed. Videos with no caption file return an empty result and are not charged. A caption track Reddit advertises only in segmented form, named by the playlist with no flat `.vtt` beside the video, is reported as `upstream_schema_drift` today and is likewise never charged. Covers Reddit-hosted video only. A post linking to YouTube or another site has no Reddit caption file and returns an empty result. The two input forms take different routes: a `v.redd.it` URL is read straight from the CDN and is verified live, while a post URL or id is first resolved through the public JSON surface, which is blocked from every network position we have measured. Pass the `v.redd.it` URL where you have it.",
+      "description": "Transcript for a Reddit-hosted video, from a direct v.redd.it URL, a post URL, or a post id. Reddit auto-captions much of its hosted video and publishes the result as a WebVTT file beside the video; this returns it as one text block plus timed cues, with the raw WebVTT in `raw.rawVtt`. English is the only caption language observed. Videos with no caption file return an empty result and are not charged. A caption track Reddit advertises only in segmented form, named by the playlist with no flat `.vtt` beside the video, is reported as `upstream_schema_drift` today and is likewise never charged. Covers Reddit-hosted video only. A post linking to YouTube or another site has no Reddit caption file and returns an empty result. A post URL or id is resolved to its video first, so a `v.redd.it` URL is one request quicker.",
       "credits": 1,
       "cacheable": true,
       "batchable": true,
@@ -4699,7 +4798,7 @@
       "action": "search",
       "path": "/v1/reddit/search",
       "summary": "Search posts",
-      "description": "Reddit post search, site-wide or restricted to one subreddit with `subreddit`. Falls back to the Atom feed when the JSON surface is blocked.",
+      "description": "Reddit post search, site-wide or restricted to one subreddit with `subreddit`, in Reddit's own ranking with scores and comment counts. Reddit returns seven results a page; pass `pagination.cursor` for the next. `raw.posts` names each result's subreddit. Body text comes from Reddit's feed of the same query and is null for a result that feed does not carry. `raw.via` names the surface that answered; on `atom`, scores and comment counts are null.",
       "credits": 1,
       "cacheable": true,
       "batchable": true,
@@ -4789,7 +4888,7 @@
       "action": "subreddit",
       "path": "/v1/reddit/subreddit",
       "summary": "Subreddit posts",
-      "description": "Posts from a subreddit, sorted the way Reddit sorts them. `sort=top` and `sort=controversial` accept a `timeframe`. Falls back to Reddit's Atom feed when the JSON surface is blocked. `raw.via` says which answered, and the Atom path returns no scores or comment counts.",
+      "description": "Posts from a subreddit, sorted the way Reddit sorts them, with scores and comment counts. `sort=top` and `sort=controversial` accept a `timeframe`. `raw.posts` adds each post's subreddit, flair, post type and upvote ratio. `raw.via` names the surface that answered; when Reddit serves only its Atom feed (`atom`), scores and comment counts are null.",
       "credits": 1,
       "cacheable": true,
       "batchable": true,
@@ -4872,7 +4971,7 @@
       "action": "subreddit-details",
       "path": "/v1/reddit/subreddit/details",
       "summary": "Subreddit details",
-      "description": "Public metadata for a subreddit: subscribers, people online now, description, icons, creation date, and whether it is private or restricted.",
+      "description": "Public metadata for a subreddit: title, description, icon, banner, and where Reddit shows them, subscribers, people online now, creation date and whether it is private or restricted. `raw.via` names the surface: on `shreddit`, subscribers, creation date and privacy are null, and `raw.weeklyVisitors` and `raw.weeklyContributions` carry Reddit's weekly activity figures.",
       "credits": 1,
       "cacheable": true,
       "batchable": true,
@@ -5408,7 +5507,7 @@
       "action": "profile",
       "path": "/v1/snapchat/profile",
       "summary": "User profile",
-      "description": "Public Snapchat profile. Creator and business accounts return subscriber count, bio, website and avatar; personal accounts return only the handle and display name, which is all Snapchat publishes for them.",
+      "description": "Public Snapchat profile. Creator and business accounts return subscriber count, bio, website and avatar; personal accounts return the handle, display name and Bitmoji avatar, which is all Snapchat publishes for them.",
       "credits": 1,
       "cacheable": true,
       "batchable": true,
@@ -5441,7 +5540,7 @@
       "action": "spotlight",
       "path": "/v1/snapchat/spotlight",
       "summary": "Spotlight by link",
-      "description": "A public Snapchat Spotlight video: view count, duration, creator, thumbnail, media URL, and the auto-generated transcript when Snapchat has one.",
+      "description": "A public Snapchat Spotlight video: view, like, comment and share counts, caption and hashtags, duration, creator, thumbnail, media URL, and the auto-generated transcript when Snapchat has one.",
       "credits": 1,
       "cacheable": true,
       "batchable": true,
@@ -5474,7 +5573,7 @@
       "action": "spotlight-comments",
       "path": "/v1/snapchat/spotlight/comments",
       "summary": "Spotlight comments by link",
-      "description": "Public comments on a Snapchat Spotlight, ranked the way Snapchat ranks them, with reaction and threaded-reply counts.",
+      "description": "Public comments on a Snapchat Spotlight, ranked the way Snapchat ranks them, with reaction and threaded-reply counts. Pass the `cursor` from the previous response to page.",
       "credits": 1,
       "cacheable": true,
       "batchable": true,
@@ -5486,6 +5585,13 @@
           "type": "string",
           "required": true,
           "description": "Spotlight URL (https://www.snapchat.com/spotlight/<id>)"
+        },
+        {
+          "name": "cursor",
+          "flag": "cursor",
+          "type": "string",
+          "required": false,
+          "description": "`pagination.cursor` from the previous response"
         },
         {
           "name": "cache_max_age",
@@ -5667,7 +5773,7 @@
       "action": "album",
       "path": "/v1/spotify/album",
       "summary": "Album details",
-      "description": "Public Spotify album: title, artist, artwork and total runtime. The full track listing is in `raw`. Add `include_raw=true`.",
+      "description": "Public Spotify album: title, artist, release date, artwork and total runtime. The track listing, release type (album or single) and track count are in `raw`. Add `include_raw=true`.",
       "credits": 1,
       "cacheable": true,
       "batchable": true,
@@ -5707,7 +5813,7 @@
       "action": "artist",
       "path": "/v1/spotify/artist",
       "summary": "Artist details",
-      "description": "Public Spotify artist: name, artwork and current top tracks (in `raw`). Follower counts are not in Spotify's public embed payload and are returned as null unless SPOTIFY_CLIENT_ID/SECRET are configured. See /v1/spotify/search, which reads the official API.",
+      "description": "Public Spotify artist: name, exact follower count, biography, artwork and external links. Monthly listeners and current top tracks with play counts are in `raw`.",
       "credits": 1,
       "cacheable": true,
       "batchable": true,
@@ -5747,7 +5853,7 @@
       "action": "playlist",
       "path": "/v1/spotify/playlist",
       "summary": "Playlist contents",
-      "description": "Public Spotify playlist: name, owner, cover art and the tracks the public embed exposes, up to a cap Spotify enforces server-side (measured 100 items on a 150+ track playlist; see docs/verified-endpoints.md). This does not page through Spotify's Web API, so a playlist longer than that cap is served partially. `cursor` pages the tracks this endpoint already has, 50 per page; it never issues a second upstream request.",
+      "description": "Public Spotify playlist: name, owner, description, cover art, total track count and its tracks, 50 per `cursor` page, up to the first 100. On a longer playlist the last page reports `hasMore` true with a null `cursor`: the remaining tracks exist but are not served.",
       "credits": 1,
       "cacheable": true,
       "batchable": true,
@@ -5796,7 +5902,7 @@
       "action": "podcast",
       "path": "/v1/spotify/podcast",
       "summary": "Podcast details",
-      "description": "A Spotify podcast: title, publisher, description, artwork and episode count. Uses Spotify's official Web API, because the public embed for a show resolves to that show's latest EPISODE, not to the show itself, so there is no keyless route to this data. Two fields carry something different here than they do elsewhere: `category` holds the show's publisher, and `postCount` is its episode count. The unified schema has no publisher field, and naming it here is better than leaving you to infer it.",
+      "description": "A Spotify podcast: title, publisher, description, artwork and episode count, with its rating and topics in `raw`. Two fields carry something different here than they do elsewhere: `category` holds the show's publisher, and `postCount` is its episode count. The unified schema has no publisher field, and naming it here is better than leaving you to infer it.",
       "credits": 1,
       "cacheable": true,
       "batchable": true,
@@ -5844,7 +5950,7 @@
       "action": "podcast-episodes",
       "path": "/v1/spotify/podcast/episodes",
       "summary": "Podcast episodes",
-      "description": "Episodes for a Spotify podcast, newest first. Pass the `cursor` from the previous response to page.",
+      "description": "Episodes for a Spotify podcast, newest first. Pass the `cursor` from the previous response to page. `hasMore` true with a null `cursor` means the show has more episodes than this response can page to.",
       "credits": 1,
       "cacheable": true,
       "batchable": true,
@@ -5968,7 +6074,7 @@
       "action": "track",
       "path": "/v1/spotify/track",
       "summary": "Track details",
-      "description": "Public Spotify track: title, artists, artwork, duration, release date, explicit flag, and the preview clip URL.",
+      "description": "Public Spotify track: title, artists, artwork, duration, release date and the preview clip URL. `viewCount` is the play count when the track is among its artist's top tracks, and null otherwise. The explicit-content label is in `raw`.",
       "credits": 1,
       "cacheable": true,
       "batchable": true,
@@ -6041,7 +6147,7 @@
       "action": "channel",
       "path": "/v1/telegram/channel",
       "summary": "Channel",
-      "description": "Public Telegram channel or group metadata including its name, description, avatar, verification status, subscriber or member count, and public media counters. Counts are Telegram's own rounded display values (\"9.66M\"), not exact figures. The original text is in `raw.counters`. Uses Telegram's public web preview and does not use a logged-in Telegram account, so private channels, invite-only groups and user accounts are not covered. An old username still resolves to the channel that took it over, so `handle` here is the header username and may differ from the one inside a post id, so join on a post `id`, never on the handle.",
+      "description": "Public Telegram channel or group metadata including its name, description, avatar, verification status, subscriber or member count, and public media counters. The subscriber or member count is exact, read from the channel's t.me page, and falls back to the rounded preview value (\"9.66M\") when that page cannot be read. The media counters in `raw.counters` are Telegram's rounded display text. Uses Telegram's public web preview and does not use a logged-in Telegram account, so private channels, invite-only groups and user accounts are not covered. An old username still resolves to the channel that took it over, so `handle` here is the header username and may differ from the one inside a post id, so join on a post `id`, never on the handle.",
       "credits": 1,
       "cacheable": true,
       "batchable": true,
@@ -6074,7 +6180,7 @@
       "action": "channel-posts",
       "path": "/v1/telegram/channel-posts",
       "summary": "Channel posts",
-      "description": "One public web-preview page of Telegram posts with text, publish date, views, reactions when exposed, forwards, media (photos and the playable video file), and link previews. Twenty posts per page, newest first. Pass the returned cursor to fetch the previous page. Empty and terminal pages are not charged. `viewCount` is Telegram's own rounded display value (\"1.37M\" → 1370000), not an exact count; the original text is in `raw.messages[].viewsText`. Reactions, the forward source and the link preview are under `raw`; the unified schema has no field for them. A post `id` carries the CANONICAL username of the channel, which differs from the one you asked for when an old username still resolves to it. Join on `id`, not on the handle you passed.",
+      "description": "One public web-preview page of Telegram posts with text, publish date, views, reactions when exposed, forwards, media (photos and the playable video file), and link previews. Twenty posts per page, newest first. Pass the returned cursor to fetch the previous page. Empty and terminal pages are not charged. `viewCount` is Telegram's own rounded display value (\"1.37M\" → 1370000), not an exact count; the original text is in `raw.messages[].viewsText`. `likeCount` totals every public reaction, paid stars included, from Telegram's rounded display values, and is null when a post shows no reactions. Each reaction, the forward source and the link preview are under `raw`. A post `id` carries the CANONICAL username of the channel, which differs from the one you asked for when an old username still resolves to it. Join on `id`, not on the handle you passed.",
       "credits": 1,
       "cacheable": true,
       "batchable": true,
@@ -6114,7 +6220,7 @@
       "action": "post",
       "path": "/v1/telegram/post",
       "summary": "Post",
-      "description": "A single public Telegram post with its text, publish date, views, reactions when exposed, forward source, media (photos and the playable video file), and link preview. `viewCount` is Telegram's own rounded display value (\"1.37M\" → 1370000), not an exact count; the original text is in `raw.viewsText`. Reactions, the forward source and the link preview are under `raw`. Reads the public post embed and does not use a logged-in Telegram account.",
+      "description": "A single public Telegram post with its text, publish date, views, reactions when exposed, forward source, media (photos and the playable video file), and link preview. `viewCount` is Telegram's own rounded display value (\"1.37M\" → 1370000), not an exact count; the original text is in `raw.viewsText`. `likeCount` totals every public reaction, paid stars included, from Telegram's rounded display values, and is null when the post shows no reactions. Each reaction, the forward source and the link preview are under `raw`. Reads the public post embed and does not use a logged-in Telegram account.",
       "credits": 1,
       "cacheable": true,
       "batchable": true,
@@ -6279,7 +6385,7 @@
       "action": "user-posts",
       "path": "/v1/threads/user/posts",
       "summary": "User posts",
-      "description": "Recent public posts from a Threads profile, with like and reply counts.",
+      "description": "Public posts from a Threads profile in the order the profile shows them, with like, reply and repost counts. Pass `pagination.cursor` back as `cursor` for the next page.",
       "credits": 1,
       "cacheable": true,
       "batchable": true,
@@ -6291,6 +6397,13 @@
           "type": "string",
           "required": true,
           "description": "Handle (@zuck) or a threads.com profile URL"
+        },
+        {
+          "name": "cursor",
+          "flag": "cursor",
+          "type": "string",
+          "required": false,
+          "description": "`pagination.cursor` from a previous response"
         },
         {
           "name": "cache_max_age",
@@ -6399,7 +6512,7 @@
       "action": "collection-videos",
       "path": "/v1/tiktok/collection/videos",
       "summary": "Collection videos",
-      "description": "Videos in a public TikTok collection, a creator-curated playlist of other people's posts as well as their own. Requires a configured TikTok signer.",
+      "description": "Videos in a public TikTok collection, a creator-curated playlist of other people's posts as well as their own.",
       "credits": 1,
       "cacheable": true,
       "batchable": true,
@@ -6455,7 +6568,7 @@
       "action": "comment-replies",
       "path": "/v1/tiktok/comment-replies",
       "summary": "Replies to a comment",
-      "description": "The reply thread under one TikTok comment. `parentId` on each reply points back at the comment it answers, so nested threads reconstruct cleanly. Requires a configured TikTok signer.",
+      "description": "The reply thread under one TikTok comment. `parentId` on each reply points back at the comment it answers, so nested threads reconstruct cleanly.",
       "credits": 1,
       "cacheable": true,
       "batchable": true,
@@ -6509,7 +6622,7 @@
       "action": "comments",
       "path": "/v1/tiktok/comments",
       "summary": "Comments on a video",
-      "description": "Top-level comments on a TikTok, with like counts, reply counts, pinned status and a flag for the creator's own replies. Use `tiktok.commentReplies` to expand a thread. Requires a configured TikTok signer.",
+      "description": "Top-level comments on a TikTok, with like counts, reply counts, pinned status and a flag for the creator's own replies. Use `tiktok.commentReplies` to expand a thread.",
       "credits": 1,
       "cacheable": true,
       "batchable": true,
@@ -6756,7 +6869,7 @@
       "action": "hashtag-videos",
       "path": "/v1/tiktok/hashtag-videos",
       "summary": "Videos using a hashtag",
-      "description": "TikToks carrying a given hashtag, in TikTok's own feed order. Resolves the tag to its numeric id from the tag page, then pages the feed, which needs a configured TikTok signer.",
+      "description": "TikToks carrying a given hashtag, in TikTok's own feed order, with a cursor for the next page.",
       "credits": 1,
       "cacheable": true,
       "batchable": true,
@@ -6939,7 +7052,7 @@
       "action": "product",
       "path": "/v1/tiktok/product",
       "summary": "Product details",
-      "description": "A single TikTok Shop product: title, price, images, rating, review and sales counts, and the seller. Read from the server-rendered product page, so it needs no signer.",
+      "description": "A single TikTok Shop product: title, description, images, price and original price, rating, review and sales counts, stock, category and the seller. `price` is the lowest-priced variant; it is null when TikTok hides the digits from logged-out visitors. Catalogues are per market: `region` picks one, default US.",
       "credits": 1,
       "cacheable": true,
       "batchable": true,
@@ -6950,7 +7063,7 @@
           "flag": "url",
           "type": "string",
           "required": true,
-          "description": "Product id, or a tiktok.com/view/product/… URL"
+          "description": "Product id, or a tiktok.com/shop/pdp/… URL"
         },
         {
           "name": "region",
@@ -7256,7 +7369,7 @@
       "action": "shop-product-reviews",
       "path": "/v1/tiktok/shop/product/reviews",
       "summary": "Product reviews",
-      "description": "Public reviews on a TikTok Shop product, with star rating, reviewer, photos and the purchased variant. Requires a configured TikTok signer.",
+      "description": "The reviews a TikTok Shop product page shows, with star rating, reviewer, photos and the purchased variant. That is the page's first screen, not every review. `region` picks the market, default US.",
       "credits": 1,
       "cacheable": true,
       "batchable": true,
@@ -7267,7 +7380,7 @@
           "flag": "url",
           "type": "string",
           "required": true,
-          "description": "Product id, or a tiktok.com/view/product/… URL"
+          "description": "Product id, or a tiktok.com/shop/pdp/… URL"
         },
         {
           "name": "count",
@@ -7310,7 +7423,7 @@
       "action": "shop-products",
       "path": "/v1/tiktok/shop/products",
       "summary": "Seller's product catalogue",
-      "description": "Products listed by a TikTok Shop seller. Pass the seller's handle or a shop URL. Requires a configured TikTok signer.",
+      "description": "The products a TikTok Shop store lists, page by page, with price, rating, review and sales counts. Pass the store's URL (tiktok.com/shop/store/<name>/<seller_id>). `region` picks the market, default US.",
       "credits": 1,
       "cacheable": true,
       "batchable": true,
@@ -7321,7 +7434,7 @@
           "flag": "url",
           "type": "string",
           "required": true,
-          "description": "Seller handle (@shopname) or a TikTok shop URL"
+          "description": "TikTok Shop store URL, e.g. https://www.tiktok.com/shop/store/goli-nutrition/7495794203056835079"
         },
         {
           "name": "count",
@@ -7364,7 +7477,7 @@
       "action": "shop-search",
       "path": "/v1/tiktok/shop/search",
       "summary": "Search TikTok Shop",
-      "description": "Product search across TikTok Shop. Requires a configured TikTok signer.",
+      "description": "The products TikTok Shop search returns for a query, page by page, with price, rating, review and sales counts. US market.",
       "credits": 1,
       "cacheable": true,
       "batchable": true,
@@ -7418,7 +7531,7 @@
       "action": "song",
       "path": "/v1/tiktok/song",
       "summary": "Sound / song details",
-      "description": "Details for a TikTok sound: title, artist, album, cover, clip length, and how many videos use it. Read from the music page, so it needs no signer.",
+      "description": "Details for a TikTok sound: title, artist, album, cover, clip length, and how many videos use it.",
       "credits": 1,
       "cacheable": true,
       "batchable": true,
@@ -7451,7 +7564,7 @@
       "action": "song-videos",
       "path": "/v1/tiktok/song-videos",
       "summary": "Videos using a sound",
-      "description": "TikToks built on a given sound: the endpoint behind \"who is using my track\". Requires a configured TikTok signer.",
+      "description": "TikToks built on a given sound: the endpoint behind \"who is using my track\", with a cursor for the next page.",
       "credits": 1,
       "cacheable": true,
       "batchable": true,
@@ -7598,7 +7711,7 @@
       "action": "trending",
       "path": "/v1/tiktok/trending",
       "summary": "Trending feed",
-      "description": "TikTok's logged-out For You feed for a region, showing what the platform is pushing to a brand-new visitor right now. Not a ranking anyone can reproduce: TikTok personalises even the anonymous feed, so two calls a second apart return different videos. Requires a configured TikTok signer.",
+      "description": "TikTok's logged-out For You feed for a region, showing what the platform is pushing to a brand-new visitor right now. Not a ranking anyone can reproduce: TikTok personalises even the anonymous feed, so two calls a second apart return different videos.",
       "credits": 1,
       "cacheable": true,
       "batchable": true,
@@ -7693,7 +7806,7 @@
       "action": "user-videos",
       "path": "/v1/tiktok/user-videos",
       "summary": "Videos posted by a creator",
-      "description": "A creator's public posts, newest first, with view/like/comment/share counts. Photo posts are included and typed as `image` or `carousel`. Paging past the first response requires a configured TikTok signer; without one the first page still returns from the profile page itself, and `raw.via` says which path answered.",
+      "description": "A creator's public posts, newest first, with view/like/comment/share counts. Photo posts are included and typed as `image` or `carousel`. Up to 15 per page, with a cursor for older posts.",
       "credits": 1,
       "cacheable": true,
       "batchable": true,
@@ -8195,7 +8308,7 @@
       "action": "profile",
       "path": "/v1/twitter/profile",
       "summary": "Profile details",
-      "description": "Public profile for an X account. With server-side credentials set this is the full profile: bio, location, follower/following/post counts, join date. Without one, X exposes only handle, id, display name, avatar and verified status to logged-out callers, and the call is refunded to 0 credits because that is not worth charging for.",
+      "description": "Public profile for an X account: bio, location, avatar, banner, website, exact follower, following and post counts, join date and verified badge.",
       "credits": 1,
       "cacheable": true,
       "batchable": true,
@@ -8301,7 +8414,7 @@
       "action": "user-tweets",
       "path": "/v1/twitter/user-tweets",
       "summary": "Recent posts from an account",
-      "description": "An account's recent public posts. With server-side credentials this pages through the timeline with real engagement metrics; without one it returns the single page X's embedded timeline exposes (roughly 20 posts, likes and replies only).",
+      "description": "An account's public posts with media, likes, replies and retweets. With server-side credentials this pages through the timeline; without one it returns the single page X's embedded timeline exposes, a selection of the account's posts rather than the latest, or the pinned post and latest few from the profile page when that timeline is unavailable.",
       "credits": 1,
       "cacheable": true,
       "batchable": true,
@@ -8319,7 +8432,7 @@
           "flag": "count",
           "type": "number",
           "required": false,
-          "description": "Posts per page, 5-100. Default 20. Official API only."
+          "description": "Posts to return, 5-100. Defaults to 20 on the official API and to every post on the page otherwise."
         },
         {
           "name": "cursor",
@@ -8730,7 +8843,7 @@
       "action": "channel-shorts",
       "path": "/v1/youtube/channel/shorts",
       "summary": "Channel shorts",
-      "description": "A channel's Shorts grid, newest first, about 48 per page. Shorts carry no duration or publish date on this surface, because YouTube does not render either, so both are null rather than guessed.",
+      "description": "A channel's Shorts grid, newest first, about 48 per page. Shorts carry no duration or publish date on this surface, because YouTube does not render either, so both are null rather than guessed. With `extra_fetch=true`, each Short is fetched individually to fill its exact view count, publish date and duration. Costs 1 credit per item fetched, up to the page size.",
       "credits": 1,
       "cacheable": true,
       "batchable": true,
@@ -8761,6 +8874,13 @@
           "flag": "include-raw",
           "type": "boolean",
           "required": false
+        },
+        {
+          "name": "extra_fetch",
+          "flag": "extra-fetch",
+          "type": "boolean",
+          "required": false,
+          "description": "When true, fetches each item's own page to fill fields the list page leaves null. Costs 1 extra credit per page fetched, up to the page size."
         }
       ]
     },
@@ -8770,7 +8890,7 @@
       "action": "channel-videos",
       "path": "/v1/youtube/channel-videos",
       "summary": "Channel videos",
-      "description": "Recent public uploads for a channel. Use `tab` to switch between videos and shorts.",
+      "description": "Recent public uploads for a channel. Use `tab` to switch between videos and shorts. With `extra_fetch=true`, each item is fetched individually to fill its exact view count, publish date and duration. Costs 1 credit per item fetched, up to the page size.",
       "credits": 1,
       "cacheable": true,
       "batchable": true,
@@ -8796,6 +8916,13 @@
           "default": "videos"
         },
         {
+          "name": "cursor",
+          "flag": "cursor",
+          "type": "string",
+          "required": false,
+          "description": "`pagination.cursor` from a previous response"
+        },
+        {
           "name": "cache_max_age",
           "flag": "cache-max-age",
           "type": "string",
@@ -8806,6 +8933,13 @@
           "flag": "include-raw",
           "type": "boolean",
           "required": false
+        },
+        {
+          "name": "extra_fetch",
+          "flag": "extra-fetch",
+          "type": "boolean",
+          "required": false,
+          "description": "When true, fetches each item's own page to fill fields the list page leaves null. Costs 1 extra credit per page fetched, up to the page size."
         }
       ]
     },
@@ -8815,7 +8949,7 @@
       "action": "community-post",
       "path": "/v1/youtube/community-post",
       "summary": "Community post details",
-      "description": "One community post by id or permalink, with its full text, attachments and like count. Poll questions and options are under `raw`. `commentCount` is null on this surface: the standalone post page does not render one, while /v1/youtube/channel/community-posts does.",
+      "description": "One community post by id or permalink, with its full text, attachments, like count and exact comment count. Poll questions and options are under `raw`.",
       "credits": 1,
       "cacheable": true,
       "batchable": true,
@@ -8888,7 +9022,7 @@
       "action": "search",
       "path": "/v1/youtube/search",
       "summary": "Search videos",
-      "description": "Public YouTube search results for a query.",
+      "description": "Public YouTube search results for a query: videos and Shorts in YouTube’s ranking order, with a cursor for the next page.",
       "credits": 1,
       "cacheable": true,
       "batchable": true,
@@ -8899,6 +9033,13 @@
           "flag": "query",
           "type": "string",
           "required": true
+        },
+        {
+          "name": "cursor",
+          "flag": "cursor",
+          "type": "string",
+          "required": false,
+          "description": "`pagination.cursor` from a previous response"
         },
         {
           "name": "cache_max_age",
@@ -9020,7 +9161,7 @@
       "action": "shorts-trending",
       "path": "/v1/youtube/shorts/trending",
       "summary": "Trending shorts",
-      "description": "Shorts YouTube is currently surfacing, by region. Note that YouTube retired the global Trending feed (/feed/trending now serves the ordinary home feed), so this reads the ranked Shorts surface instead, which is what still exists. Results differ per request; it is deliberately not subscribable.",
+      "description": "Shorts YouTube is currently surfacing, by region. Note that YouTube retired the global Trending feed (/feed/trending now serves the ordinary home feed), so this reads the ranked Shorts surface instead, which is what still exists. Results differ per request; it is deliberately not subscribable. With `extra_fetch=true`, each Short is fetched individually to fill its exact view count, publish date and duration. Costs 1 credit per item fetched, up to the page size.",
       "credits": 1,
       "cacheable": true,
       "batchable": true,
@@ -9052,6 +9193,13 @@
           "flag": "include-raw",
           "type": "boolean",
           "required": false
+        },
+        {
+          "name": "extra_fetch",
+          "flag": "extra-fetch",
+          "type": "boolean",
+          "required": false,
+          "description": "When true, fetches each item's own page to fill fields the list page leaves null. Costs 1 extra credit per page fetched, up to the page size."
         }
       ]
     },
