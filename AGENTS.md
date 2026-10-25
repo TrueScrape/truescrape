@@ -56,6 +56,7 @@ with usage on stderr and exit code 2.
 | `truescrape config get <key>` / `config set <key> <value>` / `config list` | The stored `apiKey` and `baseUrl`. |
 | `truescrape batch <platform> <action> --targets <file\|-> [--webhook <url>] [--wait]` | One job for up to 500 targets. `--targets` is a JSON array of parameter objects, or newline-delimited objects, from a file or stdin. Prints the job id; `--wait` polls until the job finishes and prints it with per-target results. |
 | `truescrape jobs get <jobId> [--wait]` / `jobs list` | Check on a batch job. |
+| `truescrape download <post-url> [--out <dir>] [--force] [--json]` | Save the video from a public Instagram, Facebook or X post, named after the post id. 1 credit for the lookup, nothing if it fails. Refuses YouTube and any other host without sending a request; any other failure exits `1` with one sentence saying why. Only download videos the user made or has permission to use. |
 | `truescrape mcp` | A stdio MCP bridge to the remote server, for clients that cannot send a header. |
 | `truescrape agent add <claude-code\|claude-desktop\|cursor\|vscode> [--project] [--dry-run]` | Write the MCP server entry into that client's config. `--dry-run` prints it instead. |
 

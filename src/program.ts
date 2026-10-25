@@ -5,6 +5,7 @@ import { register as registerAuth } from './commands/auth.js';
 import { register as registerBalance } from './commands/balance.js';
 import { register as registerBatch } from './commands/batch.js';
 import { register as registerConfig } from './commands/config.js';
+import { register as registerDownload } from './commands/download.js';
 import { register as registerEndpoints } from './commands/endpoints.js';
 import { register as registerInteractive } from './commands/interactive.js';
 import { register as registerJobs } from './commands/jobs.js';
@@ -53,6 +54,7 @@ export const defaultRegistrations: Register[] = [
   (p) => registerConfig(p),
   (p) => registerBatch(p),
   (p) => registerJobs(p),
+  (p) => registerDownload(p),
   (p) => registerMcp(p),
   (p) => registerAgent(p),
   (p) => registerList(p),

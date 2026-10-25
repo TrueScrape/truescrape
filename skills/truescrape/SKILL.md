@@ -147,8 +147,36 @@ the diffing and the scheduling for you.
   create is refused with `invalid_request` and `details.reason` of
   `subscription_limit`; lengthen the interval or delete a watch you no longer
   need.
-- Request-only options (`cache_max_age`, `render`, `download_media`,
-  `transcribe_fallback`) are refused on a subscription.
+- Request-only options (`cache_max_age`, `render`, `transcribe_fallback`) are
+  refused on a subscription.
+
+## Saving a video
+
+When the user wants the video file itself from a public Instagram, Facebook or
+X post, run `truescrape download` rather than fetching an address out of
+`mediaUrls` yourself. The command checks that the file comes from the
+platform's own video servers over https, refuses redirects, caps the size at
+150 MB, and names the file after the post id.
+
+```
+truescrape download https://www.instagram.com/reel/<shortcode>/ --out ./videos
+truescrape download https://www.facebook.com/watch/?v=<id> --out ./videos
+truescrape download https://x.com/<handle>/status/<id> --out ./videos --json
+```
+
+- **Cost:** 1 credit for the post lookup, and nothing if the lookup fails. The
+  file itself comes straight from the platform and is not billed.
+- **Output:** the saved path on stdout; `--json` prints
+  `{ path, bytes, platform, postId, sourceHost }`. An existing file is kept
+  unless you pass `--force`.
+- **Failures** exit `1` with one sentence saying why: a photo post with no
+  video, a video published only as a stream, more than one candidate video on
+  a Facebook page, or a file over the cap.
+- **YouTube is refused** without a request: YouTube does not publish its video
+  files as plain files. Offer `truescrape youtube transcript --url <url>` or
+  `truescrape youtube video --url <url>` instead.
+- Tell the user to download only videos they made or have permission to use;
+  the command prints the same reminder.
 
 ## Errors, from your side
 

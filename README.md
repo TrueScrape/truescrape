@@ -40,8 +40,15 @@ truescrape youtube channel --handle @mkbhd
 truescrape youtube channel-videos --handle @mkbhd --all | jq '.items[].viewCount'
 truescrape youtube channel --handle @mkbhd --cache-max-age 24h --format table
 truescrape batch youtube transcript --targets ids.json --wait
+truescrape download https://x.com/<handle>/status/<id> --out ./videos
 truescrape balance
 ```
+
+`truescrape download <post-url> [--out <dir>] [--force] [--json]` saves the
+video from a public Instagram, Facebook or X post. The lookup costs 1 credit
+and nothing if it fails; the file comes straight from the platform's own video
+servers, checked to be https, unredirected, a video, and under 150 MB. YouTube
+links are refused. Only download videos you made or have permission to use.
 
 Every endpoint is `truescrape <platform> <action> --param value`. Run any
 command with `--help` for its parameters, cost and any cross-field rule.
