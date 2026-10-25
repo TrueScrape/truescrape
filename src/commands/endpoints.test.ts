@@ -285,7 +285,7 @@ describe('--all', () => {
 
   it('is a usage error on an endpoint without a cursor', async () => {
     const { fetchImpl, calls } = stub(() => ok({ items: [1] }));
-    const { code, stderr } = await exec(['youtube', 'channel-videos', '--handle', 'x', '--all'], { fetchImpl });
+    const { code, stderr } = await exec(['youtube', 'channel', '--handle', 'x', '--all'], { fetchImpl });
     expect(code).toBe(2);
     expect(calls).toHaveLength(0);
     expect(stderr).toMatch(/does not paginate/);
