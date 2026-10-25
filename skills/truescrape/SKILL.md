@@ -165,7 +165,9 @@ truescrape download https://x.com/<handle>/status/<id> --out ./videos --json
 ```
 
 - **Cost:** 1 credit for the post lookup, and nothing if the lookup fails. The
-  file itself comes straight from the platform and is not billed.
+  file itself comes straight from the platform and is not billed. A lookup
+  that succeeds is charged even when the post turns out to have no video, and
+  so is a re-run onto a file that already exists, so check for the file first.
 - **Output:** the saved path on stdout; `--json` prints
   `{ path, bytes, platform, postId, sourceHost }`. An existing file is kept
   unless you pass `--force`.
