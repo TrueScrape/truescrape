@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-10-15T09:09:51.121Z",
+  "generatedAt": "2026-10-25T09:10:09.835Z",
   "source": "https://api.truescrape.com/openapi.json",
   "endpoints": [
     {
@@ -6784,53 +6784,6 @@
       ]
     },
     {
-      "name": "tiktok.following",
-      "platform": "tiktok",
-      "action": "following",
-      "path": "/v1/tiktok/following",
-      "summary": "Accounts a creator follows",
-      "description": "The accounts a TikTok creator follows, newest first. Hidden entirely when the creator has set their following list to private. Requires a configured TikTok signer.",
-      "credits": 1,
-      "cacheable": true,
-      "batchable": true,
-      "constraints": [],
-      "params": [
-        {
-          "name": "handle",
-          "flag": "handle",
-          "type": "string",
-          "required": true,
-          "description": "Handle (@nike), or a full tiktok.com profile URL"
-        },
-        {
-          "name": "count",
-          "flag": "count",
-          "type": "number",
-          "required": false,
-          "description": "Items per page (default 30, max 50)"
-        },
-        {
-          "name": "cursor",
-          "flag": "cursor",
-          "type": "string",
-          "required": false,
-          "description": "`pagination.cursor` from a previous response"
-        },
-        {
-          "name": "cache_max_age",
-          "flag": "cache-max-age",
-          "type": "string",
-          "required": false
-        },
-        {
-          "name": "include_raw",
-          "flag": "include-raw",
-          "type": "boolean",
-          "required": false
-        }
-      ]
-    },
-    {
       "name": "tiktok.hashtag",
       "platform": "tiktok",
       "action": "hashtag",
@@ -7162,81 +7115,6 @@
       ]
     },
     {
-      "name": "tiktok.searchKeyword",
-      "platform": "tiktok",
-      "action": "search-keyword",
-      "path": "/v1/tiktok/search/keyword",
-      "summary": "Search videos by keyword",
-      "description": "TikToks matching a search term, with the same normalised engagement fields as every other post endpoint. `sort_by` and `date_posted` map onto TikTok's own search filters. Requires a configured TikTok signer.",
-      "credits": 1,
-      "cacheable": true,
-      "batchable": true,
-      "constraints": [],
-      "params": [
-        {
-          "name": "query",
-          "flag": "query",
-          "type": "string",
-          "required": true,
-          "description": "Search term"
-        },
-        {
-          "name": "sort_by",
-          "flag": "sort-by",
-          "type": "string",
-          "required": false,
-          "enum": [
-            "relevance",
-            "most_liked"
-          ],
-          "default": "relevance",
-          "description": "TikTok's own two search orderings"
-        },
-        {
-          "name": "date_posted",
-          "flag": "date-posted",
-          "type": "string",
-          "required": false,
-          "enum": [
-            "all",
-            "yesterday",
-            "week",
-            "month",
-            "three_months",
-            "six_months"
-          ],
-          "default": "all",
-          "description": "Restrict to videos posted within this window"
-        },
-        {
-          "name": "count",
-          "flag": "count",
-          "type": "number",
-          "required": false,
-          "description": "Items per page (default 12, max 30)"
-        },
-        {
-          "name": "cursor",
-          "flag": "cursor",
-          "type": "string",
-          "required": false,
-          "description": "`pagination.cursor` from a previous response"
-        },
-        {
-          "name": "cache_max_age",
-          "flag": "cache-max-age",
-          "type": "string",
-          "required": false
-        },
-        {
-          "name": "include_raw",
-          "flag": "include-raw",
-          "type": "boolean",
-          "required": false
-        }
-      ]
-    },
-    {
       "name": "tiktok.searchSuggestions",
       "platform": "tiktok",
       "action": "search-suggestions",
@@ -7254,100 +7132,6 @@
           "type": "string",
           "required": true,
           "description": "Partial search term"
-        },
-        {
-          "name": "cache_max_age",
-          "flag": "cache-max-age",
-          "type": "string",
-          "required": false
-        },
-        {
-          "name": "include_raw",
-          "flag": "include-raw",
-          "type": "boolean",
-          "required": false
-        }
-      ]
-    },
-    {
-      "name": "tiktok.searchTop",
-      "platform": "tiktok",
-      "action": "search-top",
-      "path": "/v1/tiktok/search/top",
-      "summary": "Top (blended) search",
-      "description": "TikTok's blended \"Top\" search tab: the highest-ranked videos AND accounts for a query, returned as two typed lists. Requires a configured TikTok signer.",
-      "credits": 1,
-      "cacheable": true,
-      "batchable": true,
-      "constraints": [],
-      "params": [
-        {
-          "name": "query",
-          "flag": "query",
-          "type": "string",
-          "required": true,
-          "description": "Search terms"
-        },
-        {
-          "name": "count",
-          "flag": "count",
-          "type": "number",
-          "required": false,
-          "description": "Items per page (default 12, max 30)"
-        },
-        {
-          "name": "cursor",
-          "flag": "cursor",
-          "type": "string",
-          "required": false,
-          "description": "`pagination.cursor` from a previous response"
-        },
-        {
-          "name": "cache_max_age",
-          "flag": "cache-max-age",
-          "type": "string",
-          "required": false
-        },
-        {
-          "name": "include_raw",
-          "flag": "include-raw",
-          "type": "boolean",
-          "required": false
-        }
-      ]
-    },
-    {
-      "name": "tiktok.searchUsers",
-      "platform": "tiktok",
-      "action": "search-users",
-      "path": "/v1/tiktok/search/users",
-      "summary": "Search creators",
-      "description": "TikTok accounts matching a query, with follower counts and verification. Requires a configured TikTok signer.",
-      "credits": 1,
-      "cacheable": true,
-      "batchable": true,
-      "constraints": [],
-      "params": [
-        {
-          "name": "query",
-          "flag": "query",
-          "type": "string",
-          "required": true,
-          "description": "Search term"
-        },
-        {
-          "name": "count",
-          "flag": "count",
-          "type": "number",
-          "required": false,
-          "description": "Items per page (default 12, max 30)"
-        },
-        {
-          "name": "cursor",
-          "flag": "cursor",
-          "type": "string",
-          "required": false,
-          "description": "`pagination.cursor` from a previous response"
         },
         {
           "name": "cache_max_age",
