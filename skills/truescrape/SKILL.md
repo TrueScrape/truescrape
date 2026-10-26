@@ -265,7 +265,7 @@ LinkedIn's under `/v1/linkedin/ads/search`.
 ## Endpoint catalogue
 
 <!-- catalogue:start -->
-206 endpoints across 37 platforms, generated from the live API on 2026-10-15.
+202 endpoints across 37 platforms, generated from the live API on 2026-10-22.
 
 ### amazon (4)
 
@@ -554,7 +554,7 @@ LinkedIn's under `/v1/linkedin/ads/search`.
 | `GET /v1/threads/search/users` | `truescrape threads search-users --query` | 1 | Search users |
 | `GET /v1/threads/user/posts` | `truescrape threads user-posts --handle` | 1 | User posts |
 
-### tiktok (32)
+### tiktok (28)
 
 | Endpoint | CLI | Credits | What it returns |
 |---|---|---|---|
@@ -565,7 +565,6 @@ LinkedIn's under `/v1/linkedin/ads/search`.
 | `GET /v1/tiktok/comments` | `truescrape tiktok comments --url` | 1 | Comments on a video |
 | `GET /v1/tiktok/creators/popular` | `truescrape tiktok creators-popular` | 1 | Popular creators |
 | `GET /v1/tiktok/followers` | `truescrape tiktok followers --handle` | 1 | Accounts following a creator |
-| `GET /v1/tiktok/following` | `truescrape tiktok following --handle` | 1 | Accounts a creator follows |
 | `GET /v1/tiktok/hashtag` | `truescrape tiktok hashtag --hashtag` | 1 | Hashtag details |
 | `GET /v1/tiktok/hashtag-videos` | `truescrape tiktok hashtag-videos --hashtag` | 1 | Videos using a hashtag |
 | `GET /v1/tiktok/live` | `truescrape tiktok live` | 1 | Live stream info |
@@ -574,10 +573,7 @@ LinkedIn's under `/v1/linkedin/ads/search`.
 | `GET /v1/tiktok/product` | `truescrape tiktok product --url` | 1 | Product details |
 | `GET /v1/tiktok/profile` | `truescrape tiktok profile --handle` | 1 | Profile details |
 | `GET /v1/tiktok/profile/region` | `truescrape tiktok profile-region` | 1 | Creator region |
-| `GET /v1/tiktok/search/keyword` | `truescrape tiktok search-keyword --query` | 1 | Search videos by keyword |
 | `GET /v1/tiktok/search/suggestions` | `truescrape tiktok search-suggestions --query` | 1 | Search suggestions |
-| `GET /v1/tiktok/search/top` | `truescrape tiktok search-top --query` | 1 | Top (blended) search |
-| `GET /v1/tiktok/search/users` | `truescrape tiktok search-users --query` | 1 | Search creators |
 | `GET /v1/tiktok/shop/product/reviews` | `truescrape tiktok shop-product-reviews --url` | 1 | Product reviews |
 | `GET /v1/tiktok/shop/products` | `truescrape tiktok shop-products --url` | 1 | Seller's product catalogue |
 | `GET /v1/tiktok/shop/search` | `truescrape tiktok shop-search --query` | 1 | Search TikTok Shop |
