@@ -183,7 +183,8 @@ describe('help', () => {
   it('says the Linux Claude Desktop path is for unofficial builds', () => {
     const program = buildProgram([(p) => register(p)]);
     const add = program.commands.find((c) => c.name() === 'agent')?.commands.find((c) => c.name() === 'add');
-    expect(add?.helpInformation()).toMatch(/unofficial builds/);
+    // \s+: commander wraps help to the widest option, so the phrase can break across lines.
+    expect(add?.helpInformation()).toMatch(/unofficial\s+builds/);
   });
 });
 
@@ -220,6 +221,36 @@ describe('agent add', () => {
     expect(JSON.parse(readFileSync(path, 'utf8'))).toEqual({ mcpServers: { truescrape: { url: ENDPOINT, headers: { 'x-agent-key': KEY } } } });
     if (process.platform !== 'win32') expect(statSync(path).mode & 0o777).toBe(0o600);
     expect(existsSync(`${path}.${process.pid}.tmp`)).toBe(false);
+  });
+
+  it('narrows the tool list with --platforms, checked against the server first', async () => {
+    const urls: string[] = [];
+    const fetchImpl = (async (url: string | URL | Request) => {
+      urls.push(String(url));
+      return new Response(JSON.stringify(DISCOVERY), { status: 200, headers: { 'content-type': 'application/json' } });
+    }) as unknown as typeof fetch;
+    const { code, home } = await invoke(['cursor', '--platforms', 'YouTube, instagram,youtube'], { fetchImpl });
+    expect(code).toBe(0);
+    expect(urls[0]).toBe(`${BASE}/.well-known/mcp?platforms=youtube,instagram`);
+    const written = JSON.parse(readFileSync(join(home, '.cursor', 'mcp.json'), 'utf8'));
+    expect(written.mcpServers.truescrape.url).toBe(`${ENDPOINT}?platforms=youtube,instagram`);
+  });
+
+  it('refuses an unknown platform the server rejects, and writes nothing', async () => {
+    const rejected = fetchStub({ success: false, error: { code: 'invalid_request', message: 'Unknown platform in ?platforms=: nope.' } }, 400);
+    const { code, home, streams } = await invoke(['cursor', '--platforms', 'nope'], { fetchImpl: rejected });
+    expect(code).toBe(2);
+    expect(usageMessage(streams)).toContain('nope');
+    expect(existsSync(join(home, '.cursor', 'mcp.json'))).toBe(false);
+  });
+
+  it('passes --platforms to the Claude Desktop bridge and the claude command', async () => {
+    const desktop = await invoke(['claude-desktop', '--platforms', 'youtube'], { platform: 'darwin' });
+    const path = join(desktop.home, 'Library', 'Application Support', 'Claude', 'claude_desktop_config.json');
+    expect(JSON.parse(readFileSync(path, 'utf8')).mcpServers.truescrape.args).toEqual(['-y', 'truescrape', 'mcp', '--platforms', 'youtube']);
+
+    const code = await invoke(['claude-code', '--platforms', 'youtube', '--dry-run']);
+    expect(code.streams.out.join('')).toContain(`${ENDPOINT}?platforms=youtube`);
   });
 
   it('writes VS Code under cwd with the servers key', async () => {

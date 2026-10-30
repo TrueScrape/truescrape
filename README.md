@@ -149,18 +149,40 @@ bridge, which forwards stdio to the remote endpoint with your stored key:
 { "mcpServers": { "truescrape": { "command": "npx", "args": ["-y", "truescrape", "mcp"], "env": { "TRUESCRAPE_API_KEY": "YOUR_KEY" } } } }
 ```
 
+**Load only the platforms you need.** Add `?platforms=` to the URL and the
+agent sees just those tools, which keeps its context small. The CLI and the
+bridge take the same list:
+
+```bash
+claude mcp add --transport http truescrape "https://api.truescrape.com/mcp?platforms=youtube,instagram" \
+  --header "x-api-key: YOUR_KEY" --scope user
+truescrape agent add cursor --platforms youtube,instagram
+```
+
+Tools can be listed without a key, so you can inspect them before signing up;
+calling one needs the key.
+
 The server advertises its URL, transport and auth header at
 `https://api.truescrape.com/.well-known/mcp`; `agent add` reads that rather
 than assuming.
 
-## Agent skill
+## Agent skills
 
-The skill teaches an agent endpoint selection, the cost model, batching,
+`truescrape` teaches an agent endpoint selection, the cost model, batching,
 subscriptions and the platform quirks worth knowing, with the full endpoint
-table generated from the live API.
+table generated from the live API. Two workflow skills build on it:
+
+| Skill | What it does |
+|---|---|
+| [`video-to-content-brief`](skills/video-to-content-brief/SKILL.md) | Turns a sample of YouTube videos into a source-linked brief: themes, hooks and new angles |
+| [`competitor-content-audit`](skills/competitor-content-audit/SKILL.md) | Compares the same recent sample of uploads across 2 to 5 YouTube channels |
+
+Each states its sample size and cost before it runs, and keeps a link to the
+source video beside every claim.
 
 ```bash
-npx skills add TrueScrape/truescrape                 # Claude Code, Cursor, Codex, Copilot, Gemini CLI, Windsurf
+npx skills add TrueScrape/truescrape                 # pick from the list; Claude Code, Cursor, Codex, Copilot, Gemini CLI, Windsurf
+npx skills add TrueScrape/truescrape --skill video-to-content-brief
 ```
 
 As a Claude Code plugin, which installs the skill and the MCP server together

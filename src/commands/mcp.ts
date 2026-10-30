@@ -2,6 +2,7 @@ import { createInterface } from 'node:readline';
 import type { Command } from 'commander';
 import { Client, NetworkError } from '../client.js';
 import { requireKey, run, type Context, type ContextOverrides } from '../context.js';
+import { normalisePlatforms } from './agent.js';
 
 /**
  * `truescrape mcp` is a transport, nothing more. The API already serves MCP
@@ -80,10 +81,10 @@ function failureFrom(status: number, body: string, baseUrl: string): Failure {
  * One stdin line in, one stdout line (or nothing) out. Pure apart from the
  * request itself, so the shaping rules are testable without a process.
  */
-export async function bridgeLine(line: string, client: Client, baseUrl: string, warn: (text: string) => void = () => {}): Promise<string | null> {
+export async function bridgeLine(line: string, client: Client, baseUrl: string, warn: (text: string) => void = () => {}, path = '/mcp'): Promise<string | null> {
   let response: Response;
   try {
-    response = await client.raw('POST', '/mcp', line, { 'content-type': 'application/json' });
+    response = await client.raw('POST', path, line, { 'content-type': 'application/json' });
   } catch (err) {
     if (!(err instanceof NetworkError)) throw err;
     warn(`network: ${err.message}`);
@@ -110,18 +111,19 @@ export async function bridgeLine(line: string, client: Client, baseUrl: string, 
   return errorLine(line, failure);
 }
 
-export async function runBridge(ctx: Context, stdin: NodeJS.ReadableStream, stdout: NodeJS.WritableStream): Promise<void> {
+export async function runBridge(ctx: Context, stdin: NodeJS.ReadableStream, stdout: NodeJS.WritableStream, platforms?: string): Promise<void> {
   requireKey(ctx);
   const baseUrl = ctx.client.baseUrl;
+  const path = platforms ? `/mcp?platforms=${platforms}` : '/mcp';
   const warn = ctx.output.quiet ? () => {} : (text: string) => ctx.streams.stderr(`mcp: ${text}\n`);
-  warn(`bridging stdio to ${baseUrl}/mcp`);
+  warn(`bridging stdio to ${baseUrl}${path}`);
 
   // The async iterator hands over one line at a time, which is what keeps responses in request order.
   const lines = createInterface({ input: stdin, crlfDelay: Infinity, terminal: false });
   for await (const raw of lines) {
     const line = raw.trim();
     if (!line) continue;
-    const out = await bridgeLine(line, ctx.client, baseUrl, warn);
+    const out = await bridgeLine(line, ctx.client, baseUrl, warn, path);
     if (out !== null) stdout.write(`${out}\n`);
   }
 }
@@ -130,6 +132,7 @@ export function register(program: Command, overrides: BridgeOverrides = {}): voi
   program
     .command('mcp')
     .description('Serve MCP over stdio for clients that launch a local process, bridging every message to the API')
+    .option('--platforms <list>', 'Load only these platforms\' tools, comma-separated (e.g. youtube,instagram)')
     .addHelpText(
       'after',
       `
@@ -140,6 +143,7 @@ Clients that can call a remote server directly need no bridge: use <base-url>/mc
 Only JSON-RPC lines are written to stdout; diagnostics go to stderr.`,
     )
     .action(async function (this: Command) {
-      await run(this, (ctx) => runBridge(ctx, overrides.stdin ?? process.stdin, overrides.stdout ?? process.stdout), overrides);
+      const platforms = normalisePlatforms((this.opts() as { platforms?: string }).platforms);
+      await run(this, (ctx) => runBridge(ctx, overrides.stdin ?? process.stdin, overrides.stdout ?? process.stdout, platforms), overrides);
     });
 }

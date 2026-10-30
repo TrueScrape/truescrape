@@ -31,7 +31,7 @@ function capture(): Streams & { out: string[]; err: string[] } {
 }
 
 /** Runs `truescrape mcp` end to end: lines in on stdin, whatever it wrote on stdout back out. */
-async function bridge(lines: string[], fetchImpl: typeof fetch, env: Record<string, string> = { TRUESCRAPE_API_KEY: 'k' }) {
+async function bridge(lines: string[], fetchImpl: typeof fetch, env: Record<string, string> = { TRUESCRAPE_API_KEY: 'k' }, args: string[] = []) {
   const written: string[] = [];
   const stdout = new Writable({ write(chunk, _enc, cb) { written.push(String(chunk)); cb(); } });
   const stdin = Readable.from([lines.join('\n')]);
@@ -39,7 +39,7 @@ async function bridge(lines: string[], fetchImpl: typeof fetch, env: Record<stri
   const configFile = join(mkdtempSync(join(tmpdir(), 'ts-mcp-')), 'config.json');
   const program = buildProgram([(p) => register(p, { env: { ...env, TRUESCRAPE_BASE_URL: BASE }, configFile, streams, fetchImpl, stdin, stdout })]);
   program.exitOverride();
-  await program.parseAsync(['node', 'truescrape', 'mcp']);
+  await program.parseAsync(['node', 'truescrape', 'mcp', ...args]);
   return { stdout: written.join(''), lines: written.join('').split('\n').filter(Boolean), streams };
 }
 
@@ -65,6 +65,12 @@ describe('truescrape mcp', () => {
     expect(headers['x-api-key']).toBe('k');
     expect(headers['content-type']).toBe('application/json');
     expect(stdout).toBe(`${JSON.stringify(result)}\n`);
+  });
+
+  it('forwards --platforms to the server as ?platforms=, normalised', async () => {
+    const { fetchImpl, calls } = stub(() => json({ jsonrpc: '2.0', id: 1, result: {} }));
+    await bridge(['{"jsonrpc":"2.0","id":1,"method":"tools/list"}'], fetchImpl, undefined, ['--platforms', 'YouTube, instagram,youtube']);
+    expect(calls[0]?.url).toBe(`${BASE}/mcp?platforms=youtube,instagram`);
   });
 
   it('writes nothing for a notification the server acknowledges with an empty 202', async () => {

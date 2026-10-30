@@ -30,7 +30,17 @@ export interface AgentOverrides extends ContextOverrides {
 interface AddOptions {
   project?: boolean;
   dryRun?: boolean;
+  platforms?: string;
 }
+
+/** Lowercased, trimmed, de-duplicated; the server owns the list of valid ids and says which are not. */
+export function normalisePlatforms(raw: string | undefined): string | undefined {
+  if (raw === undefined) return undefined;
+  const ids = [...new Set(raw.split(',').map((p) => p.trim().toLowerCase()).filter(Boolean))];
+  return ids.length ? ids.join(',') : undefined;
+}
+
+const withPlatforms = (url: string, platforms: string | undefined) => (platforms ? `${url}?platforms=${platforms}` : url);
 
 const SERVER_NAME = 'truescrape';
 const DISCOVERY_PATH = '/.well-known/mcp';
@@ -66,18 +76,20 @@ export function configPathFor(target: FileTarget, opts: { home: string; platform
   }
 }
 
-export function entryFor(target: FileTarget, discovery: Discovery, key: string, platform: NodeJS.Platform): Record<string, unknown> {
+export function entryFor(target: FileTarget, discovery: Discovery, key: string, platform: NodeJS.Platform, platforms?: string): Record<string, unknown> {
   switch (target) {
-    case 'claude-desktop':
+    case 'claude-desktop': {
       // Desktop cannot send a header to a remote server from its config, so it gets the stdio
       // bridge. On Windows npx is a .cmd shim, which only cmd can launch.
+      const bridge = ['-y', SERVER_NAME, 'mcp', ...(platforms ? ['--platforms', platforms] : [])];
       return platform === 'win32'
-        ? { command: 'cmd', args: ['/c', 'npx', '-y', SERVER_NAME, 'mcp'], env: { TRUESCRAPE_API_KEY: key } }
-        : { command: 'npx', args: ['-y', SERVER_NAME, 'mcp'], env: { TRUESCRAPE_API_KEY: key } };
+        ? { command: 'cmd', args: ['/c', 'npx', ...bridge], env: { TRUESCRAPE_API_KEY: key } }
+        : { command: 'npx', args: bridge, env: { TRUESCRAPE_API_KEY: key } };
+    }
     case 'cursor':
-      return { url: discovery.endpoint, headers: { [discovery.authentication.name]: key } };
+      return { url: withPlatforms(discovery.endpoint, platforms), headers: { [discovery.authentication.name]: key } };
     case 'vscode':
-      return { type: 'http', url: discovery.endpoint, headers: { [discovery.authentication.name]: key } };
+      return { type: 'http', url: withPlatforms(discovery.endpoint, platforms), headers: { [discovery.authentication.name]: key } };
   }
 }
 
@@ -112,7 +124,7 @@ function quote(arg: string): string {
   return /\s/.test(arg) ? `"${arg}"` : arg;
 }
 
-export function claudeCodeCommand(discovery: Discovery, key: string, project: boolean): { command: string; args: string[]; line: string } {
+export function claudeCodeCommand(discovery: Discovery, key: string, project: boolean, platforms?: string): { command: string; args: string[]; line: string } {
   const command = 'claude';
   const args = [
     'mcp',
@@ -120,7 +132,7 @@ export function claudeCodeCommand(discovery: Discovery, key: string, project: bo
     '--transport',
     'http',
     SERVER_NAME,
-    discovery.endpoint,
+    withPlatforms(discovery.endpoint, platforms),
     '--header',
     `${discovery.authentication.name}: ${key}`,
     '--scope',
@@ -143,17 +155,22 @@ export function rehost(endpoint: string, baseUrl: string): string {
   }
 }
 
-async function discover(ctx: Context): Promise<Discovery> {
-  const url = `${ctx.client.baseUrl}${DISCOVERY_PATH}`;
+async function discover(ctx: Context, platforms?: string): Promise<Discovery> {
+  const path = withPlatforms(DISCOVERY_PATH, platforms);
+  const url = `${ctx.client.baseUrl}${path}`;
   const refuse = (reason: string) => new UsageError(`Could not read ${url}; refusing to write a config from memory. (${reason})`);
 
   let response: Response;
   try {
-    response = await ctx.client.raw('GET', DISCOVERY_PATH);
+    response = await ctx.client.raw('GET', path);
   } catch (err) {
     throw refuse(err instanceof Error ? err.message : String(err));
   }
-  if (!response.ok) throw refuse(`HTTP ${response.status}`);
+  if (!response.ok) {
+    // The server names an unknown platform and lists the valid ones; pass that on verbatim.
+    const message = await response.json().then((b) => (b as { error?: { message?: unknown } })?.error?.message, () => undefined);
+    throw refuse(typeof message === 'string' ? message : `HTTP ${response.status}`);
+  }
 
   let body: unknown;
   try {
@@ -213,10 +230,11 @@ async function add(ctx: Context, target: string, opts: AddOptions, overrides: Ag
   const platform = overrides.platform ?? process.platform;
   const home = overrides.home ?? homedir();
   const cwd = overrides.cwd ?? process.cwd();
-  const discovery = await discover(ctx);
+  const platforms = normalisePlatforms(opts.platforms);
+  const discovery = await discover(ctx, platforms);
 
   if (target === 'claude-code') {
-    const { command, args, line } = claudeCodeCommand(discovery, key, project);
+    const { command, args, line } = claudeCodeCommand(discovery, key, project, platforms);
     const which = overrides.which ?? onPath;
     if (dryRun || !which(command)) {
       ctx.streams.stdout(`${line}\n`);
@@ -234,7 +252,7 @@ async function add(ctx: Context, target: string, opts: AddOptions, overrides: Ag
   }
 
   const path = configPathFor(target, { home, platform, env: ctx.env, cwd, project });
-  const text = mergeConfig(readExisting(path), target, entryFor(target, discovery, key, platform), path);
+  const text = mergeConfig(readExisting(path), target, entryFor(target, discovery, key, platform, platforms), path);
 
   if (dryRun) {
     ctx.streams.stdout(text);
@@ -255,6 +273,7 @@ export function register(program: Command, overrides: AgentOverrides = {}): void
     .argument('<target>', 'claude-code, claude-desktop (macOS and Windows; unofficial builds on Linux), cursor, or vscode')
     .option('--project', 'Project-level config in the current directory instead of the user-level one (cursor, claude-code)')
     .option('--dry-run', 'Print what would be written or run, and change nothing')
+    .option('--platforms <list>', 'Only these platforms\' tools, e.g. youtube,instagram')
     .action(async (target: string, opts: AddOptions, command: Command) => {
       await run(command, (ctx) => add(ctx, target, opts, overrides), overrides);
     });
