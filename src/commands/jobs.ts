@@ -45,6 +45,15 @@ export function pollLine(job: Job): string {
   return `job ${job.jobId} · ${job.status} · ${job.progress?.completed ?? 0}/${job.progress?.total ?? 0}`;
 }
 
+/** What the JOB has charged so far. The read that fetched it is free, so its own meta always says 0. */
+export function jobBillingLine(envelope: Envelope<Job>): string {
+  const job = envelope.data;
+  const credits = typeof job.creditsCharged === 'number' ? job.creditsCharged : 0;
+  const parts = [`${credits} credit${credits === 1 ? '' : 's'} charged by job ${job.jobId}`, job.status];
+  if (envelope.meta?.requestId) parts.push(envelope.meta.requestId);
+  return parts.join(' · ');
+}
+
 export interface WaitOptions {
   sleep?: (ms: number) => Promise<void>;
   maxWaitMs?: number;
@@ -107,7 +116,7 @@ export async function followJob(ctx: Context, jobId: string, options: FollowOpti
       `job ${jobId} is still ${envelope.data.status} after ${options.maxWaitMs / 1000} s. Run \`truescrape jobs get ${jobId} --wait\` to keep waiting.\n`,
     );
   }
-  emit(envelope, ctx.output, ctx.streams);
+  emit(envelope, ctx.output, ctx.streams, jobBillingLine(envelope));
 }
 
 interface GetOpts {
@@ -131,7 +140,8 @@ export function register(program: Command, overrides: JobsOverrides = {}): void 
           requireKey(ctx);
           const maxWaitMs = parseMaxWait(opts.maxWait);
           if (opts.wait) return followJob(ctx, jobId, { maxWaitMs, sleep: overrides.sleep, now: overrides.now });
-          emit(await ctx.client.get<Job>(jobPath(jobId)), ctx.output, ctx.streams);
+          const envelope = await ctx.client.get<Job>(jobPath(jobId));
+          emit(envelope, ctx.output, ctx.streams, jobBillingLine(envelope));
         },
         overrides,
       );

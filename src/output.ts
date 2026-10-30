@@ -118,8 +118,12 @@ export const processStreams: Streams = {
   stderr: (text) => process.stderr.write(text),
 };
 
-/** Data to stdout (or a file, printing only its path); the billing line to stderr. */
-export function emit(envelope: Envelope, options: OutputOptions, streams: Streams = processStreams): void {
+/**
+ * Data to stdout (or a file, printing only its path); the billing line to stderr.
+ * `billing` replaces the request's own line when that request is not what was
+ * billed: reading a job is free, the job is not.
+ */
+export function emit(envelope: Envelope, options: OutputOptions, streams: Streams = processStreams, billing?: string): void {
   const payload = options.envelope
     ? { data: envelope.data, meta: envelope.meta ?? null, pagination: envelope.pagination ?? null, ...(envelope.raw !== undefined ? { raw: envelope.raw } : {}) }
     : envelope.data;
@@ -131,7 +135,7 @@ export function emit(envelope: Envelope, options: OutputOptions, streams: Stream
   } else {
     streams.stdout(`${text}\n`);
   }
-  if (!options.quiet) streams.stderr(`${paint(metaLine(envelope), options.color, 'dim')}\n`);
+  if (!options.quiet) streams.stderr(`${paint(billing ?? metaLine(envelope), options.color, 'dim')}\n`);
 }
 
 /**

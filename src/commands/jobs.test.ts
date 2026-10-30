@@ -163,6 +163,17 @@ describe('jobs get', () => {
     expect(r.err).toContain('job job_1 · succeeded · 2/2\n');
   });
 
+  it("reports the job's own charge on the billing line, not the free read that fetched it", async () => {
+    // The read of /v1/jobs/:id costs 0 and says so in meta; the job charged 4.
+    const { fetchImpl } = sequence([ok({ ...job('succeeded', 2), creditsCharged: 4 })]);
+
+    const r = await exec(['jobs', 'get', 'job_1', '--wait'], { fetchImpl, sleep: async () => {} });
+
+    const billing = r.err.trim().split('\n').at(-1)!;
+    expect(billing).toMatch(/^4 credits charged by job job_1 · succeeded/);
+    expect(billing).not.toContain('live fetch');
+  });
+
   it('treats a failed job as an answer: exit 0 and the job printed', async () => {
     const { fetchImpl } = sequence([ok(job('running')), ok({ ...job('failed'), error: { code: 'upstream_unavailable' } })]);
 

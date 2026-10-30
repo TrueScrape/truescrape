@@ -7,7 +7,7 @@
     "url": "https://github.com/TrueScrape/truescrape",
     "source": "github"
   },
-  "version": "0.5.0",
+  "version": "0.5.1",
   "websiteUrl": "https://truescrape.com/docs",
   "icons": [
     { "src": "https://truescrape.com/brand/truescrape-mark-dark.png", "mimeType": "image/png", "sizes": ["1024x1024"] }
@@ -30,7 +30,7 @@
     {
       "registryType": "npm",
       "identifier": "truescrape",
-      "version": "0.5.0",
+      "version": "0.5.1",
       "transport": { "type": "stdio" },
       "packageArguments": [{ "type": "positional", "value": "mcp" }],
       "environmentVariables": [
