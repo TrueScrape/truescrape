@@ -1,0 +1,43 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "io.github.TrueScrape/truescrape",
+  "title": "TrueScrape",
+  "description": "Public social media data: Instagram, TikTok, YouTube, X, Reddit, LinkedIn and 30+ more platforms.",
+  "repository": {
+    "url": "https://github.com/TrueScrape/truescrape",
+    "source": "github"
+  },
+  "version": "0.4.1",
+  "websiteUrl": "https://truescrape.com/docs",
+  "remotes": [
+    {
+      "type": "streamable-http",
+      "url": "https://api.truescrape.com/mcp",
+      "headers": [
+        {
+          "name": "x-api-key",
+          "description": "Your TrueScrape API key from https://truescrape.com/dashboard (1,000 free credits on signup).",
+          "isRequired": true,
+          "isSecret": true
+        }
+      ]
+    }
+  ],
+  "packages": [
+    {
+      "registryType": "npm",
+      "identifier": "truescrape",
+      "version": "0.4.1",
+      "transport": { "type": "stdio" },
+      "packageArguments": [{ "type": "positional", "value": "mcp" }],
+      "environmentVariables": [
+        {
+          "name": "TRUESCRAPE_API_KEY",
+          "description": "Your TrueScrape API key from https://truescrape.com/dashboard.",
+          "isRequired": true,
+          "isSecret": true
+        }
+      ]
+    }
+  ]
+}

@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-10-15T09:09:51.121Z",
+  "generatedAt": "2026-10-30T02:29:11.190Z",
   "source": "https://api.truescrape.com/openapi.json",
   "endpoints": [
     {
@@ -387,6 +387,164 @@
       ]
     },
     {
+      "name": "bitchute.channel",
+      "platform": "bitchute",
+      "action": "channel",
+      "path": "/v1/bitchute/channel",
+      "summary": "Channel profile",
+      "description": "A public BitChute channel: name, description, subscriber count, video count, total views and creation date.",
+      "credits": 1,
+      "cacheable": true,
+      "batchable": true,
+      "constraints": [],
+      "params": [
+        {
+          "name": "channel",
+          "flag": "channel",
+          "type": "string",
+          "required": true,
+          "description": "Channel id (EhBWKghMUros), the channel name from its URL (nextnewsnetwork), or a bitchute.com/channel/... URL"
+        },
+        {
+          "name": "cache_max_age",
+          "flag": "cache-max-age",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "include_raw",
+          "flag": "include-raw",
+          "type": "boolean",
+          "required": false
+        }
+      ]
+    },
+    {
+      "name": "bitchute.channelVideos",
+      "platform": "bitchute",
+      "action": "channel-videos",
+      "path": "/v1/bitchute/channel/videos",
+      "summary": "Channel videos",
+      "description": "A BitChute channel's public videos, newest first, 50 per page, with view counts. Likes and comment counts are not in the list; `bitchute.video` has likes. Pass the `cursor` from the previous response to page.",
+      "credits": 1,
+      "cacheable": true,
+      "batchable": true,
+      "constraints": [],
+      "params": [
+        {
+          "name": "channel",
+          "flag": "channel",
+          "type": "string",
+          "required": true,
+          "description": "Channel id (EhBWKghMUros), the channel name from its URL (nextnewsnetwork), or a bitchute.com/channel/... URL"
+        },
+        {
+          "name": "cursor",
+          "flag": "cursor",
+          "type": "string",
+          "required": false,
+          "description": "`pagination.cursor` from the previous response"
+        },
+        {
+          "name": "cache_max_age",
+          "flag": "cache-max-age",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "include_raw",
+          "flag": "include-raw",
+          "type": "boolean",
+          "required": false
+        }
+      ]
+    },
+    {
+      "name": "bitchute.search",
+      "platform": "bitchute",
+      "action": "search",
+      "path": "/v1/bitchute/search",
+      "summary": "Search videos",
+      "description": "Public BitChute video search, 50 per page, with view counts and the uploading channel.",
+      "credits": 1,
+      "cacheable": true,
+      "batchable": false,
+      "constraints": [],
+      "params": [
+        {
+          "name": "query",
+          "flag": "query",
+          "type": "string",
+          "required": true,
+          "description": "Search terms, at least two characters"
+        },
+        {
+          "name": "sort",
+          "flag": "sort",
+          "type": "string",
+          "required": false,
+          "enum": [
+            "new",
+            "old",
+            "views"
+          ],
+          "default": "new"
+        },
+        {
+          "name": "cursor",
+          "flag": "cursor",
+          "type": "string",
+          "required": false,
+          "description": "`pagination.cursor` from the previous response"
+        },
+        {
+          "name": "cache_max_age",
+          "flag": "cache-max-age",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "include_raw",
+          "flag": "include-raw",
+          "type": "boolean",
+          "required": false
+        }
+      ]
+    },
+    {
+      "name": "bitchute.video",
+      "platform": "bitchute",
+      "action": "video",
+      "path": "/v1/bitchute/video",
+      "summary": "Video details",
+      "description": "A public BitChute video: title, description, hashtags, duration, publish date, channel, views and likes. Dislikes are in `raw`. `commentCount` is always null.",
+      "credits": 1,
+      "cacheable": true,
+      "batchable": true,
+      "constraints": [],
+      "params": [
+        {
+          "name": "url",
+          "flag": "url",
+          "type": "string",
+          "required": true,
+          "description": "BitChute video URL (bitchute.com/video/uIh_YOS_Lm4/) or a bare video id"
+        },
+        {
+          "name": "cache_max_age",
+          "flag": "cache-max-age",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "include_raw",
+          "flag": "include-raw",
+          "type": "boolean",
+          "required": false
+        }
+      ]
+    },
+    {
       "name": "bluesky.post",
       "platform": "bluesky",
       "action": "post",
@@ -517,6 +675,680 @@
           "type": "string",
           "required": false,
           "description": "Alias for `handle`, accepted for compatibility. Sending both with different values is rejected."
+        }
+      ]
+    },
+    {
+      "name": "dailymotion.channel",
+      "platform": "dailymotion",
+      "action": "channel",
+      "path": "/v1/dailymotion/channel",
+      "summary": "Channel profile",
+      "description": "Public profile of a Dailymotion channel: followers, following, video count, lifetime views, verification badge, country and creation date.",
+      "credits": 1,
+      "cacheable": true,
+      "batchable": true,
+      "constraints": [],
+      "params": [
+        {
+          "name": "handle",
+          "flag": "handle",
+          "type": "string",
+          "required": true,
+          "description": "Channel username (wired), user id (x1audmk) or a dailymotion.com/<username> URL"
+        },
+        {
+          "name": "cache_max_age",
+          "flag": "cache-max-age",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "include_raw",
+          "flag": "include-raw",
+          "type": "boolean",
+          "required": false
+        }
+      ]
+    },
+    {
+      "name": "dailymotion.channelVideos",
+      "platform": "dailymotion",
+      "action": "channel-videos",
+      "path": "/v1/dailymotion/channel/videos",
+      "summary": "Channel videos",
+      "description": "A Dailymotion channel's public uploads, newest first, 50 per page, all the way back to the first upload. Pass the `cursor` from the previous response to page.",
+      "credits": 1,
+      "cacheable": true,
+      "batchable": true,
+      "constraints": [],
+      "params": [
+        {
+          "name": "handle",
+          "flag": "handle",
+          "type": "string",
+          "required": true,
+          "description": "Channel username (wired), user id (x1audmk) or a dailymotion.com/<username> URL"
+        },
+        {
+          "name": "cursor",
+          "flag": "cursor",
+          "type": "string",
+          "required": false,
+          "description": "`pagination.cursor` from the previous response"
+        },
+        {
+          "name": "cache_max_age",
+          "flag": "cache-max-age",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "include_raw",
+          "flag": "include-raw",
+          "type": "boolean",
+          "required": false
+        }
+      ]
+    },
+    {
+      "name": "dailymotion.search",
+      "platform": "dailymotion",
+      "action": "search",
+      "path": "/v1/dailymotion/search",
+      "summary": "Search videos",
+      "description": "Public Dailymotion video search, 50 per page. Dailymotion returns at most the first 1,000 results for any query, so paging stops there.",
+      "credits": 1,
+      "cacheable": true,
+      "batchable": true,
+      "constraints": [],
+      "params": [
+        {
+          "name": "query",
+          "flag": "query",
+          "type": "string",
+          "required": true,
+          "description": "Search terms"
+        },
+        {
+          "name": "sort",
+          "flag": "sort",
+          "type": "string",
+          "required": false,
+          "enum": [
+            "relevance",
+            "recent",
+            "visited"
+          ],
+          "default": "relevance",
+          "description": "`visited` is most viewed"
+        },
+        {
+          "name": "cursor",
+          "flag": "cursor",
+          "type": "string",
+          "required": false,
+          "description": "`pagination.cursor` from the previous response"
+        },
+        {
+          "name": "cache_max_age",
+          "flag": "cache-max-age",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "include_raw",
+          "flag": "include-raw",
+          "type": "boolean",
+          "required": false
+        }
+      ]
+    },
+    {
+      "name": "dailymotion.video",
+      "platform": "dailymotion",
+      "action": "video",
+      "path": "/v1/dailymotion/video",
+      "summary": "Video details",
+      "description": "Public metadata for a Dailymotion video: views, likes, duration, tags, upload date and channel. Dailymotion has no public comments, so `commentCount` is null.",
+      "credits": 1,
+      "cacheable": true,
+      "batchable": true,
+      "constraints": [],
+      "params": [
+        {
+          "name": "url",
+          "flag": "url",
+          "type": "string",
+          "required": true,
+          "description": "Video id (x9529ik) or a dailymotion.com/video/… or dai.ly/… URL"
+        },
+        {
+          "name": "cache_max_age",
+          "flag": "cache-max-age",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "include_raw",
+          "flag": "include-raw",
+          "type": "boolean",
+          "required": false
+        }
+      ]
+    },
+    {
+      "name": "dailymotion.transcript",
+      "platform": "dailymotion",
+      "action": "video-transcript",
+      "path": "/v1/dailymotion/video/transcript",
+      "summary": "Video transcript",
+      "description": "A Dailymotion video's captions as one text block plus timed cues. Returns the requested language when the video has it, otherwise the first track. Most are generated automatically by Dailymotion.",
+      "credits": 1,
+      "cacheable": true,
+      "batchable": true,
+      "constraints": [],
+      "params": [
+        {
+          "name": "url",
+          "flag": "url",
+          "type": "string",
+          "required": true,
+          "description": "Video id (x9529ik) or a dailymotion.com/video/… or dai.ly/… URL"
+        },
+        {
+          "name": "language",
+          "flag": "language",
+          "type": "string",
+          "required": false,
+          "description": "Language code, e.g. \"en\""
+        },
+        {
+          "name": "cache_max_age",
+          "flag": "cache-max-age",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "include_raw",
+          "flag": "include-raw",
+          "type": "boolean",
+          "required": false
+        }
+      ]
+    },
+    {
+      "name": "deezer.album",
+      "platform": "deezer",
+      "action": "album",
+      "path": "/v1/deezer/album",
+      "summary": "Album details",
+      "description": "A Deezer album: title, artist, label, UPC, release date, fans (`likeCount`) and its tracks. Pass `cursor` to page the tracks of a long album.",
+      "credits": 1,
+      "cacheable": true,
+      "batchable": true,
+      "constraints": [],
+      "params": [
+        {
+          "name": "id",
+          "flag": "id",
+          "type": "string",
+          "required": true,
+          "description": "Numeric Deezer album id"
+        },
+        {
+          "name": "cursor",
+          "flag": "cursor",
+          "type": "string",
+          "required": false,
+          "description": "`pagination.cursor` from the previous response"
+        },
+        {
+          "name": "cache_max_age",
+          "flag": "cache-max-age",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "include_raw",
+          "flag": "include-raw",
+          "type": "boolean",
+          "required": false
+        }
+      ]
+    },
+    {
+      "name": "deezer.artist",
+      "platform": "deezer",
+      "action": "artist",
+      "path": "/v1/deezer/artist",
+      "summary": "Artist profile",
+      "description": "A Deezer artist: name, fans, album count, picture and link.",
+      "credits": 1,
+      "cacheable": true,
+      "batchable": true,
+      "constraints": [],
+      "params": [
+        {
+          "name": "id",
+          "flag": "id",
+          "type": "string",
+          "required": true,
+          "description": "Numeric Deezer artist id"
+        },
+        {
+          "name": "cache_max_age",
+          "flag": "cache-max-age",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "include_raw",
+          "flag": "include-raw",
+          "type": "boolean",
+          "required": false
+        }
+      ]
+    },
+    {
+      "name": "deezer.artistAlbums",
+      "platform": "deezer",
+      "action": "artist-albums",
+      "path": "/v1/deezer/artist/albums",
+      "summary": "Artist albums",
+      "description": "An artist's albums, singles and EPs on Deezer. `likeCount` is the release's fans.",
+      "credits": 1,
+      "cacheable": true,
+      "batchable": true,
+      "constraints": [],
+      "params": [
+        {
+          "name": "id",
+          "flag": "id",
+          "type": "string",
+          "required": true,
+          "description": "Numeric Deezer artist id"
+        },
+        {
+          "name": "limit",
+          "flag": "limit",
+          "type": "number",
+          "required": false,
+          "default": 25
+        },
+        {
+          "name": "cursor",
+          "flag": "cursor",
+          "type": "string",
+          "required": false,
+          "description": "`pagination.cursor` from the previous response"
+        },
+        {
+          "name": "cache_max_age",
+          "flag": "cache-max-age",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "include_raw",
+          "flag": "include-raw",
+          "type": "boolean",
+          "required": false
+        }
+      ]
+    },
+    {
+      "name": "deezer.artistTopTracks",
+      "platform": "deezer",
+      "action": "artist-top-tracks",
+      "path": "/v1/deezer/artist/top-tracks",
+      "summary": "Artist top tracks",
+      "description": "An artist's most popular tracks on Deezer, most popular first.",
+      "credits": 1,
+      "cacheable": true,
+      "batchable": true,
+      "constraints": [],
+      "params": [
+        {
+          "name": "id",
+          "flag": "id",
+          "type": "string",
+          "required": true,
+          "description": "Numeric Deezer artist id"
+        },
+        {
+          "name": "limit",
+          "flag": "limit",
+          "type": "number",
+          "required": false,
+          "default": 25
+        },
+        {
+          "name": "cursor",
+          "flag": "cursor",
+          "type": "string",
+          "required": false,
+          "description": "`pagination.cursor` from the previous response"
+        },
+        {
+          "name": "cache_max_age",
+          "flag": "cache-max-age",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "include_raw",
+          "flag": "include-raw",
+          "type": "boolean",
+          "required": false
+        }
+      ]
+    },
+    {
+      "name": "deezer.charts",
+      "platform": "deezer",
+      "action": "charts",
+      "path": "/v1/deezer/charts",
+      "summary": "Charts",
+      "description": "Deezer's global top tracks, albums, artists, playlists or podcasts.",
+      "credits": 1,
+      "cacheable": true,
+      "batchable": false,
+      "constraints": [],
+      "params": [
+        {
+          "name": "type",
+          "flag": "type",
+          "type": "string",
+          "required": false,
+          "enum": [
+            "tracks",
+            "albums",
+            "artists",
+            "playlists",
+            "podcasts"
+          ],
+          "default": "tracks"
+        },
+        {
+          "name": "limit",
+          "flag": "limit",
+          "type": "number",
+          "required": false,
+          "default": 25
+        },
+        {
+          "name": "cache_max_age",
+          "flag": "cache-max-age",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "include_raw",
+          "flag": "include-raw",
+          "type": "boolean",
+          "required": false
+        }
+      ]
+    },
+    {
+      "name": "deezer.playlist",
+      "platform": "deezer",
+      "action": "playlist",
+      "path": "/v1/deezer/playlist",
+      "summary": "Playlist contents",
+      "description": "A public Deezer playlist: title, owner, description, cover, track count, fans and its tracks. Pass `cursor` to page the tracks of a long playlist.",
+      "credits": 1,
+      "cacheable": true,
+      "batchable": true,
+      "constraints": [],
+      "params": [
+        {
+          "name": "id",
+          "flag": "id",
+          "type": "string",
+          "required": true,
+          "description": "Numeric Deezer playlist id"
+        },
+        {
+          "name": "cursor",
+          "flag": "cursor",
+          "type": "string",
+          "required": false,
+          "description": "`pagination.cursor` from the previous response"
+        },
+        {
+          "name": "cache_max_age",
+          "flag": "cache-max-age",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "include_raw",
+          "flag": "include-raw",
+          "type": "boolean",
+          "required": false
+        }
+      ]
+    },
+    {
+      "name": "deezer.podcast",
+      "platform": "deezer",
+      "action": "podcast",
+      "path": "/v1/deezer/podcast",
+      "summary": "Podcast details",
+      "description": "A Deezer podcast: title, description, artwork and fans. Deezer publishes no episode count, so `postCount` is null.",
+      "credits": 1,
+      "cacheable": true,
+      "batchable": true,
+      "constraints": [],
+      "params": [
+        {
+          "name": "id",
+          "flag": "id",
+          "type": "string",
+          "required": true,
+          "description": "Numeric Deezer podcast id"
+        },
+        {
+          "name": "cache_max_age",
+          "flag": "cache-max-age",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "include_raw",
+          "flag": "include-raw",
+          "type": "boolean",
+          "required": false
+        }
+      ]
+    },
+    {
+      "name": "deezer.podcastEpisodes",
+      "platform": "deezer",
+      "action": "podcast-episodes",
+      "path": "/v1/deezer/podcast/episodes",
+      "summary": "Podcast episodes",
+      "description": "A Deezer podcast's episodes, newest first.",
+      "credits": 1,
+      "cacheable": true,
+      "batchable": true,
+      "constraints": [],
+      "params": [
+        {
+          "name": "id",
+          "flag": "id",
+          "type": "string",
+          "required": true,
+          "description": "Numeric Deezer podcast id"
+        },
+        {
+          "name": "limit",
+          "flag": "limit",
+          "type": "number",
+          "required": false,
+          "default": 25
+        },
+        {
+          "name": "cursor",
+          "flag": "cursor",
+          "type": "string",
+          "required": false,
+          "description": "`pagination.cursor` from the previous response"
+        },
+        {
+          "name": "cache_max_age",
+          "flag": "cache-max-age",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "include_raw",
+          "flag": "include-raw",
+          "type": "boolean",
+          "required": false
+        }
+      ]
+    },
+    {
+      "name": "deezer.search",
+      "platform": "deezer",
+      "action": "search",
+      "path": "/v1/deezer/search",
+      "summary": "Search",
+      "description": "Search Deezer's catalogue for tracks, albums, artists, playlists or podcasts.",
+      "credits": 1,
+      "cacheable": true,
+      "batchable": true,
+      "constraints": [],
+      "params": [
+        {
+          "name": "query",
+          "flag": "query",
+          "type": "string",
+          "required": true,
+          "description": "Search terms"
+        },
+        {
+          "name": "type",
+          "flag": "type",
+          "type": "string",
+          "required": false,
+          "enum": [
+            "track",
+            "album",
+            "artist",
+            "playlist",
+            "podcast"
+          ],
+          "default": "track"
+        },
+        {
+          "name": "limit",
+          "flag": "limit",
+          "type": "number",
+          "required": false,
+          "default": 25
+        },
+        {
+          "name": "cursor",
+          "flag": "cursor",
+          "type": "string",
+          "required": false,
+          "description": "`pagination.cursor` from the previous response"
+        },
+        {
+          "name": "cache_max_age",
+          "flag": "cache-max-age",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "include_raw",
+          "flag": "include-raw",
+          "type": "boolean",
+          "required": false
+        }
+      ]
+    },
+    {
+      "name": "deezer.track",
+      "platform": "deezer",
+      "action": "track",
+      "path": "/v1/deezer/track",
+      "summary": "Track details",
+      "description": "A Deezer track: title, artist, album artwork, duration, release date, ISRC and tempo.",
+      "credits": 1,
+      "cacheable": true,
+      "batchable": true,
+      "constraints": [],
+      "params": [
+        {
+          "name": "id",
+          "flag": "id",
+          "type": "string",
+          "required": true,
+          "description": "Numeric Deezer track id"
+        },
+        {
+          "name": "cache_max_age",
+          "flag": "cache-max-age",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "include_raw",
+          "flag": "include-raw",
+          "type": "boolean",
+          "required": false
+        }
+      ]
+    },
+    {
+      "name": "deezer.userPlaylists",
+      "platform": "deezer",
+      "action": "user-playlists",
+      "path": "/v1/deezer/user/playlists",
+      "summary": "User playlists",
+      "description": "A Deezer user's public playlists.",
+      "credits": 1,
+      "cacheable": true,
+      "batchable": true,
+      "constraints": [],
+      "params": [
+        {
+          "name": "id",
+          "flag": "id",
+          "type": "string",
+          "required": true,
+          "description": "Numeric Deezer user id"
+        },
+        {
+          "name": "limit",
+          "flag": "limit",
+          "type": "number",
+          "required": false,
+          "default": 25
+        },
+        {
+          "name": "cursor",
+          "flag": "cursor",
+          "type": "string",
+          "required": false,
+          "description": "`pagination.cursor` from the previous response"
+        },
+        {
+          "name": "cache_max_age",
+          "flag": "cache-max-age",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "include_raw",
+          "flag": "include-raw",
+          "type": "boolean",
+          "required": false
         }
       ]
     },
@@ -4382,6 +5214,159 @@
       ]
     },
     {
+      "name": "mastodon.post",
+      "platform": "mastodon",
+      "action": "post",
+      "path": "/v1/mastodon/post",
+      "summary": "Post",
+      "description": "A single public Mastodon post with its favourite, reply and boost counts and attached media.",
+      "credits": 1,
+      "cacheable": true,
+      "batchable": true,
+      "constraints": [],
+      "params": [
+        {
+          "name": "url",
+          "flag": "url",
+          "type": "string",
+          "required": true,
+          "description": "Post URL on the server that hosts it, e.g. https://mastodon.social/@Gargron/117498495330835648"
+        },
+        {
+          "name": "cache_max_age",
+          "flag": "cache-max-age",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "include_raw",
+          "flag": "include-raw",
+          "type": "boolean",
+          "required": false
+        }
+      ]
+    },
+    {
+      "name": "mastodon.postReplies",
+      "platform": "mastodon",
+      "action": "post-replies",
+      "path": "/v1/mastodon/post/replies",
+      "summary": "Post replies",
+      "description": "Public replies to a Mastodon post, in thread order, from every server the hosting server knows of. Servers return at most about 60 replies to a signed-out reader. Replies from accounts that opted out of search engine indexing are left out.",
+      "credits": 1,
+      "cacheable": true,
+      "batchable": true,
+      "constraints": [],
+      "params": [
+        {
+          "name": "url",
+          "flag": "url",
+          "type": "string",
+          "required": true,
+          "description": "Post URL on the server that hosts it, e.g. https://mastodon.social/@Gargron/117498495330835648"
+        },
+        {
+          "name": "cache_max_age",
+          "flag": "cache-max-age",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "include_raw",
+          "flag": "include-raw",
+          "type": "boolean",
+          "required": false
+        }
+      ]
+    },
+    {
+      "name": "mastodon.profile",
+      "platform": "mastodon",
+      "action": "profile",
+      "path": "/v1/mastodon/profile",
+      "summary": "Profile",
+      "description": "A public Mastodon account, read from its own server: follower, following and post counts, bio, avatar, header image and profile links. Accounts that opted out of search engine indexing are refused, free.",
+      "credits": 1,
+      "cacheable": true,
+      "batchable": true,
+      "constraints": [],
+      "params": [
+        {
+          "name": "handle",
+          "flag": "handle",
+          "type": "string",
+          "required": true,
+          "description": "Handle with its server (Gargron@mastodon.social or @Gargron@mastodon.social) or a profile URL"
+        },
+        {
+          "name": "cache_max_age",
+          "flag": "cache-max-age",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "include_raw",
+          "flag": "include-raw",
+          "type": "boolean",
+          "required": false
+        }
+      ]
+    },
+    {
+      "name": "mastodon.userPosts",
+      "platform": "mastodon",
+      "action": "user-posts",
+      "path": "/v1/mastodon/user/posts",
+      "summary": "User posts",
+      "description": "An account's public posts, newest first, with favourite, reply and boost counts. Boosts of other people's posts are left out.",
+      "credits": 1,
+      "cacheable": true,
+      "batchable": true,
+      "constraints": [],
+      "params": [
+        {
+          "name": "handle",
+          "flag": "handle",
+          "type": "string",
+          "required": true,
+          "description": "Handle with its server (Gargron@mastodon.social or @Gargron@mastodon.social) or a profile URL"
+        },
+        {
+          "name": "count",
+          "flag": "count",
+          "type": "number",
+          "required": false,
+          "default": 20
+        },
+        {
+          "name": "cursor",
+          "flag": "cursor",
+          "type": "string",
+          "required": false,
+          "description": "`pagination.cursor` from a previous response"
+        },
+        {
+          "name": "exclude_replies",
+          "flag": "exclude-replies",
+          "type": "boolean",
+          "required": false,
+          "description": "Leave out replies to other posts"
+        },
+        {
+          "name": "cache_max_age",
+          "flag": "cache-max-age",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "include_raw",
+          "flag": "include-raw",
+          "type": "boolean",
+          "required": false
+        }
+      ]
+    },
+    {
       "name": "milkshake.page",
       "platform": "milkshake",
       "action": "page",
@@ -4399,6 +5384,833 @@
           "type": "string",
           "required": true,
           "description": "Page URL (https://msha.ke/<username>) or just the username"
+        },
+        {
+          "name": "cache_max_age",
+          "flag": "cache-max-age",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "include_raw",
+          "flag": "include-raw",
+          "type": "boolean",
+          "required": false
+        }
+      ]
+    },
+    {
+      "name": "mixcloud.profile",
+      "platform": "mixcloud",
+      "action": "profile",
+      "path": "/v1/mixcloud/profile",
+      "summary": "Profile",
+      "description": "Public Mixcloud profile: followers, following, upload count, bio, avatar, cover image and location.",
+      "credits": 1,
+      "cacheable": true,
+      "batchable": true,
+      "constraints": [],
+      "params": [
+        {
+          "name": "handle",
+          "flag": "handle",
+          "type": "string",
+          "required": true,
+          "description": "Mixcloud username (spartacus), or a mixcloud.com profile URL"
+        },
+        {
+          "name": "cache_max_age",
+          "flag": "cache-max-age",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "include_raw",
+          "flag": "include-raw",
+          "type": "boolean",
+          "required": false
+        }
+      ]
+    },
+    {
+      "name": "mixcloud.search",
+      "platform": "mixcloud",
+      "action": "search",
+      "path": "/v1/mixcloud/search",
+      "summary": "Search",
+      "description": "Search Mixcloud uploads, users or tags. Results are ranked by Mixcloud and can change between calls.",
+      "credits": 1,
+      "cacheable": true,
+      "batchable": false,
+      "constraints": [],
+      "params": [
+        {
+          "name": "query",
+          "flag": "query",
+          "type": "string",
+          "required": true,
+          "description": "Search text"
+        },
+        {
+          "name": "type",
+          "flag": "type",
+          "type": "string",
+          "required": false,
+          "enum": [
+            "cloudcast",
+            "user",
+            "tag"
+          ],
+          "default": "cloudcast",
+          "description": "`cloudcast` for uploads, `user` for accounts, `tag` for tags"
+        },
+        {
+          "name": "limit",
+          "flag": "limit",
+          "type": "number",
+          "required": false,
+          "default": 20
+        },
+        {
+          "name": "cursor",
+          "flag": "cursor",
+          "type": "string",
+          "required": false,
+          "description": "`pagination.cursor` from the previous response"
+        },
+        {
+          "name": "cache_max_age",
+          "flag": "cache-max-age",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "include_raw",
+          "flag": "include-raw",
+          "type": "boolean",
+          "required": false
+        }
+      ]
+    },
+    {
+      "name": "mixcloud.tag",
+      "platform": "mixcloud",
+      "action": "tag",
+      "path": "/v1/mixcloud/tag",
+      "summary": "Popular uploads for a tag",
+      "description": "A tag's popular uploads as Mixcloud ranks them, with plays, favourites, reposts and comments.",
+      "credits": 1,
+      "cacheable": true,
+      "batchable": true,
+      "constraints": [],
+      "params": [
+        {
+          "name": "tag",
+          "flag": "tag",
+          "type": "string",
+          "required": true,
+          "description": "Tag slug (house, deep-house), or a mixcloud.com/genres/ URL"
+        },
+        {
+          "name": "limit",
+          "flag": "limit",
+          "type": "number",
+          "required": false,
+          "default": 20
+        },
+        {
+          "name": "cursor",
+          "flag": "cursor",
+          "type": "string",
+          "required": false,
+          "description": "`pagination.cursor` from the previous response"
+        },
+        {
+          "name": "cache_max_age",
+          "flag": "cache-max-age",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "include_raw",
+          "flag": "include-raw",
+          "type": "boolean",
+          "required": false
+        }
+      ]
+    },
+    {
+      "name": "mixcloud.upload",
+      "platform": "mixcloud",
+      "action": "upload",
+      "path": "/v1/mixcloud/upload",
+      "summary": "Upload details",
+      "description": "One Mixcloud upload: plays, favourites, reposts, comments, duration, tags and description. The tracklist, when the uploader published one, is in `raw.sections`.",
+      "credits": 1,
+      "cacheable": true,
+      "batchable": true,
+      "constraints": [],
+      "params": [
+        {
+          "name": "handle",
+          "flag": "handle",
+          "type": "string",
+          "required": true,
+          "description": "Mixcloud username (spartacus), or a mixcloud.com profile URL"
+        },
+        {
+          "name": "slug",
+          "flag": "slug",
+          "type": "string",
+          "required": true,
+          "description": "The upload slug: the last part of its URL, e.g. \"cinematic-soundscapes\""
+        },
+        {
+          "name": "cache_max_age",
+          "flag": "cache-max-age",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "include_raw",
+          "flag": "include-raw",
+          "type": "boolean",
+          "required": false
+        }
+      ]
+    },
+    {
+      "name": "mixcloud.uploadComments",
+      "platform": "mixcloud",
+      "action": "upload-comments",
+      "path": "/v1/mixcloud/upload/comments",
+      "summary": "Upload comments",
+      "description": "Public comments on a Mixcloud upload. Pass the `cursor` from the previous response to page.",
+      "credits": 1,
+      "cacheable": true,
+      "batchable": true,
+      "constraints": [],
+      "params": [
+        {
+          "name": "handle",
+          "flag": "handle",
+          "type": "string",
+          "required": true,
+          "description": "Mixcloud username (spartacus), or a mixcloud.com profile URL"
+        },
+        {
+          "name": "slug",
+          "flag": "slug",
+          "type": "string",
+          "required": true,
+          "description": "The upload slug: the last part of its URL, e.g. \"cinematic-soundscapes\""
+        },
+        {
+          "name": "limit",
+          "flag": "limit",
+          "type": "number",
+          "required": false,
+          "default": 20
+        },
+        {
+          "name": "cursor",
+          "flag": "cursor",
+          "type": "string",
+          "required": false,
+          "description": "`pagination.cursor` from the previous response"
+        },
+        {
+          "name": "cache_max_age",
+          "flag": "cache-max-age",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "include_raw",
+          "flag": "include-raw",
+          "type": "boolean",
+          "required": false
+        }
+      ]
+    },
+    {
+      "name": "mixcloud.followers",
+      "platform": "mixcloud",
+      "action": "user-followers",
+      "path": "/v1/mixcloud/user/followers",
+      "summary": "User followers",
+      "description": "A user's followers, most recent first: username, display name and avatar. Counts are not part of this list; fetch a profile for them.",
+      "credits": 1,
+      "cacheable": true,
+      "batchable": true,
+      "constraints": [],
+      "params": [
+        {
+          "name": "handle",
+          "flag": "handle",
+          "type": "string",
+          "required": true,
+          "description": "Mixcloud username (spartacus), or a mixcloud.com profile URL"
+        },
+        {
+          "name": "limit",
+          "flag": "limit",
+          "type": "number",
+          "required": false,
+          "default": 20
+        },
+        {
+          "name": "cursor",
+          "flag": "cursor",
+          "type": "string",
+          "required": false,
+          "description": "`pagination.cursor` from the previous response"
+        },
+        {
+          "name": "cache_max_age",
+          "flag": "cache-max-age",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "include_raw",
+          "flag": "include-raw",
+          "type": "boolean",
+          "required": false
+        }
+      ]
+    },
+    {
+      "name": "mixcloud.following",
+      "platform": "mixcloud",
+      "action": "user-following",
+      "path": "/v1/mixcloud/user/following",
+      "summary": "Accounts a user follows",
+      "description": "Accounts a user follows, most recent first: username, display name and avatar. Counts are not part of this list; fetch a profile for them.",
+      "credits": 1,
+      "cacheable": true,
+      "batchable": true,
+      "constraints": [],
+      "params": [
+        {
+          "name": "handle",
+          "flag": "handle",
+          "type": "string",
+          "required": true,
+          "description": "Mixcloud username (spartacus), or a mixcloud.com profile URL"
+        },
+        {
+          "name": "limit",
+          "flag": "limit",
+          "type": "number",
+          "required": false,
+          "default": 20
+        },
+        {
+          "name": "cursor",
+          "flag": "cursor",
+          "type": "string",
+          "required": false,
+          "description": "`pagination.cursor` from the previous response"
+        },
+        {
+          "name": "cache_max_age",
+          "flag": "cache-max-age",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "include_raw",
+          "flag": "include-raw",
+          "type": "boolean",
+          "required": false
+        }
+      ]
+    },
+    {
+      "name": "mixcloud.userUploads",
+      "platform": "mixcloud",
+      "action": "user-uploads",
+      "path": "/v1/mixcloud/user/uploads",
+      "summary": "User uploads",
+      "description": "A user's public uploads, newest first, with plays, favourites, reposts and comments. Pass the `cursor` from the previous response to page.",
+      "credits": 1,
+      "cacheable": true,
+      "batchable": true,
+      "constraints": [],
+      "params": [
+        {
+          "name": "handle",
+          "flag": "handle",
+          "type": "string",
+          "required": true,
+          "description": "Mixcloud username (spartacus), or a mixcloud.com profile URL"
+        },
+        {
+          "name": "limit",
+          "flag": "limit",
+          "type": "number",
+          "required": false,
+          "default": 20
+        },
+        {
+          "name": "cursor",
+          "flag": "cursor",
+          "type": "string",
+          "required": false,
+          "description": "`pagination.cursor` from the previous response"
+        },
+        {
+          "name": "cache_max_age",
+          "flag": "cache-max-age",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "include_raw",
+          "flag": "include-raw",
+          "type": "boolean",
+          "required": false
+        }
+      ]
+    },
+    {
+      "name": "odysee.channel",
+      "platform": "odysee",
+      "action": "channel",
+      "path": "/v1/odysee/channel",
+      "summary": "Channel",
+      "description": "Public metadata for an Odysee channel: title, description, avatar, banner, subscriber count, number of videos, website and creation date.",
+      "credits": 1,
+      "cacheable": true,
+      "batchable": true,
+      "constraints": [],
+      "params": [
+        {
+          "name": "handle",
+          "flag": "handle",
+          "type": "string",
+          "required": true,
+          "description": "Channel name (@veritasium), name with claim suffix (@veritasium:f), or an odysee.com or lbry:// channel URL"
+        },
+        {
+          "name": "cache_max_age",
+          "flag": "cache-max-age",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "include_raw",
+          "flag": "include-raw",
+          "type": "boolean",
+          "required": false
+        }
+      ]
+    },
+    {
+      "name": "odysee.channelVideos",
+      "platform": "odysee",
+      "action": "channel-videos",
+      "path": "/v1/odysee/channel/videos",
+      "summary": "Channel videos",
+      "description": "An Odysee channel's videos, newest first, 50 per page, with view and like counts. Pass the `cursor` from the previous response to page.",
+      "credits": 1,
+      "cacheable": true,
+      "batchable": true,
+      "constraints": [],
+      "params": [
+        {
+          "name": "handle",
+          "flag": "handle",
+          "type": "string",
+          "required": true,
+          "description": "Channel name (@veritasium), name with claim suffix (@veritasium:f), or an odysee.com or lbry:// channel URL"
+        },
+        {
+          "name": "cursor",
+          "flag": "cursor",
+          "type": "string",
+          "required": false,
+          "description": "`pagination.cursor` from the previous response"
+        },
+        {
+          "name": "cache_max_age",
+          "flag": "cache-max-age",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "include_raw",
+          "flag": "include-raw",
+          "type": "boolean",
+          "required": false
+        }
+      ]
+    },
+    {
+      "name": "odysee.search",
+      "platform": "odysee",
+      "action": "search",
+      "path": "/v1/odysee/search",
+      "summary": "Search videos",
+      "description": "Odysee videos matching a keyword, in Odysee search order, 20 per page, with view and like counts.",
+      "credits": 1,
+      "cacheable": true,
+      "batchable": false,
+      "constraints": [],
+      "params": [
+        {
+          "name": "query",
+          "flag": "query",
+          "type": "string",
+          "required": true,
+          "description": "Keywords to search for"
+        },
+        {
+          "name": "cursor",
+          "flag": "cursor",
+          "type": "string",
+          "required": false,
+          "description": "`pagination.cursor` from the previous response"
+        },
+        {
+          "name": "cache_max_age",
+          "flag": "cache-max-age",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "include_raw",
+          "flag": "include-raw",
+          "type": "boolean",
+          "required": false
+        }
+      ]
+    },
+    {
+      "name": "odysee.video",
+      "platform": "odysee",
+      "action": "video",
+      "path": "/v1/odysee/video",
+      "summary": "Video details",
+      "description": "Public metadata for an Odysee video: title, description, duration, tags, release date, channel, and view, like and comment counts. Dislikes are in `raw.dislikeCount`.",
+      "credits": 1,
+      "cacheable": true,
+      "batchable": true,
+      "constraints": [],
+      "params": [
+        {
+          "name": "url",
+          "flag": "url",
+          "type": "string",
+          "required": true,
+          "description": "Odysee video URL (odysee.com/@channel:x/video-name:y), lbry:// URL, or 40-character claim id"
+        },
+        {
+          "name": "cache_max_age",
+          "flag": "cache-max-age",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "include_raw",
+          "flag": "include-raw",
+          "type": "boolean",
+          "required": false
+        }
+      ]
+    },
+    {
+      "name": "odysee.comments",
+      "platform": "odysee",
+      "action": "video-comments",
+      "path": "/v1/odysee/video/comments",
+      "summary": "Video comments",
+      "description": "Top-level comments on an Odysee video, 50 per page, with like and reply counts. Pass the `cursor` from the previous response to page.",
+      "credits": 1,
+      "cacheable": true,
+      "batchable": true,
+      "constraints": [],
+      "params": [
+        {
+          "name": "url",
+          "flag": "url",
+          "type": "string",
+          "required": true,
+          "description": "Odysee video URL (odysee.com/@channel:x/video-name:y), lbry:// URL, or 40-character claim id"
+        },
+        {
+          "name": "cursor",
+          "flag": "cursor",
+          "type": "string",
+          "required": false,
+          "description": "`pagination.cursor` from the previous response"
+        },
+        {
+          "name": "cache_max_age",
+          "flag": "cache-max-age",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "include_raw",
+          "flag": "include-raw",
+          "type": "boolean",
+          "required": false
+        }
+      ]
+    },
+    {
+      "name": "peertube.channel",
+      "platform": "peertube",
+      "action": "channel",
+      "path": "/v1/peertube/channel",
+      "summary": "Channel profile",
+      "description": "Public profile of a PeerTube channel, read from the instance that hosts it: followers, following, video count, avatar, banner and creation date.",
+      "credits": 1,
+      "cacheable": true,
+      "batchable": true,
+      "constraints": [],
+      "params": [
+        {
+          "name": "handle",
+          "flag": "handle",
+          "type": "string",
+          "required": true,
+          "description": "Channel as name@instance (blender_channel@video.blender.org) or a channel URL on its instance"
+        },
+        {
+          "name": "cache_max_age",
+          "flag": "cache-max-age",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "include_raw",
+          "flag": "include-raw",
+          "type": "boolean",
+          "required": false
+        }
+      ]
+    },
+    {
+      "name": "peertube.channelVideos",
+      "platform": "peertube",
+      "action": "channel-videos",
+      "path": "/v1/peertube/channel/videos",
+      "summary": "Channel videos",
+      "description": "A PeerTube channel's public videos, newest first, 50 per page. Tags are not included in list items; `peertube.video` returns them. Pass the `cursor` from the previous response to page.",
+      "credits": 1,
+      "cacheable": true,
+      "batchable": true,
+      "constraints": [],
+      "params": [
+        {
+          "name": "handle",
+          "flag": "handle",
+          "type": "string",
+          "required": true,
+          "description": "Channel as name@instance (blender_channel@video.blender.org) or a channel URL on its instance"
+        },
+        {
+          "name": "cursor",
+          "flag": "cursor",
+          "type": "string",
+          "required": false,
+          "description": "`pagination.cursor` from the previous response"
+        },
+        {
+          "name": "cache_max_age",
+          "flag": "cache-max-age",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "include_raw",
+          "flag": "include-raw",
+          "type": "boolean",
+          "required": false
+        }
+      ]
+    },
+    {
+      "name": "peertube.search",
+      "platform": "peertube",
+      "action": "search",
+      "path": "/v1/peertube/search",
+      "summary": "Search videos",
+      "description": "Search public videos across PeerTube instances through Sepia Search, the PeerTube project's index, 50 per page. Covers the instances Sepia indexes, not every server.",
+      "credits": 1,
+      "cacheable": true,
+      "batchable": true,
+      "constraints": [],
+      "params": [
+        {
+          "name": "query",
+          "flag": "query",
+          "type": "string",
+          "required": true,
+          "description": "Search terms"
+        },
+        {
+          "name": "cursor",
+          "flag": "cursor",
+          "type": "string",
+          "required": false,
+          "description": "`pagination.cursor` from the previous response"
+        },
+        {
+          "name": "cache_max_age",
+          "flag": "cache-max-age",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "include_raw",
+          "flag": "include-raw",
+          "type": "boolean",
+          "required": false
+        }
+      ]
+    },
+    {
+      "name": "peertube.video",
+      "platform": "peertube",
+      "action": "video",
+      "path": "/v1/peertube/video",
+      "summary": "Video details",
+      "description": "Public metadata for a PeerTube video: views, likes, comment count, duration, tags, publish date and channel.",
+      "credits": 1,
+      "cacheable": true,
+      "batchable": true,
+      "constraints": [],
+      "params": [
+        {
+          "name": "url",
+          "flag": "url",
+          "type": "string",
+          "required": true,
+          "description": "Video URL (https://video.blender.org/w/9UhsEGd8vM4PTtg6bphpEM) or <video id>@<instance>"
+        },
+        {
+          "name": "cache_max_age",
+          "flag": "cache-max-age",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "include_raw",
+          "flag": "include-raw",
+          "type": "boolean",
+          "required": false
+        }
+      ]
+    },
+    {
+      "name": "peertube.comments",
+      "platform": "peertube",
+      "action": "video-comments",
+      "path": "/v1/peertube/video/comments",
+      "summary": "Video comments",
+      "description": "Top-level comments on a PeerTube video, newest first, 100 per page, including those posted from other fediverse servers. `replyCount` gives each thread's replies; `peertube.commentReplies` returns them.",
+      "credits": 1,
+      "cacheable": true,
+      "batchable": true,
+      "constraints": [],
+      "params": [
+        {
+          "name": "url",
+          "flag": "url",
+          "type": "string",
+          "required": true,
+          "description": "Video URL (https://video.blender.org/w/9UhsEGd8vM4PTtg6bphpEM) or <video id>@<instance>"
+        },
+        {
+          "name": "cursor",
+          "flag": "cursor",
+          "type": "string",
+          "required": false,
+          "description": "`pagination.cursor` from the previous response"
+        },
+        {
+          "name": "cache_max_age",
+          "flag": "cache-max-age",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "include_raw",
+          "flag": "include-raw",
+          "type": "boolean",
+          "required": false
+        }
+      ]
+    },
+    {
+      "name": "peertube.commentReplies",
+      "platform": "peertube",
+      "action": "video-comments-replies",
+      "path": "/v1/peertube/video/comments/replies",
+      "summary": "Comment replies",
+      "description": "Every reply under one top-level comment on a PeerTube video, nested replies included, each with `parentId` naming the comment it answers.",
+      "credits": 1,
+      "cacheable": true,
+      "batchable": true,
+      "constraints": [],
+      "params": [
+        {
+          "name": "url",
+          "flag": "url",
+          "type": "string",
+          "required": true,
+          "description": "Video URL (https://video.blender.org/w/9UhsEGd8vM4PTtg6bphpEM) or <video id>@<instance>"
+        },
+        {
+          "name": "commentId",
+          "flag": "commentId",
+          "type": "string",
+          "required": true,
+          "description": "`id` of a top-level comment from `peertube.comments`"
+        },
+        {
+          "name": "cache_max_age",
+          "flag": "cache-max-age",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "include_raw",
+          "flag": "include-raw",
+          "type": "boolean",
+          "required": false
+        }
+      ]
+    },
+    {
+      "name": "peertube.transcript",
+      "platform": "peertube",
+      "action": "video-transcript",
+      "path": "/v1/peertube/video/transcript",
+      "summary": "Video transcript",
+      "description": "A PeerTube video's captions as one text block plus timed cues. Returns the requested language when the video has it, otherwise the first track. `isAutoGenerated` says whether the instance transcribed it automatically.",
+      "credits": 1,
+      "cacheable": true,
+      "batchable": true,
+      "constraints": [],
+      "params": [
+        {
+          "name": "url",
+          "flag": "url",
+          "type": "string",
+          "required": true,
+          "description": "Video URL (https://video.blender.org/w/9UhsEGd8vM4PTtg6bphpEM) or <video id>@<instance>"
+        },
+        {
+          "name": "language",
+          "flag": "language",
+          "type": "string",
+          "required": false,
+          "description": "Language code, e.g. \"en\""
         },
         {
           "name": "cache_max_age",
@@ -6109,6 +7921,185 @@
       ]
     },
     {
+      "name": "substack.comments",
+      "platform": "substack",
+      "action": "comments",
+      "path": "/v1/substack/comments",
+      "summary": "Post comments",
+      "description": "Every public comment on a Substack post, replies included, newest first; `parentId` links a reply to its comment. Comments a publication shows only to paid subscribers are not available.",
+      "credits": 1,
+      "cacheable": true,
+      "batchable": true,
+      "constraints": [],
+      "params": [
+        {
+          "name": "id",
+          "flag": "id",
+          "type": "string",
+          "required": true,
+          "description": "Numeric post id, as returned in `id` by `substack.posts`"
+        },
+        {
+          "name": "cache_max_age",
+          "flag": "cache-max-age",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "include_raw",
+          "flag": "include-raw",
+          "type": "boolean",
+          "required": false
+        }
+      ]
+    },
+    {
+      "name": "substack.post",
+      "platform": "substack",
+      "action": "post",
+      "path": "/v1/substack/post",
+      "summary": "Post",
+      "description": "One Substack post with its text, reactions, comments, restacks and word count. For a subscriber-only post, `text` is the public preview and `truncated` is true.",
+      "credits": 1,
+      "cacheable": true,
+      "batchable": true,
+      "constraints": [],
+      "params": [
+        {
+          "name": "id",
+          "flag": "id",
+          "type": "string",
+          "required": true,
+          "description": "Numeric post id, as returned in `id` by `substack.posts`"
+        },
+        {
+          "name": "cache_max_age",
+          "flag": "cache-max-age",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "include_raw",
+          "flag": "include-raw",
+          "type": "boolean",
+          "required": false
+        }
+      ]
+    },
+    {
+      "name": "substack.posts",
+      "platform": "substack",
+      "action": "posts",
+      "path": "/v1/substack/posts",
+      "summary": "Publication posts",
+      "description": "A publication's posts, newest first, with reactions, comments, restacks and word count. Substack shows no view counts. Pass the `cursor` from the previous response to page.",
+      "credits": 1,
+      "cacheable": true,
+      "batchable": true,
+      "constraints": [],
+      "params": [
+        {
+          "name": "publication",
+          "flag": "publication",
+          "type": "string",
+          "required": true,
+          "description": "The publication: its name on Substack (garymarcus), its host (garymarcus.substack.com or www.lennysnewsletter.com), or any URL on it"
+        },
+        {
+          "name": "limit",
+          "flag": "limit",
+          "type": "number",
+          "required": false,
+          "default": 20
+        },
+        {
+          "name": "cursor",
+          "flag": "cursor",
+          "type": "string",
+          "required": false,
+          "description": "`pagination.cursor` from the previous response"
+        },
+        {
+          "name": "cache_max_age",
+          "flag": "cache-max-age",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "include_raw",
+          "flag": "include-raw",
+          "type": "boolean",
+          "required": false
+        }
+      ]
+    },
+    {
+      "name": "substack.profile",
+      "platform": "substack",
+      "action": "profile",
+      "path": "/v1/substack/profile",
+      "summary": "Profile",
+      "description": "A Substack writer's public profile: followers, bio, links, and their main publication. Subscribers appear only as Substack's rounded badge.",
+      "credits": 1,
+      "cacheable": true,
+      "batchable": true,
+      "constraints": [],
+      "params": [
+        {
+          "name": "handle",
+          "flag": "handle",
+          "type": "string",
+          "required": true,
+          "description": "Substack handle (lenny), @handle, or a substack.com/@handle URL"
+        },
+        {
+          "name": "cache_max_age",
+          "flag": "cache-max-age",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "include_raw",
+          "flag": "include-raw",
+          "type": "boolean",
+          "required": false
+        }
+      ]
+    },
+    {
+      "name": "substack.publication",
+      "platform": "substack",
+      "action": "publication",
+      "path": "/v1/substack/publication",
+      "summary": "Publication",
+      "description": "A Substack publication: name, description, author, custom domain, whether it sells paid plans, and its rounded subscriber badge. Custom domains are accepted.",
+      "credits": 1,
+      "cacheable": true,
+      "batchable": true,
+      "constraints": [],
+      "params": [
+        {
+          "name": "publication",
+          "flag": "publication",
+          "type": "string",
+          "required": true,
+          "description": "The publication: its name on Substack (garymarcus), its host (garymarcus.substack.com or www.lennysnewsletter.com), or any URL on it"
+        },
+        {
+          "name": "cache_max_age",
+          "flag": "cache-max-age",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "include_raw",
+          "flag": "include-raw",
+          "type": "boolean",
+          "required": false
+        }
+      ]
+    },
+    {
       "name": "taplink.page",
       "platform": "taplink",
       "action": "page",
@@ -6784,53 +8775,6 @@
       ]
     },
     {
-      "name": "tiktok.following",
-      "platform": "tiktok",
-      "action": "following",
-      "path": "/v1/tiktok/following",
-      "summary": "Accounts a creator follows",
-      "description": "The accounts a TikTok creator follows, newest first. Hidden entirely when the creator has set their following list to private. Requires a configured TikTok signer.",
-      "credits": 1,
-      "cacheable": true,
-      "batchable": true,
-      "constraints": [],
-      "params": [
-        {
-          "name": "handle",
-          "flag": "handle",
-          "type": "string",
-          "required": true,
-          "description": "Handle (@nike), or a full tiktok.com profile URL"
-        },
-        {
-          "name": "count",
-          "flag": "count",
-          "type": "number",
-          "required": false,
-          "description": "Items per page (default 30, max 50)"
-        },
-        {
-          "name": "cursor",
-          "flag": "cursor",
-          "type": "string",
-          "required": false,
-          "description": "`pagination.cursor` from a previous response"
-        },
-        {
-          "name": "cache_max_age",
-          "flag": "cache-max-age",
-          "type": "string",
-          "required": false
-        },
-        {
-          "name": "include_raw",
-          "flag": "include-raw",
-          "type": "boolean",
-          "required": false
-        }
-      ]
-    },
-    {
       "name": "tiktok.hashtag",
       "platform": "tiktok",
       "action": "hashtag",
@@ -7162,81 +9106,6 @@
       ]
     },
     {
-      "name": "tiktok.searchKeyword",
-      "platform": "tiktok",
-      "action": "search-keyword",
-      "path": "/v1/tiktok/search/keyword",
-      "summary": "Search videos by keyword",
-      "description": "TikToks matching a search term, with the same normalised engagement fields as every other post endpoint. `sort_by` and `date_posted` map onto TikTok's own search filters. Requires a configured TikTok signer.",
-      "credits": 1,
-      "cacheable": true,
-      "batchable": true,
-      "constraints": [],
-      "params": [
-        {
-          "name": "query",
-          "flag": "query",
-          "type": "string",
-          "required": true,
-          "description": "Search term"
-        },
-        {
-          "name": "sort_by",
-          "flag": "sort-by",
-          "type": "string",
-          "required": false,
-          "enum": [
-            "relevance",
-            "most_liked"
-          ],
-          "default": "relevance",
-          "description": "TikTok's own two search orderings"
-        },
-        {
-          "name": "date_posted",
-          "flag": "date-posted",
-          "type": "string",
-          "required": false,
-          "enum": [
-            "all",
-            "yesterday",
-            "week",
-            "month",
-            "three_months",
-            "six_months"
-          ],
-          "default": "all",
-          "description": "Restrict to videos posted within this window"
-        },
-        {
-          "name": "count",
-          "flag": "count",
-          "type": "number",
-          "required": false,
-          "description": "Items per page (default 12, max 30)"
-        },
-        {
-          "name": "cursor",
-          "flag": "cursor",
-          "type": "string",
-          "required": false,
-          "description": "`pagination.cursor` from a previous response"
-        },
-        {
-          "name": "cache_max_age",
-          "flag": "cache-max-age",
-          "type": "string",
-          "required": false
-        },
-        {
-          "name": "include_raw",
-          "flag": "include-raw",
-          "type": "boolean",
-          "required": false
-        }
-      ]
-    },
-    {
       "name": "tiktok.searchSuggestions",
       "platform": "tiktok",
       "action": "search-suggestions",
@@ -7254,100 +9123,6 @@
           "type": "string",
           "required": true,
           "description": "Partial search term"
-        },
-        {
-          "name": "cache_max_age",
-          "flag": "cache-max-age",
-          "type": "string",
-          "required": false
-        },
-        {
-          "name": "include_raw",
-          "flag": "include-raw",
-          "type": "boolean",
-          "required": false
-        }
-      ]
-    },
-    {
-      "name": "tiktok.searchTop",
-      "platform": "tiktok",
-      "action": "search-top",
-      "path": "/v1/tiktok/search/top",
-      "summary": "Top (blended) search",
-      "description": "TikTok's blended \"Top\" search tab: the highest-ranked videos AND accounts for a query, returned as two typed lists. Requires a configured TikTok signer.",
-      "credits": 1,
-      "cacheable": true,
-      "batchable": true,
-      "constraints": [],
-      "params": [
-        {
-          "name": "query",
-          "flag": "query",
-          "type": "string",
-          "required": true,
-          "description": "Search terms"
-        },
-        {
-          "name": "count",
-          "flag": "count",
-          "type": "number",
-          "required": false,
-          "description": "Items per page (default 12, max 30)"
-        },
-        {
-          "name": "cursor",
-          "flag": "cursor",
-          "type": "string",
-          "required": false,
-          "description": "`pagination.cursor` from a previous response"
-        },
-        {
-          "name": "cache_max_age",
-          "flag": "cache-max-age",
-          "type": "string",
-          "required": false
-        },
-        {
-          "name": "include_raw",
-          "flag": "include-raw",
-          "type": "boolean",
-          "required": false
-        }
-      ]
-    },
-    {
-      "name": "tiktok.searchUsers",
-      "platform": "tiktok",
-      "action": "search-users",
-      "path": "/v1/tiktok/search/users",
-      "summary": "Search creators",
-      "description": "TikTok accounts matching a query, with follower counts and verification. Requires a configured TikTok signer.",
-      "credits": 1,
-      "cacheable": true,
-      "batchable": true,
-      "constraints": [],
-      "params": [
-        {
-          "name": "query",
-          "flag": "query",
-          "type": "string",
-          "required": true,
-          "description": "Search term"
-        },
-        {
-          "name": "count",
-          "flag": "count",
-          "type": "number",
-          "required": false,
-          "description": "Items per page (default 12, max 30)"
-        },
-        {
-          "name": "cursor",
-          "flag": "cursor",
-          "type": "string",
-          "required": false,
-          "description": "`pagination.cursor` from a previous response"
         },
         {
           "name": "cache_max_age",

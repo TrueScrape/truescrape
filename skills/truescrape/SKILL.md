@@ -265,7 +265,7 @@ LinkedIn's under `/v1/linkedin/ads/search`.
 ## Endpoint catalogue
 
 <!-- catalogue:start -->
-206 endpoints across 37 platforms, generated from the live API on 2026-10-15.
+251 endpoints across 45 platforms, generated from the live API on 2026-10-30.
 
 ### amazon (4)
 
@@ -285,6 +285,15 @@ LinkedIn's under `/v1/linkedin/ads/search`.
 | `GET /v1/apple-music/search` | `truescrape apple-music search --query` | 1 | Search |
 | `GET /v1/apple-music/track` | `truescrape apple-music track --id` | 1 | Track details |
 
+### bitchute (4)
+
+| Endpoint | CLI | Credits | What it returns |
+|---|---|---|---|
+| `GET /v1/bitchute/channel` | `truescrape bitchute channel --channel` | 1 | Channel profile |
+| `GET /v1/bitchute/channel/videos` | `truescrape bitchute channel-videos --channel` | 1 | Channel videos |
+| `GET /v1/bitchute/search` | `truescrape bitchute search --query` | 1 | Search videos |
+| `GET /v1/bitchute/video` | `truescrape bitchute video --url` | 1 | Video details |
+
 ### bluesky (3)
 
 | Endpoint | CLI | Credits | What it returns |
@@ -292,6 +301,32 @@ LinkedIn's under `/v1/linkedin/ads/search`.
 | `GET /v1/bluesky/post` | `truescrape bluesky post --url` | 1 | Post |
 | `GET /v1/bluesky/profile` | `truescrape bluesky profile --handle` | 1 | Profile |
 | `GET /v1/bluesky/user/posts` | `truescrape bluesky user-posts --handle` | 1 | User posts |
+
+### dailymotion (5)
+
+| Endpoint | CLI | Credits | What it returns |
+|---|---|---|---|
+| `GET /v1/dailymotion/channel` | `truescrape dailymotion channel --handle` | 1 | Channel profile |
+| `GET /v1/dailymotion/channel/videos` | `truescrape dailymotion channel-videos --handle` | 1 | Channel videos |
+| `GET /v1/dailymotion/search` | `truescrape dailymotion search --query` | 1 | Search videos |
+| `GET /v1/dailymotion/video` | `truescrape dailymotion video --url` | 1 | Video details |
+| `GET /v1/dailymotion/video/transcript` | `truescrape dailymotion video-transcript --url` | 1 | Video transcript |
+
+### deezer (11)
+
+| Endpoint | CLI | Credits | What it returns |
+|---|---|---|---|
+| `GET /v1/deezer/album` | `truescrape deezer album --id` | 1 | Album details |
+| `GET /v1/deezer/artist` | `truescrape deezer artist --id` | 1 | Artist profile |
+| `GET /v1/deezer/artist/albums` | `truescrape deezer artist-albums --id` | 1 | Artist albums |
+| `GET /v1/deezer/artist/top-tracks` | `truescrape deezer artist-top-tracks --id` | 1 | Artist top tracks |
+| `GET /v1/deezer/charts` | `truescrape deezer charts` | 1 | Charts |
+| `GET /v1/deezer/playlist` | `truescrape deezer playlist --id` | 1 | Playlist contents |
+| `GET /v1/deezer/podcast` | `truescrape deezer podcast --id` | 1 | Podcast details |
+| `GET /v1/deezer/podcast/episodes` | `truescrape deezer podcast-episodes --id` | 1 | Podcast episodes |
+| `GET /v1/deezer/search` | `truescrape deezer search --query` | 1 | Search |
+| `GET /v1/deezer/track` | `truescrape deezer track --id` | 1 | Track details |
+| `GET /v1/deezer/user/playlists` | `truescrape deezer user-playlists --id` | 1 | User playlists |
 
 ### ebay (2)
 
@@ -442,11 +477,55 @@ LinkedIn's under `/v1/linkedin/ads/search`.
 |---|---|---|---|
 | `GET /v1/linktree` | `truescrape linktree page --url` | 1 | Linktree page |
 
+### mastodon (4)
+
+| Endpoint | CLI | Credits | What it returns |
+|---|---|---|---|
+| `GET /v1/mastodon/post` | `truescrape mastodon post --url` | 1 | Post |
+| `GET /v1/mastodon/post/replies` | `truescrape mastodon post-replies --url` | 1 | Post replies |
+| `GET /v1/mastodon/profile` | `truescrape mastodon profile --handle` | 1 | Profile |
+| `GET /v1/mastodon/user/posts` | `truescrape mastodon user-posts --handle` | 1 | User posts |
+
 ### milkshake (1)
 
 | Endpoint | CLI | Credits | What it returns |
 |---|---|---|---|
 | `GET /v1/milkshake` | `truescrape milkshake page --url` | 1 | Milkshake page |
+
+### mixcloud (8)
+
+| Endpoint | CLI | Credits | What it returns |
+|---|---|---|---|
+| `GET /v1/mixcloud/profile` | `truescrape mixcloud profile --handle` | 1 | Profile |
+| `GET /v1/mixcloud/search` | `truescrape mixcloud search --query` | 1 | Search |
+| `GET /v1/mixcloud/tag` | `truescrape mixcloud tag --tag` | 1 | Popular uploads for a tag |
+| `GET /v1/mixcloud/upload` | `truescrape mixcloud upload --handle --slug` | 1 | Upload details |
+| `GET /v1/mixcloud/upload/comments` | `truescrape mixcloud upload-comments --handle --slug` | 1 | Upload comments |
+| `GET /v1/mixcloud/user/followers` | `truescrape mixcloud user-followers --handle` | 1 | User followers |
+| `GET /v1/mixcloud/user/following` | `truescrape mixcloud user-following --handle` | 1 | Accounts a user follows |
+| `GET /v1/mixcloud/user/uploads` | `truescrape mixcloud user-uploads --handle` | 1 | User uploads |
+
+### odysee (5)
+
+| Endpoint | CLI | Credits | What it returns |
+|---|---|---|---|
+| `GET /v1/odysee/channel` | `truescrape odysee channel --handle` | 1 | Channel |
+| `GET /v1/odysee/channel/videos` | `truescrape odysee channel-videos --handle` | 1 | Channel videos |
+| `GET /v1/odysee/search` | `truescrape odysee search --query` | 1 | Search videos |
+| `GET /v1/odysee/video` | `truescrape odysee video --url` | 1 | Video details |
+| `GET /v1/odysee/video/comments` | `truescrape odysee video-comments --url` | 1 | Video comments |
+
+### peertube (7)
+
+| Endpoint | CLI | Credits | What it returns |
+|---|---|---|---|
+| `GET /v1/peertube/channel` | `truescrape peertube channel --handle` | 1 | Channel profile |
+| `GET /v1/peertube/channel/videos` | `truescrape peertube channel-videos --handle` | 1 | Channel videos |
+| `GET /v1/peertube/search` | `truescrape peertube search --query` | 1 | Search videos |
+| `GET /v1/peertube/video` | `truescrape peertube video --url` | 1 | Video details |
+| `GET /v1/peertube/video/comments` | `truescrape peertube video-comments --url` | 1 | Video comments |
+| `GET /v1/peertube/video/comments/replies` | `truescrape peertube video-comments-replies --url --commentId` | 1 | Comment replies |
+| `GET /v1/peertube/video/transcript` | `truescrape peertube video-transcript --url` | 1 | Video transcript |
 
 ### pillar (1)
 
@@ -530,6 +609,16 @@ LinkedIn's under `/v1/linkedin/ads/search`.
 | `GET /v1/spotify/search` | `truescrape spotify search --query` | 1 | Search |
 | `GET /v1/spotify/track` | `truescrape spotify track --id` | 1 | Track details |
 
+### substack (5)
+
+| Endpoint | CLI | Credits | What it returns |
+|---|---|---|---|
+| `GET /v1/substack/comments` | `truescrape substack comments --id` | 1 | Post comments |
+| `GET /v1/substack/post` | `truescrape substack post --id` | 1 | Post |
+| `GET /v1/substack/posts` | `truescrape substack posts --publication` | 1 | Publication posts |
+| `GET /v1/substack/profile` | `truescrape substack profile --handle` | 1 | Profile |
+| `GET /v1/substack/publication` | `truescrape substack publication --publication` | 1 | Publication |
+
 ### taplink (1)
 
 | Endpoint | CLI | Credits | What it returns |
@@ -554,7 +643,7 @@ LinkedIn's under `/v1/linkedin/ads/search`.
 | `GET /v1/threads/search/users` | `truescrape threads search-users --query` | 1 | Search users |
 | `GET /v1/threads/user/posts` | `truescrape threads user-posts --handle` | 1 | User posts |
 
-### tiktok (32)
+### tiktok (28)
 
 | Endpoint | CLI | Credits | What it returns |
 |---|---|---|---|
@@ -565,7 +654,6 @@ LinkedIn's under `/v1/linkedin/ads/search`.
 | `GET /v1/tiktok/comments` | `truescrape tiktok comments --url` | 1 | Comments on a video |
 | `GET /v1/tiktok/creators/popular` | `truescrape tiktok creators-popular` | 1 | Popular creators |
 | `GET /v1/tiktok/followers` | `truescrape tiktok followers --handle` | 1 | Accounts following a creator |
-| `GET /v1/tiktok/following` | `truescrape tiktok following --handle` | 1 | Accounts a creator follows |
 | `GET /v1/tiktok/hashtag` | `truescrape tiktok hashtag --hashtag` | 1 | Hashtag details |
 | `GET /v1/tiktok/hashtag-videos` | `truescrape tiktok hashtag-videos --hashtag` | 1 | Videos using a hashtag |
 | `GET /v1/tiktok/live` | `truescrape tiktok live` | 1 | Live stream info |
@@ -574,10 +662,7 @@ LinkedIn's under `/v1/linkedin/ads/search`.
 | `GET /v1/tiktok/product` | `truescrape tiktok product --url` | 1 | Product details |
 | `GET /v1/tiktok/profile` | `truescrape tiktok profile --handle` | 1 | Profile details |
 | `GET /v1/tiktok/profile/region` | `truescrape tiktok profile-region` | 1 | Creator region |
-| `GET /v1/tiktok/search/keyword` | `truescrape tiktok search-keyword --query` | 1 | Search videos by keyword |
 | `GET /v1/tiktok/search/suggestions` | `truescrape tiktok search-suggestions --query` | 1 | Search suggestions |
-| `GET /v1/tiktok/search/top` | `truescrape tiktok search-top --query` | 1 | Top (blended) search |
-| `GET /v1/tiktok/search/users` | `truescrape tiktok search-users --query` | 1 | Search creators |
 | `GET /v1/tiktok/shop/product/reviews` | `truescrape tiktok shop-product-reviews --url` | 1 | Product reviews |
 | `GET /v1/tiktok/shop/products` | `truescrape tiktok shop-products --url` | 1 | Seller's product catalogue |
 | `GET /v1/tiktok/shop/search` | `truescrape tiktok shop-search --query` | 1 | Search TikTok Shop |

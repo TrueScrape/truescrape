@@ -1,9 +1,39 @@
 # TrueScrape
 
-Public social media data from one API: profiles, posts, videos, comments,
-transcripts, ad libraries and metrics across every platform in the catalogue,
-in one schema. This repository holds the three ways to plug it into your
-tools and your agents.
+[![npm](https://img.shields.io/npm/v/truescrape)](https://www.npmjs.com/package/truescrape)
+[![downloads](https://img.shields.io/npm/dm/truescrape)](https://www.npmjs.com/package/truescrape)
+[![MCP](https://img.shields.io/badge/MCP-remote%20server-blue)](#mcp-server)
+[![license](https://img.shields.io/npm/l/truescrape)](LICENSE)
+
+Public social media data from one API: Instagram, TikTok, YouTube, X,
+Facebook, LinkedIn, Reddit, Threads and more. Profiles, posts, videos,
+comments, transcripts, ad libraries and metrics, all in one schema. Use it
+from the terminal, from scripts, or as an MCP server for Claude, Cursor and
+VS Code.
+
+- **1,000 free credits on signup**, no card. Most requests cost 1 credit.
+- **Failed and empty requests are never charged**, and cache hits cost 0.
+- **Credits never expire.** No subscription; packs from $25 for 20,000 credits.
+
+```console
+$ truescrape instagram profile --handle natgeo --pretty
+{
+  "platform": "instagram",
+  "id": "787132",
+  "handle": "natgeo",
+  "displayName": "National Geographic",
+  …
+  "verified": true,
+  "followerCount": 268245801,
+  "followingCount": 195,
+  "postCount": 32000,
+  …
+}
+1 credit · live fetch · 1204 ms · req_…
+```
+
+This repository holds the three ways to plug it into your tools and your
+agents.
 
 | | Install | Best for |
 |---|---|---|
@@ -12,9 +42,9 @@ tools and your agents.
 | **Agent skill** | `npx skills add TrueScrape/truescrape` | Teaching Claude Code, Cursor, Codex, Copilot, Gemini CLI or Windsurf how to use the API well |
 
 <!-- catalogue:start -->
-**206 endpoints across 37 platforms**, generated from the live API on 2026-10-15.
+**251 endpoints across 45 platforms**, generated from the live API on 2026-10-30.
 
-tiktok (32) · facebook (22) · instagram (19) · youtube (17) · github (10) · reddit (9) · google (8) · linkedin (8) · spotify (7) · twitter (6) · rumble (5) · threads (5) · amazon (4) · apple-music (4) · pinterest (4) · redfin (4) · twitch (4) · walmart (4) · bluesky (3) · kwai (3) · snapchat (3) · soundcloud (3) · telegram (3) · truthsocial (3) · zillow (3) · ebay (2) · identity (1) · inference (1) · kick (1) · komi (1) · linkbio (1) · linkme (1) · linktree (1) · milkshake (1) · pillar (1) · solo (1) · taplink (1)
+tiktok (28) · facebook (22) · instagram (19) · youtube (17) · deezer (11) · github (10) · reddit (9) · google (8) · linkedin (8) · mixcloud (8) · peertube (7) · spotify (7) · twitter (6) · dailymotion (5) · odysee (5) · rumble (5) · substack (5) · threads (5) · amazon (4) · apple-music (4) · bitchute (4) · mastodon (4) · pinterest (4) · redfin (4) · twitch (4) · walmart (4) · bluesky (3) · kwai (3) · snapchat (3) · soundcloud (3) · telegram (3) · truthsocial (3) · zillow (3) · ebay (2) · identity (1) · inference (1) · kick (1) · komi (1) · linkbio (1) · linkme (1) · linktree (1) · milkshake (1) · pillar (1) · solo (1) · taplink (1)
 <!-- catalogue:end -->
 
 Get a key at [truescrape.com/dashboard](https://truescrape.com/dashboard).
