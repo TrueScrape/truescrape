@@ -1,3 +1,8 @@
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="https://truescrape.com/brand/truescrape-logo-transparent-for-dark-bg.png">
+  <img alt="TrueScrape" src="https://truescrape.com/brand/truescrape-logo-transparent-for-light-bg.png" width="280">
+</picture>
+
 # TrueScrape
 
 [![npm](https://img.shields.io/npm/v/truescrape)](https://www.npmjs.com/package/truescrape)

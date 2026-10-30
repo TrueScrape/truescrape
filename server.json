@@ -9,6 +9,9 @@
   },
   "version": "0.4.1",
   "websiteUrl": "https://truescrape.com/docs",
+  "icons": [
+    { "src": "https://truescrape.com/brand/truescrape-mark-dark.png", "mimeType": "image/png", "sizes": ["1024x1024"] }
+  ],
   "remotes": [
     {
       "type": "streamable-http",
