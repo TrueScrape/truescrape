@@ -51,6 +51,18 @@ afterEach(() => {
 });
 
 describe('truescrape mcp', () => {
+  it('names the agent on every request after initialize, and on none before it', async () => {
+    const ping = '{"jsonrpc":"2.0","id":0,"method":"ping"}';
+    const init = '{"jsonrpc":"2.0","id":1,"method":"initialize","params":{"clientInfo":{"name":"claude-code","version":"2.1.0"}}}';
+    const list = '{"jsonrpc":"2.0","id":2,"method":"tools/list"}';
+    const { fetchImpl, calls } = stub(() => json({ jsonrpc: '2.0', id: 1, result: {} }));
+
+    await bridge([ping, init, list], fetchImpl);
+
+    const sent = calls.map((c) => (c.init.headers as Record<string, string>)['x-truescrape-mcp-client']);
+    expect(sent).toEqual([undefined, 'claude-code/2.1.0', 'claude-code/2.1.0']);
+  });
+
   it('posts an initialize request verbatim with the key and echoes the result as one line', async () => {
     const request = '{"jsonrpc":"2.0","id":1,"method":"initialize","params":{"protocolVersion":"2025-06-18"}}';
     const result = { jsonrpc: '2.0', id: 1, result: { protocolVersion: '2025-06-18', serverInfo: { name: 'truescrape' } } };

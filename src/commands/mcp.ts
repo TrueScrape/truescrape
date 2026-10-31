@@ -81,10 +81,29 @@ function failureFrom(status: number, body: string, baseUrl: string): Failure {
  * One stdin line in, one stdout line (or nothing) out. Pure apart from the
  * request itself, so the shaping rules are testable without a process.
  */
-export async function bridgeLine(line: string, client: Client, baseUrl: string, warn: (text: string) => void = () => {}, path = '/mcp'): Promise<string | null> {
+/** What the bridge learned from the agent's `initialize`, sent on every request
+ *  after it so the server can tell which agent uses the bridge. */
+export interface BridgeSession { mcpClient?: string }
+
+function agentName(line: string): string | undefined {
+  try {
+    const info = (JSON.parse(line) as { method?: string; params?: { clientInfo?: { name?: unknown; version?: unknown } } });
+    if (info.method !== 'initialize' || typeof info.params?.clientInfo?.name !== 'string') return undefined;
+    const { name, version } = info.params.clientInfo;
+    return typeof version === 'string' ? `${name}/${version}` : name;
+  } catch {
+    return undefined;
+  }
+}
+
+export async function bridgeLine(line: string, client: Client, baseUrl: string, warn: (text: string) => void = () => {}, path = '/mcp', session: BridgeSession = {}): Promise<string | null> {
+  session.mcpClient = agentName(line) ?? session.mcpClient;
   let response: Response;
   try {
-    response = await client.raw('POST', path, line, { 'content-type': 'application/json' });
+    response = await client.raw('POST', path, line, {
+      'content-type': 'application/json',
+      ...(session.mcpClient ? { 'x-truescrape-mcp-client': session.mcpClient } : {}),
+    });
   } catch (err) {
     if (!(err instanceof NetworkError)) throw err;
     warn(`network: ${err.message}`);
@@ -119,11 +138,12 @@ export async function runBridge(ctx: Context, stdin: NodeJS.ReadableStream, stdo
   warn(`bridging stdio to ${baseUrl}${path}`);
 
   // The async iterator hands over one line at a time, which is what keeps responses in request order.
+  const session: BridgeSession = {};
   const lines = createInterface({ input: stdin, crlfDelay: Infinity, terminal: false });
   for await (const raw of lines) {
     const line = raw.trim();
     if (!line) continue;
-    const out = await bridgeLine(line, ctx.client, baseUrl, warn, path);
+    const out = await bridgeLine(line, ctx.client, baseUrl, warn, path, session);
     if (out !== null) stdout.write(`${out}\n`);
   }
 }
