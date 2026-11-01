@@ -31,7 +31,11 @@ interface AddOptions {
   project?: boolean;
   dryRun?: boolean;
   platforms?: string;
+  all?: boolean;
 }
+
+/** What a plain `agent add` installs: every tool at once costs an agent most of its context before it starts. */
+export const DEFAULT_PLATFORMS = 'youtube,tiktok,instagram,reddit,threads,bluesky,hackernews,amazon,walmart';
 
 /** Lowercased, trimmed, de-duplicated; the server owns the list of valid ids and says which are not. */
 export function normalisePlatforms(raw: string | undefined): string | undefined {
@@ -155,7 +159,7 @@ export function rehost(endpoint: string, baseUrl: string): string {
   }
 }
 
-async function discover(ctx: Context, platforms?: string): Promise<Discovery> {
+async function discover(ctx: Context, platforms?: string, onRejected = ''): Promise<Discovery> {
   const path = withPlatforms(DISCOVERY_PATH, platforms);
   const url = `${ctx.client.baseUrl}${path}`;
   const refuse = (reason: string) => new UsageError(`Could not read ${url}; refusing to write a config from memory. (${reason})`);
@@ -169,7 +173,7 @@ async function discover(ctx: Context, platforms?: string): Promise<Discovery> {
   if (!response.ok) {
     // The server names an unknown platform and lists the valid ones; pass that on verbatim.
     const message = await response.json().then((b) => (b as { error?: { message?: unknown } })?.error?.message, () => undefined);
-    throw refuse(typeof message === 'string' ? message : `HTTP ${response.status}`);
+    throw refuse(`${typeof message === 'string' ? message : `HTTP ${response.status}`}${response.status === 400 ? onRejected : ''}`);
   }
 
   let body: unknown;
@@ -230,8 +234,16 @@ async function add(ctx: Context, target: string, opts: AddOptions, overrides: Ag
   const platform = overrides.platform ?? process.platform;
   const home = overrides.home ?? homedir();
   const cwd = overrides.cwd ?? process.cwd();
-  const platforms = normalisePlatforms(opts.platforms);
-  const discovery = await discover(ctx, platforms);
+  if (opts.all && opts.platforms !== undefined) throw new UsageError('Pass --all or --platforms, not both: --all loads every tool and --platforms narrows them.');
+  const chosen = normalisePlatforms(opts.platforms);
+  const usingDefault = !opts.all && !chosen;
+  const platforms = opts.all ? undefined : (chosen ?? DEFAULT_PLATFORMS);
+  const discovery = await discover(ctx, platforms, usingDefault ? ' That list is the default toolset, which you did not choose: pass --all, or --platforms with the ones you want.' : '');
+  const noteToolset = () => {
+    if (usingDefault && !ctx.output.quiet) {
+      ctx.streams.stderr(`Installed the default toolset: ${DEFAULT_PLATFORMS}. Add others with --platforms a,b, or every tool with --all. From the agent, explore_tools reaches the rest.\n`);
+    }
+  };
 
   if (target === 'claude-code') {
     const { command, args, line } = claudeCodeCommand(discovery, key, project, platforms);
@@ -239,6 +251,7 @@ async function add(ctx: Context, target: string, opts: AddOptions, overrides: Ag
     if (dryRun || !which(command)) {
       ctx.streams.stdout(`${line}\n`);
       if (!dryRun && !ctx.output.quiet) ctx.streams.stderr(`${command} is not on PATH; run the command above once it is.\n`);
+      noteToolset();
       return;
     }
     const { status } = (overrides.exec ?? spawn)(command, args);
@@ -248,6 +261,7 @@ async function add(ctx: Context, target: string, opts: AddOptions, overrides: Ag
       return;
     }
     emit({ data: { target, scope: project ? 'project' : 'user', ran: true }, status: 200 }, { ...ctx.output, quiet: true }, ctx.streams);
+    noteToolset();
     return;
   }
 
@@ -257,11 +271,13 @@ async function add(ctx: Context, target: string, opts: AddOptions, overrides: Ag
   if (dryRun) {
     ctx.streams.stdout(text);
     if (!ctx.output.quiet) ctx.streams.stderr(`dry run: ${path} was not written.\n`);
+    noteToolset();
     return;
   }
 
   writeAtomic(path, text);
   emit({ data: { target, path, written: true }, status: 200 }, { ...ctx.output, quiet: true }, ctx.streams);
+  noteToolset();
 }
 
 export function register(program: Command, overrides: AgentOverrides = {}): void {
@@ -273,7 +289,8 @@ export function register(program: Command, overrides: AgentOverrides = {}): void
     .argument('<target>', 'claude-code, claude-desktop (macOS and Windows; unofficial builds on Linux), cursor, or vscode')
     .option('--project', 'Project-level config in the current directory instead of the user-level one (cursor, claude-code)')
     .option('--dry-run', 'Print what would be written or run, and change nothing')
-    .option('--platforms <list>', 'Only these platforms\' tools, e.g. youtube,instagram')
+    .option('--platforms <list>', `Only these platforms' tools, e.g. youtube,instagram. Default: ${DEFAULT_PLATFORMS}`)
+    .option('--all', 'Every tool, which takes far more of the agent\'s context')
     .action(async (target: string, opts: AddOptions, command: Command) => {
       await run(command, (ctx) => add(ctx, target, opts, overrides), overrides);
     });

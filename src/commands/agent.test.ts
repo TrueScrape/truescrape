@@ -2,9 +2,10 @@ import { existsSync, mkdirSync, mkdtempSync, readFileSync, statSync, symlinkSync
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { afterEach, describe, expect, it, vi } from 'vitest';
+import { bundledCatalogue } from '../catalogue.js';
 import { UsageError, type Streams } from '../output.js';
 import { buildProgram } from '../program.js';
-import { claudeCodeCommand, configPathFor, entryFor, mergeConfig, register, rehost, type Discovery } from './agent.js';
+import { DEFAULT_PLATFORMS, claudeCodeCommand, configPathFor, entryFor, mergeConfig, register, rehost, type Discovery } from './agent.js';
 
 const KEY = 'sk-test-key';
 const BASE = 'https://api.example.test';
@@ -190,7 +191,7 @@ describe('help', () => {
 
 describe('agent add', () => {
   it('refuses when discovery is unreachable, and writes nothing', async () => {
-    const { code, home, streams } = await invoke(['cursor'], { fetchImpl: unreachable });
+    const { code, home, streams } = await invoke(['cursor', '--all'], { fetchImpl: unreachable });
     expect(code).toBe(2);
     expect(usageMessage(streams)).toContain(`Could not read ${BASE}/.well-known/mcp; refusing to write a config from memory.`);
     expect(existsSync(join(home, '.cursor', 'mcp.json'))).toBe(false);
@@ -214,7 +215,7 @@ describe('agent add', () => {
   });
 
   it('writes the Cursor file with the advertised endpoint and header, owner-only, and reports the path', async () => {
-    const { code, home, streams } = await invoke(['cursor']);
+    const { code, home, streams } = await invoke(['cursor', '--all']);
     expect(code).toBe(0);
     const path = join(home, '.cursor', 'mcp.json');
     expect(stdoutJson(streams)).toEqual({ target: 'cursor', path, written: true });
@@ -253,8 +254,90 @@ describe('agent add', () => {
     expect(code.streams.out.join('')).toContain(`${ENDPOINT}?platforms=youtube`);
   });
 
+  describe('the default toolset', () => {
+    const LIST = 'youtube,tiktok,instagram,reddit,threads,bluesky,hackernews,amazon,walmart';
+
+    it('is the agreed list, and every platform in it is in the catalogue', () => {
+      expect(DEFAULT_PLATFORMS).toBe(LIST);
+      const known = new Set(bundledCatalogue().endpoints.map((e) => e.platform));
+      expect(DEFAULT_PLATFORMS.split(',').filter((p) => !known.has(p))).toEqual([]);
+    });
+
+    it('is what no flag installs, checked against the server first, on every client', async () => {
+      const urls: string[] = [];
+      const fetchImpl = (async (url: string | URL | Request) => {
+        urls.push(String(url));
+        return new Response(JSON.stringify(DISCOVERY), { status: 200 });
+      }) as unknown as typeof fetch;
+
+      const cursor = await invoke(['cursor'], { fetchImpl });
+      expect(urls[0]).toBe(`${BASE}/.well-known/mcp?platforms=${LIST}`);
+      expect(JSON.parse(readFileSync(join(cursor.home, '.cursor', 'mcp.json'), 'utf8')).mcpServers.truescrape.url).toBe(`${ENDPOINT}?platforms=${LIST}`);
+
+      const vscode = await invoke(['vscode']);
+      expect(JSON.parse(readFileSync(join(vscode.cwd, '.vscode', 'mcp.json'), 'utf8')).servers.truescrape.url).toBe(`${ENDPOINT}?platforms=${LIST}`);
+
+      const desktop = await invoke(['claude-desktop'], { platform: 'darwin' });
+      const path = join(desktop.home, 'Library', 'Application Support', 'Claude', 'claude_desktop_config.json');
+      expect(JSON.parse(readFileSync(path, 'utf8')).mcpServers.truescrape.args).toEqual(['-y', 'truescrape', 'mcp', '--platforms', LIST]);
+
+      const code = await invoke(['claude-code', '--dry-run']);
+      expect(code.streams.out.join('')).toContain(`${ENDPOINT}?platforms=${LIST}`);
+    });
+
+    it('says how to add more and that explore_tools reaches the rest', async () => {
+      const { streams } = await invoke(['cursor']);
+      const said = streams.err.join('');
+      expect(said).toContain('--platforms');
+      expect(said).toContain('--all');
+      expect(said).toContain('explore_tools');
+    });
+
+    it('says nothing about it when the caller chose the list', async () => {
+      const chosen = await invoke(['cursor', '--platforms', 'youtube']);
+      expect(chosen.streams.err.join('')).not.toContain('explore_tools');
+      const all = await invoke(['cursor', '--all']);
+      expect(all.streams.err.join('')).not.toContain('explore_tools');
+    });
+
+    it('--all writes no filter and asks discovery for none', async () => {
+      const urls: string[] = [];
+      const fetchImpl = (async (url: string | URL | Request) => {
+        urls.push(String(url));
+        return new Response(JSON.stringify(DISCOVERY), { status: 200 });
+      }) as unknown as typeof fetch;
+      const { home } = await invoke(['cursor', '--all'], { fetchImpl });
+      expect(urls[0]).toBe(`${BASE}/.well-known/mcp`);
+      expect(JSON.parse(readFileSync(join(home, '.cursor', 'mcp.json'), 'utf8')).mcpServers.truescrape.url).toBe(ENDPOINT);
+    });
+
+    it('refuses --all with --platforms', async () => {
+      const { code, home, streams } = await invoke(['cursor', '--all', '--platforms', 'youtube']);
+      expect(code).toBe(2);
+      expect(usageMessage(streams)).toMatch(/--all.*--platforms/);
+      expect(existsSync(join(home, '.cursor', 'mcp.json'))).toBe(false);
+    });
+
+    it('a rejected default list fails loudly, writes nothing and names the way out', async () => {
+      const rejected = fetchStub({ success: false, error: { code: 'invalid_request', message: 'Unknown platform in ?platforms=: hackernews.' } }, 400);
+      const { code, home, streams } = await invoke(['cursor'], { fetchImpl: rejected });
+      expect(code).toBe(2);
+      const message = usageMessage(streams);
+      expect(message).toContain('hackernews');
+      expect(message).toContain('default toolset');
+      expect(message).toContain('--all');
+      expect(existsSync(join(home, '.cursor', 'mcp.json'))).toBe(false);
+    });
+
+    it('a rejected list the caller typed does not blame the default', async () => {
+      const rejected = fetchStub({ success: false, error: { code: 'invalid_request', message: 'Unknown platform in ?platforms=: nope.' } }, 400);
+      const { streams } = await invoke(['cursor', '--platforms', 'nope'], { fetchImpl: rejected });
+      expect(usageMessage(streams)).not.toContain('default toolset');
+    });
+  });
+
   it('writes VS Code under cwd with the servers key', async () => {
-    const { code, cwd, streams } = await invoke(['vscode']);
+    const { code, cwd, streams } = await invoke(['vscode', '--all']);
     expect(code).toBe(0);
     const path = join(cwd, '.vscode', 'mcp.json');
     expect(stdoutJson(streams).path).toBe(path);
@@ -263,7 +346,7 @@ describe('agent add', () => {
 
   it('writes Claude Desktop under APPDATA on Windows with the cmd wrapper', async () => {
     const appdata = tmp('appdata');
-    const { code, streams } = await invoke(['claude-desktop'], { platform: 'win32', env: { APPDATA: appdata } });
+    const { code, streams } = await invoke(['claude-desktop', '--all'], { platform: 'win32', env: { APPDATA: appdata } });
     expect(code).toBe(0);
     const path = join(appdata, 'Claude', 'claude_desktop_config.json');
     expect(stdoutJson(streams).path).toBe(path);
@@ -285,7 +368,7 @@ describe('agent add', () => {
     };
     writeFileSync(path, JSON.stringify(existing, null, 4));
 
-    const { code } = await invoke(['cursor'], { home });
+    const { code } = await invoke(['cursor', '--all'], { home });
     expect(code).toBe(0);
     const merged = JSON.parse(readFileSync(path, 'utf8')) as typeof existing & { mcpServers: { truescrape: unknown } };
     expect(merged.mcpServers.alpha).toEqual(existing.mcpServers.alpha);
@@ -321,7 +404,7 @@ describe('agent add', () => {
   });
 
   it('prints the merged JSON under --dry-run and writes nothing', async () => {
-    const { code, home, streams } = await invoke(['cursor', '--dry-run']);
+    const { code, home, streams } = await invoke(['cursor', '--all', '--dry-run']);
     expect(code).toBe(0);
     expect(stdoutJson(streams)).toEqual({ mcpServers: { truescrape: { url: ENDPOINT, headers: { 'x-agent-key': KEY } } } });
     expect(existsSync(join(home, '.cursor'))).toBe(false);
@@ -329,7 +412,7 @@ describe('agent add', () => {
 
   it('prints the claude command when claude is not on PATH', async () => {
     const exec = vi.fn(() => ({ status: 0 }));
-    const { code, streams } = await invoke(['claude-code'], { which: () => false, exec });
+    const { code, streams } = await invoke(['claude-code', '--all'], { which: () => false, exec });
     expect(code).toBe(0);
     expect(streams.out.join('')).toBe(`claude mcp add --transport http truescrape ${ENDPOINT} --header "x-agent-key: ${KEY}" --scope user\n`);
     expect(exec).not.toHaveBeenCalled();
@@ -338,7 +421,7 @@ describe('agent add', () => {
   it('runs claude when it is on PATH, with project scope under --project', async () => {
     const exec = vi.fn(() => ({ status: 0 }));
     const which = vi.fn((cmd: string) => cmd === 'claude');
-    const { code } = await invoke(['claude-code', '--project'], { which, exec });
+    const { code } = await invoke(['claude-code', '--all', '--project'], { which, exec });
     expect(code).toBe(0);
     expect(which).toHaveBeenCalledWith('claude');
     expect(exec).toHaveBeenCalledWith('claude', ['mcp', 'add', '--transport', 'http', 'truescrape', ENDPOINT, '--header', `x-agent-key: ${KEY}`, '--scope', 'project']);
