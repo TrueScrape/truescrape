@@ -96,8 +96,8 @@ const clean = (text: string) => text.replace(/[\u0000-\u001f\u007f-\u009f]+/g, '
 function itemLines(items: Item[], label: (i: Item) => string = (i) => i.platform): string[] {
   return items.flatMap((i) => {
     const said = clean(i.title || i.text || '').slice(0, 120);
-    const meta = [i.authorHandle && `@${clean(i.authorHandle)}`, i.publishedAt].filter(Boolean).join(', ');
-    return [`[${label(i)}] ${said}${meta ? ` (${meta})` : ''}`, `  ${i.url}`];
+    const meta = [i.authorHandle && `@${clean(i.authorHandle)}`, i.publishedAt && clean(i.publishedAt)].filter(Boolean).join(', ');
+    return [`[${label(i)}] ${said}${meta ? ` (${meta})` : ''}`, `  ${clean(i.url)}`];
   });
 }
 
@@ -244,8 +244,8 @@ function listedWords(list: Listed[]): string {
     .join('\n');
 }
 
-function pageWords(page: Page, unread: boolean): string {
-  if (!page.items.length && !page.nextCursor) return unread ? 'Nothing unread.' : 'Nothing stored yet.';
+function pageWords(page: Page, unread: boolean, narrowed: boolean): string {
+  if (!page.items.length && !page.nextCursor) return narrowed ? 'Nothing matches.' : unread ? 'Nothing unread.' : 'Nothing stored yet.';
   return [
     ...itemLines(page.items, (i) => [i.platform, i.source, i.baseline ? 'baseline' : ''].filter(Boolean).join(', ')),
     ...(page.nextCursor ? [unread ? 'More unread: run this again.' : `More: rerun with --cursor ${page.nextCursor}`] : []),
@@ -361,8 +361,8 @@ export function register(program: Command, overrides: ContextOverrides = {}): vo
           cursor: opts.cursor,
         });
         // A search or filter does not advance the read position, so only a plain --unread pages by running again.
-        const narrowed = opts.query || opts.platform || opts.source || opts.since;
-        respond(ctx, opts, envelope, pageWords(envelope.data, Boolean(opts.unread && !narrowed)));
+        const narrowed = Boolean(opts.query || opts.platform || opts.source || opts.since);
+        respond(ctx, opts, envelope, pageWords(envelope.data, Boolean(opts.unread) && !narrowed, narrowed));
       });
     });
 }

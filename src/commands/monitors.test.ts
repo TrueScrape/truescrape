@@ -375,6 +375,24 @@ describe('monitors check', () => {
   });
 });
 
+describe('what the words mode prints', () => {
+  it('strips control characters from a scraped link and date before they reach a terminal', async () => {
+    const hostile = 'https://x.test/\u001b[2Jpage';
+    const { fetchImpl } = ok({ items: [{ id: '1', url: hostile, title: 'acme', text: null, authorHandle: 'a', publishedAt: '2026-11-01\u001b[31m', platform: 'peertube', source: 'mention', baseline: false }], nextCursor: null });
+    const { out } = await exec(['monitors', 'updates'], fetchImpl);
+    expect(out).not.toContain('\u001b');
+  });
+
+  it('an empty filtered read says nothing matches, not that nothing is stored', async () => {
+    const { fetchImpl } = ok({ items: [], nextCursor: null });
+    const { out } = await exec(['monitors', 'updates', '--platform', 'reddit'], fetchImpl);
+    expect(out).toMatch(/nothing matches/i);
+    expect(out).not.toMatch(/stored yet/i);
+    const unread = ok({ items: [], nextCursor: null });
+    expect((await exec(['monitors', 'updates', '--unread', '--since', '7d'], unread.fetchImpl)).out).toMatch(/nothing matches/i);
+  });
+});
+
 describe('monitors updates filters', () => {
   const empty = { items: [], nextCursor: null };
 
