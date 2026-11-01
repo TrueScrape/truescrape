@@ -170,6 +170,9 @@ does not mean nothing happened.
 
 **Reading.** `--unread` returns what this API key has not read and marks it read, so two
 keys read independently. `--query` searches the stored text. `--monitor` narrows to one.
+`--platform`, `--source` (mention or account) and `--since` (24h, 7d or an ISO time) filter
+what is stored, as `platform`, `source` and `since` do on `get_monitor_mentions`. A search or
+filter marks nothing read, so what it skipped is still unread.
 
 **Use a monitor for a name or accounts with no webhook. Use a subscription, below, to watch
 any other endpoint and be called when it changes.**

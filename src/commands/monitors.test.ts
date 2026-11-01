@@ -375,6 +375,42 @@ describe('monitors check', () => {
   });
 });
 
+describe('monitors updates filters', () => {
+  const empty = { items: [], nextCursor: null };
+
+  it('sends platform, source and an ISO since', async () => {
+    const { fetchImpl, calls } = ok(empty);
+    await exec(['monitors', 'updates', '--platform', 'reddit', '--source', 'account', '--since', '2026-11-01T00:00:00Z'], fetchImpl);
+    const url = calls[0]!.url;
+    expect(url.searchParams.get('platform')).toBe('reddit');
+    expect(url.searchParams.get('source')).toBe('account');
+    expect(url.searchParams.get('since')).toBe('2026-11-01T00:00:00.000Z');
+  });
+
+  it('turns a window such as 7d into a time', async () => {
+    const { fetchImpl, calls } = ok(empty);
+    const before = Date.now();
+    await exec(['monitors', 'updates', '--since', '7d'], fetchImpl);
+    const since = Date.parse(calls[0]!.url.searchParams.get('since')!);
+    expect(before - since).toBeGreaterThanOrEqual(7 * 86_400_000 - 1000);
+    expect(before - since).toBeLessThan(7 * 86_400_000 + 5000);
+  });
+
+  it('refuses a since it cannot read and a source it does not know, before any request', async () => {
+    const a = ok(empty);
+    expect((await exec(['monitors', 'updates', '--since', 'yesterday'], a.fetchImpl)).code).not.toBe(0);
+    expect(a.calls).toEqual([]);
+    const b = ok(empty);
+    expect((await exec(['monitors', 'updates', '--source', 'everything'], b.fetchImpl)).code).not.toBe(0);
+    expect(b.calls).toEqual([]);
+  });
+
+  it('a filtered --unread pages by cursor: it moved nothing, so running again would repeat it', async () => {
+    const { fetchImpl } = ok({ items: [], nextCursor: 'abc' });
+    expect((await exec(['monitors', 'updates', '--unread', '--platform', 'reddit'], fetchImpl)).out).toContain('--cursor abc');
+  });
+});
+
 describe('monitors updates', () => {
   const PAGE = {
     items: [

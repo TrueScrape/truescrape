@@ -104,6 +104,7 @@ truescrape monitors create "Acme" --no-search --accounts youtube:@acme,bluesky:a
 truescrape monitors create "Acme" --interval 21600 --stop-at <ISO time> --max-credits <n>
 truescrape monitors check <id>                  # check each source now, report what is new
 truescrape monitors updates --unread            # read what this key has not read
+truescrape monitors updates --platform reddit --source mention --since 7d
 truescrape monitors list
 truescrape monitors delete <id>
 ```

@@ -154,6 +154,20 @@ function positiveInt(flag: string, value: string): number {
   return n;
 }
 
+/** A window such as 7d or 24h, or an ISO time. The API takes only the time. */
+function sinceTime(raw: string, now = Date.now()): string {
+  const window = /^(\d+)([hd])$/.exec(raw);
+  if (window) return new Date(now - Number(window[1]) * (window[2] === 'h' ? 3_600_000 : 86_400_000)).toISOString();
+  const at = Date.parse(raw);
+  if (Number.isNaN(at)) throw new UsageError(`--since takes a window such as 7d or 24h, or an ISO time, not "${raw}".`);
+  return new Date(at).toISOString();
+}
+
+function sourceFilter(raw: string): string {
+  if (raw !== 'mention' && raw !== 'account') throw new UsageError(`--source takes mention or account, not "${raw}".`);
+  return raw;
+}
+
 function createBody(term: string, opts: CreateOpts): Record<string, unknown> {
   if (opts.platforms !== undefined && !opts.search) throw new UsageError('Pass --platforms or --no-search, not both: one names where to search and the other turns searching off.');
   if (opts.manual && opts.interval !== undefined) throw new UsageError('Pass --manual or --interval, not both: a manual monitor has no schedule, so it checks only when you run `monitors check`.');
@@ -330,18 +344,25 @@ export function register(program: Command, overrides: ContextOverrides = {}): vo
     .option('--monitor <id>', 'Only this monitor')
     .option('--unread', 'Only what this API key has not read yet, and mark it read')
     .option('--query <text>', 'Search the stored text')
+    .option('--platform <name>', 'Only posts from this platform, such as reddit')
+    .option('--source <kind>', 'mention (found by the term) or account (from a followed account)')
+    .option('--since <when>', 'Only posts first seen since then: 24h, 7d or an ISO time')
     .option('--cursor <cursor>', 'The next page, from the previous answer')
     .option('--json', 'Print the response data as JSON')
-    .action(async function (this: Command, opts: JsonOpt & { monitor?: string; unread?: boolean; query?: string; cursor?: string }) {
+    .action(async function (this: Command, opts: JsonOpt & { monitor?: string; unread?: boolean; query?: string; platform?: string; source?: string; since?: string; cursor?: string }) {
       await action(this, async (ctx) => {
         const envelope = await ctx.client.get<Page>('/v1/monitors/mentions', {
           monitor: opts.monitor,
           unread_only: opts.unread ? 'true' : undefined,
           query: opts.query,
+          platform: opts.platform,
+          source: opts.source === undefined ? undefined : sourceFilter(opts.source),
+          since: opts.since === undefined ? undefined : sinceTime(opts.since),
           cursor: opts.cursor,
         });
-        // A search does not advance the read position, so only a plain --unread pages by running again.
-        respond(ctx, opts, envelope, pageWords(envelope.data, Boolean(opts.unread && !opts.query)));
+        // A search or filter does not advance the read position, so only a plain --unread pages by running again.
+        const narrowed = opts.query || opts.platform || opts.source || opts.since;
+        respond(ctx, opts, envelope, pageWords(envelope.data, Boolean(opts.unread && !narrowed)));
       });
     });
 }
