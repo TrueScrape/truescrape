@@ -231,6 +231,28 @@ describe('market-scan', () => {
   });
 });
 
+describe('the README', () => {
+  it('leads with the one line and the three jobs, before any CLI detail', () => {
+    const cliAt = readme.indexOf('## CLI');
+    const lineAt = readme.indexOf('npx truescrape agent add claude-code');
+    expect(lineAt).toBeGreaterThan(-1);
+    expect(lineAt).toBeLessThan(cliAt);
+    const lead = readme.slice(0, cliAt);
+    for (const job of [/Research on demand/, /Watch competitors and accounts/, /Find mentions/, /without an agent/]) expect(lead).toMatch(job);
+  });
+
+  it('lists every skill in the repository', () => {
+    const skills = readdirSync(new URL('../skills/', import.meta.url), { withFileTypes: true }).filter((d) => d.isDirectory()).map((d) => d.name);
+    for (const name of skills) expect(readme, name).toContain(`skills/${name}/SKILL.md`);
+  });
+
+  it('documents the new commands and the default toolset', () => {
+    for (const text of ['truescrape mentions find', 'truescrape monitors create', 'truescrape monitors check', 'truescrape monitors updates', '--all', 'explore_tools']) {
+      expect(readme, text).toContain(text);
+    }
+  });
+});
+
 describe('AGENTS.md', () => {
   it('documents the new commands and the default toolset', () => {
     for (const text of ['truescrape mentions find', 'truescrape monitors', '--all', 'explore_tools']) expect(agents, text).toContain(text);

@@ -10,15 +10,31 @@
 [![MCP](https://img.shields.io/badge/MCP-remote%20server-blue)](#mcp-server)
 [![license](https://img.shields.io/npm/l/truescrape)](LICENSE)
 
-Public social media data from one API: Instagram, TikTok, YouTube, X,
-Facebook, LinkedIn, Reddit, Threads and more. Profiles, posts, videos,
-comments, transcripts, ad libraries and metrics, all in one schema. Use it
-from the terminal, from scripts, or as an MCP server for Claude, Cursor and
-VS Code.
+**Live context for your agent: competitors, mentions and markets.** An agent can
+read your code and files. It cannot see your competitors, your market, or what
+people say about you. Connect it in one line:
+
+```bash
+npx truescrape auth login                # once: stores your key from truescrape.com/dashboard
+npx truescrape agent add claude-code     # or: claude-desktop, cursor, vscode
+```
+
+Then ask it for one of three jobs:
+
+| Job | Ask your agent | What it uses |
+|---|---|---|
+| **Research on demand** | "What are people saying about standing desks, and what do they cost on Amazon and Walmart?" | Search and profile tools across social platforms, plus Amazon and Walmart search |
+| **Watch competitors and accounts** | "Watch Acme's YouTube channel and tell me what's new" | A monitor on their accounts. No webhook needed, and it checks when your agent asks |
+| **Find mentions** | "Who is mentioning Acme, and what needs a reply?" | One search across public sources, each reporting what it found or that it could not be checked |
+
+Public, logged-out data only. Monitors check on request, or on a schedule of an
+hour or longer.
 
 - **1,000 free credits on signup**, no card. Most requests cost 1 credit.
 - **Failed and empty requests are never charged**, and cache hits cost 0.
 - **Credits never expire.** No subscription; packs from $25 for 20,000 credits.
+
+It all works without an agent too, from the terminal or your own scripts:
 
 ```console
 $ truescrape instagram profile --handle natgeo --pretty
@@ -78,6 +94,39 @@ truescrape batch youtube transcript --targets ids.json --wait
 truescrape download https://x.com/<handle>/status/<id> --out ./videos
 truescrape balance
 ```
+
+### Mentions and monitors
+
+```bash
+truescrape mentions find "Acme"                 # one search, nothing stored
+truescrape monitors create "Acme" --manual      # keep watching; checks only when you say
+truescrape monitors create "Acme" --no-search --accounts youtube:@acme,bluesky:acme.com --manual
+truescrape monitors create "Acme" --interval 21600 --stop-at <ISO time> --max-credits <n>
+truescrape monitors check <id>                  # check each source now, report what is new
+truescrape monitors updates --unread            # read what this key has not read
+truescrape monitors list
+truescrape monitors delete <id>
+```
+
+Each takes `--json`, and exits `1` on an API error. Creating and reading are free.
+`mentions find` costs 1 credit per source that answers. A check charges each source
+that answers at its endpoint's own price; `creditsPerCheck` in the create response
+is the most one check can charge, and the first check is a baseline that reports
+nothing as new. Failed, empty and cached answers are free, and the output names
+each source that could not be checked, so a failure never reads as "no mentions".
+
+**Mention sources:** Reddit, Hacker News, Bluesky, YouTube, Threads, Instagram tags,
+TikTok tags, Dailymotion, PeerTube and Odysee. PeerTube and Odysee have no date order
+and may rarely surface new videos. X, LinkedIn search and Instagram captions are not
+covered.
+
+**Accounts** can be followed on YouTube, TikTok, Instagram, Threads, Bluesky, Reddit,
+Mastodon (the handle includes the server), Telegram, Substack and LinkedIn. X and
+Facebook accounts are not available.
+
+An agent creating a monitor passes `--agent <name>`, so you can see what it left
+running. A scheduled monitor runs until deleted unless you set `--stop-at` or
+`--max-credits`.
 
 `truescrape download <post-url> [--out <dir>] [--force] [--json]` saves the
 video from a public Instagram, Facebook or X post. The lookup costs 1 credit
@@ -149,14 +198,22 @@ bridge, which forwards stdio to the remote endpoint with your stored key:
 { "mcpServers": { "truescrape": { "command": "npx", "args": ["-y", "truescrape", "mcp"], "env": { "TRUESCRAPE_API_KEY": "YOUR_KEY" } } } }
 ```
 
-**Load only the platforms you need.** Add `?platforms=` to the URL and the
-agent sees just those tools, which keeps its context small. The CLI and the
-bridge take the same list:
+**`agent add` installs a default toolset, not every tool,** which leaves the agent
+room to work: `youtube`, `tiktok`, `instagram`, `reddit`, `threads`, `bluesky`,
+`hackernews`, `amazon` and `walmart`. From the agent, `explore_tools` finds any other
+tool and `call_tool` runs it. Change the set by adding the client again; a config you
+already have stays as it is until you do:
+
+```bash
+truescrape agent add cursor --platforms youtube,instagram    # only these
+truescrape agent add cursor --all                            # every tool
+```
+
+A URL you write by hand loads every tool unless you add `?platforms=`:
 
 ```bash
 claude mcp add --transport http truescrape "https://api.truescrape.com/mcp?platforms=youtube,instagram" \
   --header "x-api-key: YOUR_KEY" --scope user
-truescrape agent add cursor --platforms youtube,instagram
 ```
 
 Tools can be listed without a key, so you can inspect them before signing up;
@@ -169,16 +226,19 @@ than assuming.
 ## Agent skills
 
 `truescrape` teaches an agent endpoint selection, the cost model, batching,
-subscriptions and the platform quirks worth knowing, with the full endpoint
-table generated from the live API. Two workflow skills build on it:
+mentions, monitors, subscriptions and the platform quirks worth knowing, with the
+full endpoint table generated from the live API. Workflow skills build on it:
 
 | Skill | What it does |
 |---|---|
+| [`competitor-watch`](skills/competitor-watch/SKILL.md) | Follows a competitor's accounts and reports what changed since last time |
+| [`mention-digest`](skills/mention-digest/SKILL.md) | Public mentions grouped by source, each with its link, flagging what needs a reply |
+| [`market-scan`](skills/market-scan/SKILL.md) | A question about a category, across social posts and Amazon and Walmart search |
 | [`video-to-content-brief`](skills/video-to-content-brief/SKILL.md) | Turns a sample of YouTube videos into a source-linked brief: themes, hooks and new angles |
 | [`competitor-content-audit`](skills/competitor-content-audit/SKILL.md) | Compares the same recent sample of uploads across 2 to 5 YouTube channels |
 
-Each states its sample size and cost before it runs, and keeps a link to the
-source video beside every claim.
+Each states its cost and that its sample is a sample, and keeps a link to the
+source beside every claim.
 
 ```bash
 npx skills add TrueScrape/truescrape                 # pick from the list; Claude Code, Cursor, Codex, Copilot, Gemini CLI, Windsurf
