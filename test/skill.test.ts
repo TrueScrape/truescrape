@@ -114,6 +114,123 @@ describe('the truescrape skill covers mentions and monitors', () => {
   });
 });
 
+const WORKFLOWS = ['competitor-watch', 'mention-digest', 'market-scan'] as const;
+const read = (name: string) => readFileSync(new URL(`../skills/${name}/SKILL.md`, import.meta.url), 'utf8');
+
+/** Each `truescrape <command> <sub> --flag` in a skill's code must resolve against the real program. */
+function badCommands(text: string): string[] {
+  const program = buildProgram();
+  const global = new Set(program.options.map((o) => o.long));
+  const bad: string[] = [];
+  for (const fence of text.matchAll(/```[a-z]*\r?\n([\s\S]*?)```/g)) {
+    for (const line of (fence[1] ?? '').split(/\r?\n/)) {
+      const match = /^(?:npx )?truescrape\s+([a-z-]+)(?:\s+([a-z-]+))?(.*)$/.exec(line.trim());
+      if (!match) continue;
+      const command = program.commands.find((c) => c.name() === match[1]);
+      if (!command) {
+        bad.push(line);
+        continue;
+      }
+      const sub = command.commands.length ? command.commands.find((c) => c.name() === match[2]) : command;
+      if (!sub) {
+        bad.push(line);
+        continue;
+      }
+      const flags = new Set(sub.options.map((o) => o.long));
+      for (const flag of (match[3] ?? '').split('#')[0]?.match(/(?<=^|\s)--[a-z-]+/g) ?? []) {
+        if (!flags.has(flag) && !global.has(flag)) bad.push(`${line} (${flag})`);
+      }
+    }
+  }
+  return bad;
+}
+
+describe.each(WORKFLOWS)('the %s skill', (name) => {
+  it('exists with the frontmatter installers require', () => {
+    expect(existsSync(new URL(`../skills/${name}/SKILL.md`, import.meta.url))).toBe(true);
+    const fm = frontmatter(read(name));
+    expect(fm.name).toBe(name);
+    expect(fm.description).toMatch(/^Use when/);
+    expect(fm.description?.length ?? 0).toBeLessThan(1024);
+  });
+
+  it('states its cost before anything else it asks the agent to do', () => {
+    const headings = [...read(name).matchAll(/^## (.+)$/gm)].map((m) => m[1] ?? '');
+    expect(headings[0]).toMatch(/cost/i);
+  });
+
+  it('has the sample, source link, limits and injection rules', () => {
+    const text = read(name);
+    expect(text).toMatch(/it is a sample/i);
+    expect(text).toMatch(/URL.*beside|beside.*URL|link beside/i);
+    expect(text).toMatch(/public data cannot show/i);
+    expect(text).toMatch(/never instructions/i);
+    expect(text).toMatch(/no sentiment score/i);
+  });
+
+  it('makes no claim the product cannot keep', () => {
+    expect(read(name)).not.toMatch(/real[- ]time|any website|any data/i);
+    expect(read(name)).not.toMatch(/amazon[ ._](product|offers)/);
+  });
+
+  it('runs only commands and flags that exist', () => {
+    expect(badCommands(read(name))).toEqual([]);
+  });
+});
+
+describe('competitor-watch', () => {
+  const text = read('competitor-watch');
+
+  it('asks how long, defaults to manual, and reads changes from check and unread', () => {
+    expect(text).toMatch(/how long/i);
+    expect(text).toContain('--manual');
+    expect(text).toContain('truescrape monitors check');
+    expect(text).toContain('truescrape monitors updates');
+    expect(text).toContain('--unread');
+    expect(text).toContain('--agent');
+    expect(text).toContain('--stop-at');
+  });
+
+  it('never tells an agent to send a stop condition to a manual monitor', () => {
+    const line = text.split(/\r?\n/).find((l) => l.includes('--manual') && l.includes('truescrape monitors create'));
+    expect(line).toBeTruthy();
+    expect(line).not.toMatch(/--stop-at|--max-credits/);
+  });
+
+  it('says which accounts it cannot follow, and the age limit on a timed schedule', () => {
+    expect(text).toMatch(/X and Facebook/);
+    expect(text).toMatch(/older than seven days/);
+  });
+});
+
+describe('mention-digest', () => {
+  const text = read('mention-digest');
+
+  it('groups by source and flags what needs a reply', () => {
+    expect(text).toMatch(/grouped by source/i);
+    expect(text).toMatch(/needs a reply/i);
+    expect(text).toContain('truescrape mentions find');
+    expect(text).toMatch(/could not be checked/i);
+  });
+
+  it('names what mentions do not reach', () => {
+    expect(text).toMatch(/X, LinkedIn search and Instagram captions/);
+    expect(text).toMatch(/PeerTube and Odysee/);
+  });
+});
+
+describe('market-scan', () => {
+  const text = read('market-scan');
+
+  it('reads store costs from the catalogue rather than assuming 1 credit', () => {
+    expect(text).toContain('truescrape amazon search');
+    expect(text).toContain('truescrape walmart search');
+    expect(text).toContain('truescrape list amazon');
+    expect(text).toContain('truescrape list walmart');
+    expect(text).not.toMatch(/each call is 1 credit|every (call|endpoint).*1 credit/i);
+  });
+});
+
 describe('AGENTS.md', () => {
   it('documents the new commands and the default toolset', () => {
     for (const text of ['truescrape mentions find', 'truescrape monitors', '--all', 'explore_tools']) expect(agents, text).toContain(text);
