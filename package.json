@@ -1,7 +1,7 @@
 {
   "name": "truescrape",
-  "version": "0.6.0",
-  "description": "Social media data API and MCP server: Instagram, TikTok, YouTube, X, Facebook, LinkedIn, Reddit and more, as JSON from the terminal or as tools for Claude, Cursor and other AI agents. 1,000 free credits.",
+  "version": "0.7.0",
+  "description": "Live context for your agent: competitors, mentions and markets. Public social, product and property data through an MCP server and CLI, for Claude, Cursor and other AI agents. 1,000 free credits.",
   "mcpName": "io.github.TrueScrape/truescrape",
   "type": "module",
   "bin": {

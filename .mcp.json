@@ -2,7 +2,7 @@
   "mcpServers": {
     "truescrape": {
       "type": "http",
-      "url": "https://api.truescrape.com/mcp",
+      "url": "https://api.truescrape.com/mcp?platforms=youtube,tiktok,instagram,reddit,threads,bluesky,hackernews,amazon,walmart",
       "headers": { "x-api-key": "${TRUESCRAPE_API_KEY}" }
     }
   }

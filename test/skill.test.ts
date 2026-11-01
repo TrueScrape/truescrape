@@ -3,6 +3,14 @@ import { describe, expect, it } from 'vitest';
 import { bundledCatalogue } from '../src/catalogue.js';
 import { buildProgram } from '../src/program.js';
 
+describe('the plugin install', () => {
+  it('starts on the same default toolset as agent add', async () => {
+    const { DEFAULT_PLATFORMS } = await import('../src/commands/agent.js');
+    const config = JSON.parse(readFileSync(new URL('../.mcp.json', import.meta.url), 'utf8'));
+    expect(config.mcpServers.truescrape.url).toBe(`https://api.truescrape.com/mcp?platforms=${DEFAULT_PLATFORMS}`);
+  });
+});
+
 const skill = readFileSync(new URL('../skills/truescrape/SKILL.md', import.meta.url), 'utf8');
 const agents = readFileSync(new URL('../AGENTS.md', import.meta.url), 'utf8');
 const readme = readFileSync(new URL('../README.md', import.meta.url), 'utf8');

@@ -2,12 +2,12 @@
   "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
   "name": "io.github.TrueScrape/truescrape",
   "title": "TrueScrape",
-  "description": "Public social media data: Instagram, TikTok, YouTube, X, Reddit, LinkedIn and 30+ more platforms.",
+  "description": "Live context for your agent: competitors, mentions and markets, from public data.",
   "repository": {
     "url": "https://github.com/TrueScrape/truescrape",
     "source": "github"
   },
-  "version": "0.6.0",
+  "version": "0.7.0",
   "websiteUrl": "https://truescrape.com/docs",
   "icons": [
     { "src": "https://truescrape.com/brand/truescrape-mark-dark.png", "mimeType": "image/png", "sizes": ["1024x1024"] }
@@ -30,7 +30,7 @@
     {
       "registryType": "npm",
       "identifier": "truescrape",
-      "version": "0.6.0",
+      "version": "0.7.0",
       "transport": { "type": "stdio" },
       "packageArguments": [{ "type": "positional", "value": "mcp" }],
       "environmentVariables": [
