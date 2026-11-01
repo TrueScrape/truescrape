@@ -11,6 +11,7 @@ import { register as registerInteractive } from './commands/interactive.js';
 import { register as registerJobs } from './commands/jobs.js';
 import { register as registerList } from './commands/list.js';
 import { register as registerMcp } from './commands/mcp.js';
+import { register as registerMonitors } from './commands/monitors.js';
 import { FORMATS } from './output.js';
 
 export type Register = (program: Command) => void;
@@ -55,6 +56,7 @@ export const defaultRegistrations: Register[] = [
   (p) => registerBatch(p),
   (p) => registerJobs(p),
   (p) => registerDownload(p),
+  (p) => registerMonitors(p),
   (p) => registerMcp(p),
   (p) => registerAgent(p),
   (p) => registerList(p),

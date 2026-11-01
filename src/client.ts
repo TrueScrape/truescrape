@@ -110,6 +110,10 @@ export class Client {
     return this.request<T>('POST', path, JSON.stringify(body), { 'content-type': 'application/json' });
   }
 
+  async delete<T = unknown>(path: string): Promise<Envelope<T>> {
+    return this.request<T>('DELETE', path);
+  }
+
   /** Raw response for callers that speak their own protocol over the API, such as the MCP bridge. */
   async raw(method: string, path: string, body?: string, headers: Record<string, string> = {}): Promise<Response> {
     const url = `${this.baseUrl}${path}`;
