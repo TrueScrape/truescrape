@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-10-30T02:29:11.190Z",
+  "generatedAt": "2026-11-01T14:27:08.972Z",
   "source": "https://api.truescrape.com/openapi.json",
   "endpoints": [
     {
@@ -614,6 +614,46 @@
           "type": "string",
           "required": false,
           "description": "Alias for `handle`, accepted for compatibility. Sending both with different values is rejected."
+        }
+      ]
+    },
+    {
+      "name": "bluesky.search",
+      "platform": "bluesky",
+      "action": "search",
+      "path": "/v1/bluesky/search",
+      "summary": "Search posts",
+      "description": "Public Bluesky posts matching a keyword, newest first.",
+      "credits": 1,
+      "cacheable": true,
+      "batchable": true,
+      "constraints": [],
+      "params": [
+        {
+          "name": "query",
+          "flag": "query",
+          "type": "string",
+          "required": true,
+          "description": "Keyword or phrase to search for"
+        },
+        {
+          "name": "cursor",
+          "flag": "cursor",
+          "type": "string",
+          "required": false,
+          "description": "`pagination.cursor` from a previous response"
+        },
+        {
+          "name": "cache_max_age",
+          "flag": "cache-max-age",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "include_raw",
+          "flag": "include-raw",
+          "type": "boolean",
+          "required": false
         }
       ]
     },
@@ -3687,6 +3727,59 @@
       ]
     },
     {
+      "name": "hackernews.search",
+      "platform": "hackernews",
+      "action": "search",
+      "path": "/v1/hackernews/search",
+      "summary": "Search",
+      "description": "Hacker News stories and comments matching a search, newest first. Points and comment counts are given for stories; comments come back as plain text with their item page as the URL.",
+      "credits": 1,
+      "cacheable": true,
+      "batchable": true,
+      "constraints": [],
+      "params": [
+        {
+          "name": "query",
+          "flag": "query",
+          "type": "string",
+          "required": true,
+          "description": "Search text"
+        },
+        {
+          "name": "type",
+          "flag": "type",
+          "type": "string",
+          "required": false,
+          "enum": [
+            "story",
+            "comment",
+            "all"
+          ],
+          "default": "all",
+          "description": "`story`, `comment`, or `all` for both"
+        },
+        {
+          "name": "cursor",
+          "flag": "cursor",
+          "type": "string",
+          "required": false,
+          "description": "`pagination.cursor` from a previous response"
+        },
+        {
+          "name": "cache_max_age",
+          "flag": "cache-max-age",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "include_raw",
+          "flag": "include-raw",
+          "type": "boolean",
+          "required": false
+        }
+      ]
+    },
+    {
       "name": "identity.findSocialProfiles",
       "platform": "identity",
       "action": "find-social-profiles",
@@ -4279,7 +4372,7 @@
       "action": "transcript",
       "path": "/v1/instagram/transcript",
       "summary": "Reel or video transcript",
-      "description": "The caption track Instagram published for a reel or video, as one text block plus timed cues. We return Instagram's own track and never transcribe the audio ourselves, so a transcript here is always what the platform said rather than what a model guessed. **Read this before relying on it:** checked against 12 real reel payloads, none carried a caption track in any form: no inline transcript, and DASH manifests with video and audio tracks only. On current evidence Instagram publishes none, so this returns `empty_result` (free, never charged) rather than a transcript. It is shipped as experimental so the shape is stable if that changes.",
+      "description": "The caption track Instagram published for a reel or video, as one text block plus timed cues. This is Instagram's own track, never a transcription of the audio, so a transcript here is what the platform published rather than what a model guessed. Instagram has published no caption track on any reel checked so far, so most requests return `empty_result`, which is free.",
       "credits": 1,
       "cacheable": true,
       "batchable": true,

@@ -265,7 +265,7 @@ LinkedIn's under `/v1/linkedin/ads/search`.
 ## Endpoint catalogue
 
 <!-- catalogue:start -->
-251 endpoints across 45 platforms, generated from the live API on 2026-10-30.
+253 endpoints across 46 platforms, generated from the live API on 2026-11-01.
 
 ### amazon (4)
 
@@ -294,12 +294,13 @@ LinkedIn's under `/v1/linkedin/ads/search`.
 | `GET /v1/bitchute/search` | `truescrape bitchute search --query` | 1 | Search videos |
 | `GET /v1/bitchute/video` | `truescrape bitchute video --url` | 1 | Video details |
 
-### bluesky (3)
+### bluesky (4)
 
 | Endpoint | CLI | Credits | What it returns |
 |---|---|---|---|
 | `GET /v1/bluesky/post` | `truescrape bluesky post --url` | 1 | Post |
 | `GET /v1/bluesky/profile` | `truescrape bluesky profile --handle` | 1 | Profile |
+| `GET /v1/bluesky/search` | `truescrape bluesky search --query` | 1 | Search posts |
 | `GET /v1/bluesky/user/posts` | `truescrape bluesky user-posts --handle` | 1 | User posts |
 
 ### dailymotion (5)
@@ -389,6 +390,12 @@ LinkedIn's under `/v1/linkedin/ads/search`.
 | `GET /v1/google/news` | `truescrape google news --query` | 5 | Google News results |
 | `GET /v1/google/search` | `truescrape google search --query` | 1 | Web search results |
 | `GET /v1/google/shopping` | `truescrape google shopping --query` | 5 | Google Shopping results |
+
+### hackernews (1)
+
+| Endpoint | CLI | Credits | What it returns |
+|---|---|---|---|
+| `GET /v1/hackernews/search` | `truescrape hackernews search --query` | 1 | Search |
 
 ### identity (1)
 
