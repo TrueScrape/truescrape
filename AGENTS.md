@@ -58,7 +58,12 @@ with usage on stderr and exit code 2.
 | `truescrape jobs get <jobId> [--wait]` / `jobs list` | Check on a batch job. |
 | `truescrape download <post-url> [--out <dir>] [--force] [--json]` | Save the video from a public Instagram, Facebook or X post, named after the post id. 1 credit for the lookup, nothing if it fails. Refuses YouTube and any other host without sending a request; any other failure exits `1` with one sentence saying why. Only download videos the user made or has permission to use. |
 | `truescrape mcp` | A stdio MCP bridge to the remote server, for clients that cannot send a header. |
-| `truescrape agent add <claude-code\|claude-desktop\|cursor\|vscode> [--project] [--dry-run]` | Write the MCP server entry into that client's config. `--dry-run` prints it instead. |
+| `truescrape agent add <claude-code\|claude-desktop\|cursor\|vscode> [--platforms a,b\|--all] [--project] [--dry-run]` | Write the MCP server entry into that client's config, with a default toolset unless `--platforms` or `--all` says otherwise. `explore_tools` reaches every other tool from the agent. `--dry-run` prints the entry instead. |
+| `truescrape mentions find "<term>" [--platforms a,b] [--json]` | One search across public sources, nothing stored. 1 credit per source that answers. Lists each source's outcome; if none answers, it is an API error and costs nothing. |
+| `truescrape monitors create "<term>" [--platforms a,b\|--no-search] [--accounts youtube:@x,bluesky:y] [--manual] [--interval <seconds>] [--webhook <url>] [--stop-at <iso>] [--max-credits <n>] [--agent <name>] [--json]` | Keep watching a name or accounts. Free to create; send `--agent` with your own name. Prefer `--manual`, which has no recurring charge. Tell the user `creditsPerCheck` before the first check. |
+| `truescrape monitors check <id> [--json]` | Check every source now. Charges each that answers; the first check is a baseline. Exits `1` if no source answered. |
+| `truescrape monitors updates [--monitor <id>] [--unread] [--query <text>] [--cursor <c>] [--json]` | Read what monitors stored, free. `--unread` marks what it returns as read for this key. |
+| `truescrape monitors list [--json]` / `monitors delete <id> [--json]` | See what is running and what it spent, or stop it. |
 
 ## Billing, in three rules
 
@@ -89,7 +94,8 @@ objects:
 truescrape batch youtube channel --targets targets.json --wait
 ```
 
-For recurring checks ("track", "monitor", "tell me when"), use a subscription
+To watch a name or accounts with no webhook, use `truescrape monitors`. For
+recurring checks of any other endpoint ("track", "tell me when"), use a subscription
 through the API (`POST /v1/subscriptions` with `endpoint`, `params`,
 `webhook_url` and an optional `interval_seconds`). Each check is billed like a
 normal request and refunded if it fails or comes back empty; the webhook fires

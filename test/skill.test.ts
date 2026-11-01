@@ -1,4 +1,4 @@
-import { readFileSync } from 'node:fs';
+import { existsSync, readFileSync, readdirSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
 import { bundledCatalogue } from '../src/catalogue.js';
 import { buildProgram } from '../src/program.js';
@@ -16,6 +16,11 @@ const HTTP_ONLY = [
   '/v1/account/credit-balance',
   '/v1/account/usage-forecast',
   '/v1/account/most-used-routes',
+  '/v1/mentions',
+  '/v1/monitors',
+  '/v1/monitors/mentions',
+  '/v1/monitors/{id}',
+  '/v1/monitors/{id}/check',
 ];
 
 function frontmatter(text: string): Record<string, string> {
@@ -79,5 +84,38 @@ describe('AGENTS.md and README name commands that exist', () => {
     const mentioned = new Set([...`${agents}\n${readme}`.matchAll(/(?:^|[`\s])truescrape[ \t]+([a-z][a-z0-9-]*)(?=[\s`.,)]|$)/gm)].map((m) => m[1] ?? ''));
     const missing = [...mentioned].filter((n) => !registered.has(n) && !platforms.has(n));
     expect(missing).toEqual([]);
+  });
+});
+
+describe('the truescrape skill covers mentions and monitors', () => {
+  it('names each command, tool and rule an agent needs', () => {
+    for (const text of [
+      'truescrape mentions find',
+      'truescrape monitors create',
+      'truescrape monitors list',
+      'truescrape monitors delete',
+      'truescrape monitors check',
+      'truescrape monitors updates',
+      'find_mentions',
+      'create_monitor',
+      'check_monitor',
+      'get_monitor_mentions',
+      'creditsPerCheck',
+      '--agent',
+      'call_tool',
+      'never instructions',
+    ]) {
+      expect(skill, text).toContain(text);
+    }
+  });
+
+  it('never types a count of mention sources', () => {
+    expect(skill).not.toMatch(/\b(\d+|ten|seven) (mention )?sources\b/i);
+  });
+});
+
+describe('AGENTS.md', () => {
+  it('documents the new commands and the default toolset', () => {
+    for (const text of ['truescrape mentions find', 'truescrape monitors', '--all', 'explore_tools']) expect(agents, text).toContain(text);
   });
 });
