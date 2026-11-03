@@ -121,7 +121,8 @@ export function verifyMcpJson(text: string, discovery: Discovery, baseUrl: strin
   } catch {
     expectedUrl = discovery.endpoint;
   }
-  if (entry.url !== expectedUrl) return `.mcp.json url is ${entry.url}; discovery says ${expectedUrl}`;
+  // The plugin narrows its toolset with ?platforms=, which discovery knows nothing about.
+  if (entry.url?.split('?')[0] !== expectedUrl) return `.mcp.json url is ${entry.url}; discovery says ${expectedUrl}`;
 
   const headers = Object.keys(entry.headers ?? {}).map((h) => h.toLowerCase());
   if (!headers.includes(discovery.authentication.name.toLowerCase())) {

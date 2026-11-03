@@ -50,6 +50,8 @@ describe('generated blocks', () => {
     const discovery = { endpoint: 'http://localhost:3000/mcp', authentication: { in: 'header', name: 'x-api-key' } };
     const good = JSON.stringify({ mcpServers: { truescrape: { url: 'https://api.example/mcp', headers: { 'x-api-key': '${TRUESCRAPE_API_KEY}' } } } });
     expect(verifyMcpJson(good, discovery, 'https://api.example')).toBeNull();
+    const narrowed = good.replace('https://api.example/mcp', 'https://api.example/mcp?platforms=youtube,reddit');
+    expect(verifyMcpJson(narrowed, discovery, 'https://api.example')).toBeNull();
     const wrongUrl = good.replace('https://api.example/mcp', 'https://api.example/v2/mcp');
     expect(verifyMcpJson(wrongUrl, discovery, 'https://api.example')).toMatch(/discovery says https:\/\/api.example\/mcp/);
     const wrongHeader = good.replace('x-api-key', 'authorization');
