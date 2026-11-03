@@ -59,6 +59,14 @@ describe('download', () => {
     ['https://www.youtube.com/watch?v=dQw4w9WgXcQ', /youtube transcript/],
     ['https://youtu.be/dQw4w9WgXcQ', /youtube transcript/],
     ['not a url', /instagram\.com/],
+    ['https://vimeo.com/293802639', /HLS stream.*truescrape vimeo video/],
+    ['https://player.vimeo.com/video/293802639', /HLS stream.*truescrape vimeo video/],
+    ['https://ok.ru/video/7475662490142', /Chrome.*will not.*truescrape okru video/],
+    ['https://m.ok.ru/video/7475662490142', /Chrome.*will not.*truescrape okru video/],
+    ['https://notvimeo.com/1', /streamable\.com/],
+    ['https://book.ru/video/1', /streamable\.com/],
+    ['https://streamable.com.evil.example/moo', /streamable\.com/],
+    ['https://b23.tv/abc', /bilibili\.com/],
   ])('refuses %s without any request', async (url, message) => {
     const { dir, configFile, env, streams, isTTY } = setup();
     const { fetchImpl, calls } = stub({ id: 'x', mediaUrls: [IG_MP4] });
@@ -89,6 +97,11 @@ describe('download', () => {
     ['https://twitter.com/nasa/status/123', '/v1/twitter/tweet', X_MP4, 'x-123.mp4'],
     ['https://fb.watch/abc/', '/v1/facebook/post', FB_MP4, 'facebook-123.mp4'],
     ['https://m.facebook.com/watch/?v=123', '/v1/facebook/post', FB_MP4, 'facebook-123.mp4'],
+    ['https://streamable.com/123', '/v1/streamable/video', 'https://cdn-cf-west.streamable.com/video/mp4/a.mp4?Expires=1', 'streamable-123.mp4'],
+    ['https://mashable.com/video/123', '/v1/mashable/video', 'https://large-cdn.ex.co/transformations/production/a/720p.mp4', 'mashable-123.mp4'],
+    ['https://www.flickr.com/photos/nasa/123/', '/v1/flickr/post', 'https://live.staticflickr.com/video/123/abc/720p.mp4?s=x', 'flickr-123.mp4'],
+    ['https://flic.kr/p/abc', '/v1/flickr/post', 'https://live.staticflickr.com/video/123/abc/720p.mp4?s=x', 'flickr-123.mp4'],
+    ['https://www.bilibili.com/video/BV1GJ411x7h7', '/v1/bilibili/video', 'https://upos-hz-mirrorakam.akamaized.net/upgcxcode/1/a.mp4?deadline=1', 'bilibili-123.mp4'],
   ])('routes %s to %s', async (url, path, file, name) => {
     const { dir, configFile, env, streams, isTTY } = setup();
     const { fetchImpl, calls } = stub({ id: '123', mediaUrls: [file] });
@@ -97,6 +110,19 @@ describe('download', () => {
 
     expect(calls[0]).toContain(`https://api.truescrape.com${path}?url=`);
     expect(existsSync(join(dir, name))).toBe(true);
+  });
+
+  it('saves a Mashable file served as application/octet-stream', async () => {
+    const { dir, configFile, env, streams, isTTY } = setup();
+    const file = 'https://large-cdn.ex.co/transformations/production/a/720p.mp4';
+    const { fetchImpl } = stub({ id: 'burnbot-rx2', mediaUrls: [file, 'https://cdn.ex.co/transformations/production/a/master.m3u8'] }, () =>
+      new Response(new Uint8Array(16), { status: 200, headers: { 'content-type': 'application/octet-stream' } }),
+    );
+
+    await cli(['download', 'https://mashable.com/video/burnbot-rx2', '--out', dir], { env, configFile, streams, fetchImpl, isTTY });
+
+    expect(process.exitCode).toBeUndefined();
+    expect(readFileSync(join(dir, 'mashable-burnbot-rx2.mp4')).length).toBe(16);
   });
 
   it('prints the result as JSON under --json', async () => {

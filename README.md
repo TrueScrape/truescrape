@@ -130,10 +130,12 @@ running. A scheduled monitor runs until deleted unless you set `--stop-at` or
 `--max-credits`.
 
 `truescrape download <post-url> [--out <dir>] [--force] [--json]` saves the
-video from a public Instagram, Facebook or X post. The lookup costs 1 credit
-and nothing if it fails; the file comes straight from the platform's own video
-servers, checked to be https, unredirected, a video, and under 150 MB. YouTube
-links are refused. Only download videos you made or have permission to use.
+video from a public Instagram, Facebook, X, Streamable, Mashable, Flickr or
+Bilibili post. The lookup costs 1 credit and nothing if it fails; the file comes
+straight from the platform's own video servers, checked to be https,
+unredirected, a video, and under 150 MB. YouTube, Vimeo and OK.ru links are
+refused: they offer no plain file a CLI can fetch. Only download videos you made
+or have permission to use.
 
 Every endpoint is `truescrape <platform> <action> --param value`. Run any
 command with `--help` for its parameters, cost and any cross-field rule.

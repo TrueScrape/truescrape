@@ -14,6 +14,12 @@ describe('isAllowedMediaUrl', () => {
     ['instagram', FB_MP4],
     ['facebook', FB_MP4],
     ['twitter', X_MP4],
+    ['streamable', 'https://cdn-cf-east.streamable.com/video/mp4/a.mp4?Expires=1'],
+    ['mashable', 'https://large-cdn.ex.co/transformations/production/a/720p.mp4'],
+    ['mashable', 'https://cdn.ex.co/transformations/production/a/720p.mp4'],
+    ['flickr', 'https://live.staticflickr.com/video/1/a/720p.mp4?s=x'],
+    ['bilibili', 'https://upos-hz-mirrorakam.akamaized.net/upgcxcode/1/a.mp4?deadline=1'],
+    ['bilibili', 'https://upos-sz-mirrorali.bilivideo.com/upgcxcode/1/a.mp4?deadline=1'],
   ] as const)('%s accepts %s', (platform, url) => {
     expect(isAllowedMediaUrl(platform, url)).toBe(true);
   });
@@ -33,6 +39,16 @@ describe('isAllowedMediaUrl', () => {
     ['twitter', 'https://video.twimg.com.evil.example/x.mp4'],
     ['twitter', 'javascript:alert(1)'],
     ['twitter', 'not a url'],
+    ['streamable', 'https://streamable.com.evil.example/a.mp4'],
+    ['streamable', 'https://notstreamable.com/a.mp4'],
+    ['mashable', 'https://ex.co/a.mp4'],
+    ['mashable', 'https://evil.ex.co/a.mp4'],
+    ['mashable', 'https://zmgvideos.mashable.com/a.mp4'],
+    ['flickr', 'https://www.flickr.com/a.mp4'],
+    ['flickr', 'https://live.staticflickr.com.evil.example/a.mp4'],
+    ['bilibili', 'https://someone-else.akamaized.net/a.mp4'],
+    ['bilibili', 'https://evilbilivideo.com/a.mp4'],
+    ['bilibili', 'http://upos-hz-mirrorakam.akamaized.net/a.mp4'],
   ] as const)('%s refuses %s', (platform, url) => {
     expect(isAllowedMediaUrl(platform, url)).toBe(false);
   });
@@ -64,6 +80,17 @@ describe('pickVideoUrl', () => {
     expect(pickVideoUrl('instagram', { mediaUrls: ['https://evil.example/clip.mp4'] })).toEqual({ ok: false, reason: 'blocked_host' });
   });
 
+  it('takes the best file first and skips the stream on Mashable', () => {
+    const best = 'https://large-cdn.ex.co/t/a/720p.mp4';
+    const urls = [best, 'https://large-cdn.ex.co/t/a/360p.mp4', 'https://cdn.ex.co/t/a/master.m3u8'];
+    expect(pickVideoUrl('mashable', { mediaUrls: urls })).toEqual({ ok: true, url: best });
+    expect(pickVideoUrl('mashable', { mediaUrls: urls.slice(2) })).toEqual({ ok: false, reason: 'stream_only' });
+  });
+
+  it('reports no_video for a Flickr photo', () => {
+    expect(pickVideoUrl('flickr', { mediaUrls: ['https://live.staticflickr.com/65535/1_a_b.jpg'] })).toEqual({ ok: false, reason: 'no_video' });
+  });
+
   it('reports ambiguous for a Facebook post with more than one candidate', () => {
     expect(pickVideoUrl('facebook', { mediaUrls: [FB_MP4, FB_MP4.replace('clip', 'other')] })).toEqual({ ok: false, reason: 'ambiguous' });
     expect(pickVideoUrl('facebook', { mediaUrls: [FB_MP4] })).toEqual({ ok: true, url: FB_MP4 });
@@ -74,6 +101,7 @@ describe('mediaFilename', () => {
   it('is built from the post id', () => {
     expect(mediaFilename('instagram', 'CIWJ56ujr5w')).toBe('instagram-CIWJ56ujr5w.mp4');
     expect(mediaFilename('twitter', '2113776971603689874')).toBe('x-2113776971603689874.mp4');
+    expect(mediaFilename('bilibili', 'BV1GJ411x7h7')).toBe('bilibili-BV1GJ411x7h7.mp4');
   });
 
   it('strips anything that could leave the folder or change the type', () => {
@@ -138,6 +166,12 @@ describe('saveMedia', () => {
     const fetchImpl = vi.fn(async () => video('<html>', { headers: { 'content-type': 'text/html' } }));
     expect(await saveMedia('instagram', IG_MP4, path, { fetchImpl })).toEqual({ ok: false, reason: 'not_video' });
     expect(readdirSync(dir)).toEqual([]);
+  });
+
+  it('takes octet-stream only from Mashable', async () => {
+    const octet = () => vi.fn(async () => video(bytes, { headers: { 'content-type': 'application/octet-stream' } }));
+    expect(await saveMedia('mashable', 'https://large-cdn.ex.co/t/a/720p.mp4', tmpFile().path, { fetchImpl: octet() })).toMatchObject({ ok: true });
+    expect(await saveMedia('twitter', X_MP4, tmpFile().path, { fetchImpl: octet() })).toEqual({ ok: false, reason: 'not_video' });
   });
 
   it('refuses a declared size over the cap without reading it', async () => {

@@ -1,6 +1,6 @@
 {
   "name": "truescrape",
-  "version": "0.7.1",
+  "version": "0.8.0",
   "description": "Live context for your agent: competitors, mentions and markets. Public social, product and property data through an MCP server and CLI, for Claude, Cursor and other AI agents. 1,000 free credits.",
   "mcpName": "io.github.TrueScrape/truescrape",
   "type": "module",

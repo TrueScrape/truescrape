@@ -7,7 +7,7 @@ import { open, rename, rm } from 'node:fs/promises';
  * file comes straight from the platform.
  */
 
-export type MediaPlatform = 'instagram' | 'facebook' | 'twitter';
+export type MediaPlatform = 'instagram' | 'facebook' | 'twitter' | 'streamable' | 'mashable' | 'flickr' | 'bilibili';
 
 export const MAX_MEDIA_BYTES = 150 * 1024 * 1024;
 
@@ -16,6 +16,11 @@ const HOSTS: Record<MediaPlatform, readonly string[]> = {
   instagram: ['cdninstagram.com', 'fbcdn.net'],
   facebook: ['fbcdn.net'],
   twitter: ['video.twimg.com'],
+  streamable: ['streamable.com'],
+  mashable: ['large-cdn.ex.co', 'cdn.ex.co'],
+  flickr: ['live.staticflickr.com'],
+  // akamaized.net is shared by every Akamai customer, so only Bilibili's own mirror is listed.
+  bilibili: ['bilivideo.com', 'upos-hz-mirrorakam.akamaized.net'],
 };
 
 /** A label boundary, so `evilfbcdn.net` and `fbcdn.net.evil.example` do not match. */
@@ -58,7 +63,7 @@ export function pickVideoUrl(platform: MediaPlatform, post: { mediaUrls?: unknow
   return isAllowedMediaUrl(platform, url) ? { ok: true, url } : { ok: false, reason: 'blocked_host' };
 }
 
-const NAME_PREFIX: Record<MediaPlatform, string> = { instagram: 'instagram', facebook: 'facebook', twitter: 'x' };
+const NAME_PREFIX: Record<MediaPlatform, string> = { instagram: 'instagram', facebook: 'facebook', twitter: 'x', streamable: 'streamable', mashable: 'mashable', flickr: 'flickr', bilibili: 'bilibili' };
 
 /** Built from the post id, never from a header or the address, so it cannot leave the folder. */
 export function mediaFilename(platform: MediaPlatform, id: string): string {
@@ -102,7 +107,9 @@ export async function saveMedia(
 
     if (!response.ok) return { ok: false, reason: 'http_error', status: response.status };
     const contentType = (response.headers.get('content-type') ?? '').split(';')[0]!.trim().toLowerCase();
-    if (!contentType.startsWith('video/')) return { ok: false, reason: 'not_video' };
+    // Mashable's file host labels its MP4s as generic binary.
+    const isVideo = contentType.startsWith('video/') || (platform === 'mashable' && contentType === 'application/octet-stream');
+    if (!isVideo) return { ok: false, reason: 'not_video' };
     const declared = Number(response.headers.get('content-length'));
     if (Number.isFinite(declared) && declared > maxBytes) return { ok: false, reason: 'too_large' };
     if (!response.body) return { ok: false, reason: 'network' };
@@ -139,7 +146,7 @@ export async function saveMedia(
   }
 }
 
-const NAMES: Record<MediaPlatform, string> = { instagram: 'Instagram', facebook: 'Facebook', twitter: 'X' };
+const NAMES: Record<MediaPlatform, string> = { instagram: 'Instagram', facebook: 'Facebook', twitter: 'X', streamable: 'Streamable', mashable: 'Mashable', flickr: 'Flickr', bilibili: 'Bilibili' };
 
 /** One plain sentence per way a lookup or a download can fail. */
 export function failureMessage(platform: MediaPlatform, failure: { reason: PickReason | SaveFailure['reason']; status?: number }): string {

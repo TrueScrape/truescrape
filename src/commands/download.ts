@@ -12,12 +12,20 @@ const ROUTES: { hosts: string[]; platform: MediaPlatform; path: string }[] = [
   { hosts: ['instagram.com'], platform: 'instagram', path: '/v1/instagram/post' },
   { hosts: ['facebook.com', 'fb.watch'], platform: 'facebook', path: '/v1/facebook/post' },
   { hosts: ['x.com', 'twitter.com'], platform: 'twitter', path: '/v1/twitter/tweet' },
+  { hosts: ['streamable.com'], platform: 'streamable', path: '/v1/streamable/video' },
+  { hosts: ['mashable.com'], platform: 'mashable', path: '/v1/mashable/video' },
+  { hosts: ['flickr.com', 'flic.kr'], platform: 'flickr', path: '/v1/flickr/post' },
+  { hosts: ['bilibili.com'], platform: 'bilibili', path: '/v1/bilibili/video' },
 ];
 
 const UNSUPPORTED =
-  'Only Instagram, Facebook and X videos can be downloaded. Pass a post URL on instagram.com, facebook.com, fb.watch, x.com or twitter.com.';
+  'Only Instagram, Facebook, X, Streamable, Mashable, Flickr and Bilibili videos can be downloaded. Pass a post URL on instagram.com, facebook.com, fb.watch, x.com, twitter.com, streamable.com, mashable.com, flickr.com, flic.kr or bilibili.com.';
 const YOUTUBE =
   'YouTube video files are not available: YouTube does not publish them as plain files. For the text and details of a video, use `truescrape youtube transcript --url <url>` or `truescrape youtube video --url <url>`.';
+const VIMEO =
+  'Vimeo video files are not available: Vimeo publishes an HLS stream, not a plain file, and the CLI does not assemble streams. For the details of a video and its stream address, use `truescrape vimeo video --url <url>`.';
+const OKRU =
+  'OK.ru video files are not available: OK.ru only serves them to a Chrome or Edge browser, and the CLI will not pretend to be one. For the details of a video and its links, use `truescrape okru video --url <url>`.';
 
 /** Decided from the URL alone, so a refusal sends nothing and costs nothing. */
 export function route(raw: string): (typeof ROUTES)[number] {
@@ -28,6 +36,8 @@ export function route(raw: string): (typeof ROUTES)[number] {
     throw new UsageError(UNSUPPORTED);
   }
   if (onHost(host, 'youtube.com') || onHost(host, 'youtu.be')) throw new UsageError(YOUTUBE);
+  if (onHost(host, 'vimeo.com')) throw new UsageError(VIMEO);
+  if (onHost(host, 'ok.ru')) throw new UsageError(OKRU);
   const found = ROUTES.find((r) => r.hosts.some((h) => onHost(host, h)));
   if (!found) throw new UsageError(UNSUPPORTED);
   return found;
@@ -42,7 +52,7 @@ function fail(ctx: Context, code: string, message: string): void {
 export function register(program: Command, overrides: ContextOverrides = {}): void {
   program
     .command('download <post-url>')
-    .description('Save the video from a public Instagram, Facebook or X post (1 credit for the lookup)')
+    .description('Save the video from a public Instagram, Facebook, X, Streamable, Mashable, Flickr or Bilibili post (1 credit for the lookup)')
     .option('--out <dir>', 'Folder to save into. Default: the current folder')
     .option('--force', 'Overwrite a file that already exists')
     .option('--json', 'Print { path, bytes, platform, postId, sourceHost } instead of the path')

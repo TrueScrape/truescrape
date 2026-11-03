@@ -215,9 +215,9 @@ the diffing and the scheduling for you.
 
 ## Saving a video
 
-When the user wants the video file itself from a public Instagram, Facebook or
-X post, run `truescrape download` rather than fetching an address out of
-`mediaUrls` yourself. The command checks that the file comes from the
+When the user wants the video file itself from a public Instagram, Facebook, X,
+Streamable, Mashable, Flickr or Bilibili post, run `truescrape download` rather
+than fetching an address out of `mediaUrls` yourself. The command checks that the file comes from the
 platform's own video servers over https, refuses redirects, caps the size at
 150 MB, and names the file after the post id.
 
@@ -225,6 +225,8 @@ platform's own video servers over https, refuses redirects, caps the size at
 truescrape download https://www.instagram.com/reel/<shortcode>/ --out ./videos
 truescrape download https://www.facebook.com/watch/?v=<id> --out ./videos
 truescrape download https://x.com/<handle>/status/<id> --out ./videos --json
+truescrape download https://streamable.com/<id> --out ./videos
+truescrape download https://www.flickr.com/photos/<owner>/<id>/ --out ./videos
 ```
 
 - **Cost:** 1 credit for the post lookup, and nothing if the lookup fails. The
@@ -240,6 +242,12 @@ truescrape download https://x.com/<handle>/status/<id> --out ./videos --json
 - **YouTube is refused** without a request: YouTube does not publish its video
   files as plain files. Offer `truescrape youtube transcript --url <url>` or
   `truescrape youtube video --url <url>` instead.
+- **Vimeo is refused** without a request: it publishes an HLS stream, not a
+  file. Offer `truescrape vimeo video --url <url>`, which returns the details
+  and the stream address.
+- **OK.ru is refused** without a request: its files only answer a Chrome or Edge
+  browser, and the CLI does not pretend to be one. Offer
+  `truescrape okru video --url <url>`.
 - Tell the user to download only videos they made or have permission to use;
   the command prints the same reminder.
 
