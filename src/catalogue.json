@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-01T14:27:08.972Z",
+  "generatedAt": "2026-11-04T01:45:46.847Z",
   "source": "https://api.truescrape.com/openapi.json",
   "endpoints": [
     {
@@ -383,6 +383,39 @@
           "type": "string",
           "required": false,
           "description": "Alias for `id`, accepted for compatibility. Sending both with different values is rejected."
+        }
+      ]
+    },
+    {
+      "name": "bilibili.video",
+      "platform": "bilibili",
+      "action": "video",
+      "path": "/v1/bilibili/video",
+      "summary": "Video files and details",
+      "description": "A public Bilibili video's mp4 address (up to 720p), description, tags, duration and first frame. For a multi-part video, `?p=` in the URL selects the part. The title, the uploader, the counts and the upload date are null. The mp4 address expires 2 hours after it is issued.",
+      "credits": 1,
+      "cacheable": true,
+      "batchable": true,
+      "constraints": [],
+      "params": [
+        {
+          "name": "url",
+          "flag": "url",
+          "type": "string",
+          "required": true,
+          "description": "BV id (BV1GJ411x7h7) or a bilibili.com/video/BV… URL"
+        },
+        {
+          "name": "cache_max_age",
+          "flag": "cache-max-age",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "include_raw",
+          "flag": "include-raw",
+          "type": "boolean",
+          "required": false
         }
       ]
     },
@@ -2673,6 +2706,39 @@
       ]
     },
     {
+      "name": "flickr.post",
+      "platform": "flickr",
+      "action": "post",
+      "path": "/v1/flickr/post",
+      "summary": "Photo or video details",
+      "description": "A public Flickr photo or video: title, description, owner, views, faves, comments, upload date and media addresses. A video lists one signed MP4 per encode, best first, and those links expire within minutes, so fetch them straight away. A photo lists its largest public size. `durationSeconds` is null because Flickr does not state it.",
+      "credits": 1,
+      "cacheable": true,
+      "batchable": true,
+      "constraints": [],
+      "params": [
+        {
+          "name": "url",
+          "flag": "url",
+          "type": "string",
+          "required": true,
+          "description": "Photo or video id (50843625323), a flickr.com/photos/<owner>/<id> URL or a flic.kr/p/… short link"
+        },
+        {
+          "name": "cache_max_age",
+          "flag": "cache-max-age",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "include_raw",
+          "flag": "include-raw",
+          "type": "boolean",
+          "required": false
+        }
+      ]
+    },
+    {
       "name": "github.repository",
       "platform": "github",
       "action": "repository",
@@ -3322,7 +3388,7 @@
       "action": "jobs",
       "path": "/v1/google/jobs",
       "summary": "Google Jobs results",
-      "description": "Job postings for a query: title, company, location and the board it was syndicated from. Shares the `/search` anti-bot gate `google.search` already documents; a blocked attempt returns `upstream_blocked` and is not charged.",
+      "description": "Job postings for a query: title, company, location and the board it was syndicated from. Results lean toward an area that can change between calls, so name the place in your query. Slower than most endpoints, often 20 seconds or more. A failed attempt returns `upstream_unavailable` and is not charged.",
       "credits": 5,
       "cacheable": true,
       "batchable": true,
@@ -3370,14 +3436,14 @@
           "flag": "uule",
           "type": "string",
           "required": false,
-          "description": "Encoded Google location string for precise geo-targeting."
+          "description": "Not currently supported; any value returns `invalid_request`."
         },
         {
           "name": "start",
           "flag": "start",
           "type": "number",
           "required": false,
-          "description": "0-based result offset."
+          "description": "Not currently supported; any value returns `invalid_request`."
         },
         {
           "name": "cache_max_age",
@@ -3399,7 +3465,7 @@
       "action": "maps-search",
       "path": "/v1/google/maps-search",
       "summary": "Google Maps place search",
-      "description": "Business listings near a coordinate: name, address, phone, rating and hours. Google Maps requires JavaScript to render its result list; an unrendered response returns `upstream_blocked` and is not charged, rather than a silent empty success.",
+      "description": "Business listings near a coordinate: name, address, phone, website, rating and hours, 20 per page. A failed attempt returns `upstream_unavailable` and is not charged.",
       "credits": 5,
       "cacheable": true,
       "batchable": true,
@@ -3447,7 +3513,7 @@
           "flag": "uule",
           "type": "string",
           "required": false,
-          "description": "Encoded Google location string for precise geo-targeting."
+          "description": "Not currently supported; any value returns `invalid_request`."
         },
         {
           "name": "start",
@@ -3490,7 +3556,7 @@
       "action": "news",
       "path": "/v1/google/news",
       "summary": "Google News results",
-      "description": "News articles for a query: title, source, and published time. Shares the `/search` anti-bot gate `google.search` already documents; a blocked attempt returns `upstream_blocked` and is not charged.",
+      "description": "News articles for a query: title, source and published time, up to about 100 items. `link` is Google's article link, not the publisher's URL. A failed attempt returns `upstream_unavailable` and is not charged.",
       "credits": 5,
       "cacheable": true,
       "batchable": true,
@@ -3509,7 +3575,7 @@
           "type": "string",
           "required": false,
           "default": "com",
-          "description": "Google marketplace TLD. One of: com, co.uk, ca, de, es, fr, it, co.jp, in, cn, com.sg, com.mx, ae, com.br, nl, com.au, com.tr, sa, se, pl. Defaults to \"com\"."
+          "description": "Must be \"com\", its default; any other value returns `invalid_request`. Use `gl` and `hl` for another country."
         },
         {
           "name": "country_code",
@@ -3538,7 +3604,7 @@
           "flag": "uule",
           "type": "string",
           "required": false,
-          "description": "Encoded Google location string for precise geo-targeting."
+          "description": "Not currently supported; any value returns `invalid_request`."
         },
         {
           "name": "start",
@@ -3581,7 +3647,7 @@
       "action": "search",
       "path": "/v1/google/search",
       "summary": "Web search results",
-      "description": "Organic Google results for a query. Google blocks automated queries harder than any other source here, so this endpoint fails more often than the rest; a blocked attempt returns `upstream_blocked` and is not charged.",
+      "description": "Google web results for a query, 20 per page, up to 6 pages. Ranking can differ from a signed-out search on google.com. A failed attempt returns `upstream_unavailable` and is not charged.",
       "credits": 1,
       "cacheable": true,
       "batchable": true,
@@ -3612,14 +3678,15 @@
             "week",
             "month",
             "year"
-          ]
+          ],
+          "description": "Not currently supported; any value returns `invalid_request`."
         },
         {
           "name": "page",
           "flag": "page",
           "type": "string",
           "required": false,
-          "description": "1-based page number"
+          "description": "1-based page number, up to 6. 20 results per page."
         },
         {
           "name": "cache_max_age",
@@ -3641,7 +3708,7 @@
       "action": "shopping",
       "path": "/v1/google/shopping",
       "summary": "Google Shopping results",
-      "description": "Shopping tiles for a query: title, price, currency and merchant. Shares the `/search` anti-bot gate `google.search` already documents; a blocked attempt returns `upstream_blocked` and is not charged.",
+      "description": "Shopping listings for a query: title, price, currency and merchant. `url` and `availability` are null because the listing page does not carry them. Slower than most endpoints, often 20 seconds or more. A failed attempt returns `upstream_unavailable` and is not charged.",
       "credits": 5,
       "cacheable": true,
       "batchable": true,
@@ -3689,14 +3756,14 @@
           "flag": "uule",
           "type": "string",
           "required": false,
-          "description": "Encoded Google location string for precise geo-targeting."
+          "description": "Not currently supported; any value returns `invalid_request`."
         },
         {
           "name": "start",
           "flag": "start",
           "type": "number",
           "required": false,
-          "description": "0-based result offset."
+          "description": "Not currently supported; any value returns `invalid_request`."
         },
         {
           "name": "cache_max_age",
@@ -3722,7 +3789,7 @@
             "m",
             "y"
           ],
-          "description": "Time filter: hour/day/week/month/year, as Google's own `qdr` code."
+          "description": "Not currently supported; any value returns `invalid_request`."
         }
       ]
     },
@@ -3785,7 +3852,7 @@
       "action": "find-social-profiles",
       "path": "/v1/find-social-profiles",
       "summary": "Find a creator's other social profiles",
-      "description": "Starts from one public profile and reports the other accounts that profile can be shown to own: profiles it links to directly, profiles reached through a recognised link-in-bio page (Linktree, Komi, Pillar, Lnk.Bio, LinkMe), and same-handle accounts on the other supported platforms that link back to the source or share a website only the owner controls. Covers Instagram, TikTok, YouTube, X and Facebook. A same-handle account with no corroboration is reported under `candidates`, never as a profile: the handle matching is a fact handed over, not a claim. There is no search-engine discovery and no display-name matching; neither is evidence of ownership. Every result carries the evidence type it rests on. Each entry in `failures` carries the inner error’s `code` and `message`, so \"we checked and found nothing\" (`upstream_not_found`, `empty_result`) stays distinguishable from \"we could not check\" (`upstream_blocked`, `not_configured`); only the second kind sets `partial`. Not covered: any platform outside the five, and links a creator has not published. An X/Twitter source can only be resolved by same-handle probing, because X exposes no bio links at all to a logged-out caller. The 20-second budget stops the composite scheduling new inner fetches; it does not abort one already in flight, so a slow leg is reported as a timeout while its request finishes unread. Link-in-bio expansion is verified against fixtures only, because no channel sampled live from our network published a link-in-bio URL to expand. A `partial: true` answer is cached for the same seven days as a complete one, so pass `cache_max_age=0` to refetch after a transient block rather than being served the gap for a week. Pricing is per source checked: the 10 credits buy the legs this call runs (the starting profile, each link-in-bio page expanded, and each same-handle probe), and a leg listed in `unchecked` is not charged for, so a partial answer costs `ceil(10 x legs answered / legs attempted)` and never more than 10. **Any response with an empty `profiles` AND an empty `candidates` costs nothing at all**, whatever `unchecked` says: an answer carrying no account has delivered nothing to charge for, and the `unchecked` disclosure ships free. When every leg was checked and none carries another account that free answer is an `empty_result`; when nothing beyond the starting profile could be checked it is an error, because \"no other accounts\" would then be a fact we did not establish.",
+      "description": "Starts from one public profile and reports the other accounts that profile can be shown to own: profiles it links to directly, profiles reached through a recognised link-in-bio page (Linktree, Komi, Pillar, Lnk.Bio, LinkMe), and same-handle accounts on the other supported platforms that link back to the source or share a website only the owner controls. Covers Instagram, TikTok, YouTube, X and Facebook. A same-handle account with no corroboration is reported under `candidates`, never as a profile: the handle matching is a fact handed over, not a claim. There is no search-engine discovery and no display-name matching; neither is evidence of ownership. Every result carries the evidence type it rests on. Each entry in `failures` carries the inner error’s `code` and `message`, so \"we checked and found nothing\" (`upstream_not_found`, `empty_result`) stays distinguishable from \"we could not check\" (`upstream_unavailable`, `not_configured`); only the second kind sets `partial`. Not covered: any platform outside the five, and links a creator has not published. An X/Twitter source can only be resolved by same-handle probing, because X exposes no bio links at all to a logged-out caller. The 20-second budget stops the composite scheduling new inner fetches; it does not abort one already in flight, so a slow leg is reported as a timeout while its request finishes unread. Link-in-bio expansion is verified against fixtures only, because no channel sampled live from our network published a link-in-bio URL to expand. A `partial: true` answer is cached for the same seven days as a complete one, so pass `cache_max_age=0` to refetch after a transient failure rather than being served the gap for a week. Pricing is per source checked: the 10 credits buy the legs this call runs (the starting profile, each link-in-bio page expanded, and each same-handle probe), and a leg listed in `unchecked` is not charged for, so a partial answer costs `ceil(10 x legs answered / legs attempted)` and never more than 10. **Any response with an empty `profiles` AND an empty `candidates` costs nothing at all**, whatever `unchecked` says: an answer carrying no account has delivered nothing to charge for, and the `unchecked` disclosure ships free. When every leg was checked and none carries another account that free answer is an `empty_result`; when nothing beyond the starting profile could be checked it is an error, because \"no other accounts\" would then be a fact we did not establish.",
       "credits": 10,
       "cacheable": true,
       "batchable": true,
@@ -5307,6 +5374,39 @@
       ]
     },
     {
+      "name": "mashable.video",
+      "platform": "mashable",
+      "action": "video",
+      "path": "/v1/mashable/video",
+      "summary": "Video details",
+      "description": "A Mashable video: title, summary, author, tags, duration, thumbnail and the addresses of its video files, best quality first, then the stream. Mashable shows no view, like or comment counts, so those are null. `mediaUrls` is empty, and the call is free, when the file behind an older video is gone.",
+      "credits": 1,
+      "cacheable": true,
+      "batchable": true,
+      "constraints": [],
+      "params": [
+        {
+          "name": "url",
+          "flag": "url",
+          "type": "string",
+          "required": true,
+          "description": "A mashable.com/video/… URL, or the slug after /video/"
+        },
+        {
+          "name": "cache_max_age",
+          "flag": "cache-max-age",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "include_raw",
+          "flag": "include-raw",
+          "type": "boolean",
+          "required": false
+        }
+      ]
+    },
+    {
       "name": "mastodon.post",
       "platform": "mastodon",
       "action": "post",
@@ -6038,6 +6138,39 @@
           "type": "string",
           "required": false,
           "description": "`pagination.cursor` from the previous response"
+        },
+        {
+          "name": "cache_max_age",
+          "flag": "cache-max-age",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "include_raw",
+          "flag": "include-raw",
+          "type": "boolean",
+          "required": false
+        }
+      ]
+    },
+    {
+      "name": "okru.video",
+      "platform": "okru",
+      "action": "video",
+      "path": "/v1/okru/video",
+      "summary": "Video details",
+      "description": "Public metadata for an OK.ru (Odnoklassniki) video: title, description, channel, duration, views, likes, comments, shares and upload date. `mediaUrls` lists the video files largest first, then the HLS playlist. Those links expire after about a day and answer only requests sent with a Chrome or Edge browser User-Agent.",
+      "credits": 1,
+      "cacheable": true,
+      "batchable": true,
+      "constraints": [],
+      "params": [
+        {
+          "name": "url",
+          "flag": "url",
+          "type": "string",
+          "required": true,
+          "description": "Video id (7475662490142) or an ok.ru/video/… link"
         },
         {
           "name": "cache_max_age",
@@ -8010,6 +8143,39 @@
           "type": "string",
           "required": false,
           "description": "Alias for `id`, accepted for compatibility. Sending both with different values is rejected."
+        }
+      ]
+    },
+    {
+      "name": "streamable.video",
+      "platform": "streamable",
+      "action": "video",
+      "path": "/v1/streamable/video",
+      "summary": "Video details and file links",
+      "description": "Public details of a Streamable video: title, duration, play count, upload date, thumbnail and its MP4 file links, tallest first. The links are signed and stop working after a few days. Password-protected videos return 404.",
+      "credits": 1,
+      "cacheable": true,
+      "batchable": true,
+      "constraints": [],
+      "params": [
+        {
+          "name": "url",
+          "flag": "url",
+          "type": "string",
+          "required": true,
+          "description": "Video id (moo) or a streamable.com/<id> URL"
+        },
+        {
+          "name": "cache_max_age",
+          "flag": "cache-max-age",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "include_raw",
+          "flag": "include-raw",
+          "type": "boolean",
+          "required": false
         }
       ]
     },
@@ -10209,7 +10375,7 @@
       "action": "tweet",
       "path": "/v1/twitter/tweet",
       "summary": "Post details",
-      "description": "One public post with its text, media and engagement. Served from X's embed CDN, which is the most durable logged-out surface X still operates; with server-side credentials set it uses the official API instead and adds retweet, quote and impression counts.",
+      "description": "One public post with its text, media, likes and replies, plus views and retweets where X shows them.",
       "credits": 1,
       "cacheable": true,
       "batchable": true,
@@ -10282,7 +10448,7 @@
       "action": "user-tweets",
       "path": "/v1/twitter/user-tweets",
       "summary": "Recent posts from an account",
-      "description": "An account's public posts with media, likes, replies and retweets. With server-side credentials this pages through the timeline; without one it returns the single page X's embedded timeline exposes, a selection of the account's posts rather than the latest, or the pinned post and latest few from the profile page when that timeline is unavailable.",
+      "description": "An account's public posts with media, likes, replies and retweets: its pinned post and latest few, followed by a selection of older posts chosen by X, newest first. `viewCount` is null on the selection, and it is not a complete history.",
       "credits": 1,
       "cacheable": true,
       "batchable": true,
@@ -10300,7 +10466,7 @@
           "flag": "count",
           "type": "number",
           "required": false,
-          "description": "Posts to return, 5-100. Defaults to 20 on the official API and to every post on the page otherwise."
+          "description": "Posts to return, 5-100. Defaults to 20 on the official API and to every post available otherwise."
         },
         {
           "name": "cursor",
@@ -10308,6 +10474,39 @@
           "type": "string",
           "required": false,
           "description": "`pagination.cursor` from a previous response. Official API only."
+        },
+        {
+          "name": "cache_max_age",
+          "flag": "cache-max-age",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "include_raw",
+          "flag": "include-raw",
+          "type": "boolean",
+          "required": false
+        }
+      ]
+    },
+    {
+      "name": "vimeo.video",
+      "platform": "vimeo",
+      "action": "video",
+      "path": "/v1/vimeo/video",
+      "summary": "Video details and stream",
+      "description": "Public metadata for a Vimeo video: title, description, channel, duration, tags, upload date and, where the owner shows them, plays, likes and comments. `mediaUrls` holds the HLS playlist address, valid for about an hour. It is empty when Vimeo gives no open stream: the video is DRM-protected, or its player is unavailable to a logged-out visitor.",
+      "credits": 1,
+      "cacheable": true,
+      "batchable": true,
+      "constraints": [],
+      "params": [
+        {
+          "name": "url",
+          "flag": "url",
+          "type": "string",
+          "required": true,
+          "description": "Video id (293802639) or a vimeo.com/… or player.vimeo.com/video/… URL"
         },
         {
           "name": "cache_max_age",
@@ -10340,7 +10539,7 @@
           "flag": "category",
           "type": "string",
           "required": true,
-          "description": "Walmart category id, e.g. \"3944_1089430_37807\""
+          "description": "Walmart category id, the last part of a category page's URL, e.g. \"3944_1089430_37807\". The page's URL is also accepted, on the marketplace set by `tld`."
         },
         {
           "name": "tld",

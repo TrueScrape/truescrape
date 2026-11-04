@@ -336,7 +336,7 @@ LinkedIn's under `/v1/linkedin/ads/search`.
 ## Endpoint catalogue
 
 <!-- catalogue:start -->
-253 endpoints across 46 platforms, generated from the live API on 2026-11-01.
+259 endpoints across 52 platforms, generated from the live API on 2026-11-04.
 
 ### amazon (4)
 
@@ -355,6 +355,12 @@ LinkedIn's under `/v1/linkedin/ads/search`.
 | `GET /v1/apple-music/artist` | `truescrape apple-music artist --id` | 1 | Artist details |
 | `GET /v1/apple-music/search` | `truescrape apple-music search --query` | 1 | Search |
 | `GET /v1/apple-music/track` | `truescrape apple-music track --id` | 1 | Track details |
+
+### bilibili (1)
+
+| Endpoint | CLI | Credits | What it returns |
+|---|---|---|---|
+| `GET /v1/bilibili/video` | `truescrape bilibili video --url` | 1 | Video files and details |
 
 ### bitchute (4)
 
@@ -433,6 +439,12 @@ LinkedIn's under `/v1/linkedin/ads/search`.
 | `GET /v1/facebook/profile` | `truescrape facebook profile --url` | 1 | Public Page profile |
 | `GET /v1/facebook/profile-events` | `truescrape facebook profile-events --url` | 1 | Events on a Page |
 | `GET /v1/facebook/profile-photos` | `truescrape facebook profile-photos --url` | 1 | Photos on a Page |
+
+### flickr (1)
+
+| Endpoint | CLI | Credits | What it returns |
+|---|---|---|---|
+| `GET /v1/flickr/post` | `truescrape flickr post --url` | 1 | Photo or video details |
 
 ### github (10)
 
@@ -555,6 +567,12 @@ LinkedIn's under `/v1/linkedin/ads/search`.
 |---|---|---|---|
 | `GET /v1/linktree` | `truescrape linktree page --url` | 1 | Linktree page |
 
+### mashable (1)
+
+| Endpoint | CLI | Credits | What it returns |
+|---|---|---|---|
+| `GET /v1/mashable/video` | `truescrape mashable video --url` | 1 | Video details |
+
 ### mastodon (4)
 
 | Endpoint | CLI | Credits | What it returns |
@@ -592,6 +610,12 @@ LinkedIn's under `/v1/linkedin/ads/search`.
 | `GET /v1/odysee/search` | `truescrape odysee search --query` | 1 | Search videos |
 | `GET /v1/odysee/video` | `truescrape odysee video --url` | 1 | Video details |
 | `GET /v1/odysee/video/comments` | `truescrape odysee video-comments --url` | 1 | Video comments |
+
+### okru (1)
+
+| Endpoint | CLI | Credits | What it returns |
+|---|---|---|---|
+| `GET /v1/okru/video` | `truescrape okru video --url` | 1 | Video details |
 
 ### peertube (7)
 
@@ -687,6 +711,12 @@ LinkedIn's under `/v1/linkedin/ads/search`.
 | `GET /v1/spotify/search` | `truescrape spotify search --query` | 1 | Search |
 | `GET /v1/spotify/track` | `truescrape spotify track --id` | 1 | Track details |
 
+### streamable (1)
+
+| Endpoint | CLI | Credits | What it returns |
+|---|---|---|---|
+| `GET /v1/streamable/video` | `truescrape streamable video --url` | 1 | Video details and file links |
+
 ### substack (5)
 
 | Endpoint | CLI | Credits | What it returns |
@@ -781,6 +811,12 @@ LinkedIn's under `/v1/linkedin/ads/search`.
 | `GET /v1/twitter/tweet` | `truescrape twitter tweet --url` | 1 | Post details |
 | `GET /v1/twitter/tweet/transcript` | `truescrape twitter tweet-transcript --url` | 1 | Post transcript |
 | `GET /v1/twitter/user-tweets` | `truescrape twitter user-tweets --handle` | 1 | Recent posts from an account |
+
+### vimeo (1)
+
+| Endpoint | CLI | Credits | What it returns |
+|---|---|---|---|
+| `GET /v1/vimeo/video` | `truescrape vimeo video --url` | 1 | Video details and stream |
 
 ### walmart (4)
 
